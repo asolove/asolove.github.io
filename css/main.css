@@ -75,6 +75,7 @@ ul.posts span {
 .site .header h1.title {
   display: inline-block;
   margin-bottom: 2em;
+  margin-right: 1em;
 }
 
 .site .header h1.title a {
@@ -87,7 +88,6 @@ ul.posts span {
 
 .site .header a.extra {
   color: #aaa;
-  margin-left: 1em;
 }
 
 .site .header a.extra:hover {

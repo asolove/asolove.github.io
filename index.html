@@ -3,11 +3,39 @@ layout: default
 title: "Adam Solove: Document Function Model"
 ---
 
-<div id="home">
+<div class="col-left">
+
+<h3>About me</h3>
+
+<p>I'm a front-end developer at <a href="http://www.webs.com">Webs</a>, where I build web applications
+  that help small businesses get online. I live right outside Washington, DC.</p>
+
+<h3>Current projects</h3>
+
+<p>I build tools and examples for smarter software interfaces. I'm exploring the history of UI programming and the powerful models behind revolutionary interfaces. My current projects center on constraint programming as a way to build user interfaces that blur the distinction between input and output.</p>
+
+<dl class="current-projects">
+  <dt><a href="https://github.com/asolove/scrubbing-budget">Scrubbing budget</a> <span class="in progress"></span></dt>
+  <dd>This visualization of the US Federal Budget lets you explore questions like: "how much would we have to raise taxes in order to increase education spending?" or "how much could we cut the deficit by raising the retirement age for social security?"</dd>
+
+  <dt><a href="https://github.com/asolove/scrubbing-linear-calculator">Scrubbing linear calculator</a></dt>
+  <dd>A just-started attempt to create a small part of Bret Victor's scrubbing calculator.
+
+  <dt><a href="https://github.com/asolove/Sketchpad">Sketchpad</a></dt>
+  <dd>Recreating Ivan Sutherland's Sketchpad, the 
+    first graphical user interface, in ClojureScript.</dd>
+
+  <dt><a href="https://github.com/asolove/cassowary-js-refactor">Cassowary</a></dt>
+  <dd>I'm trying to give back to <a href="http://infrequently.org/">Alex Russell</a>'s <a href="https://github.com/slightlyoff/cassowary-js-refactor">awesome fork of Cassowary for js</a> by adding some new features, especially with the new parser-based api.</dd>
+</dl>
+
+</div>
+
+<div class="col-right">
   <h1>Blog Posts</h1>
   <ul class="posts">
     {% for post in site.posts %}
-      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+      <li><a href="{{ post.url }}">{{ post.title }}</a> <span>{{ post.date | date_to_string }}</span></li>
     {% endfor %}
   </ul>
 </div>

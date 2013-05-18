@@ -15,7 +15,8 @@ html, body { height: 100%; }
 body {
   background-color: #FFF;
   font-family: helvetica;
-  text-align: center;
+  text-align: left;
+  color: #444;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -44,15 +45,39 @@ ul.posts {
 }
 
 ul.posts li {
-  line-height: 1.75em;
+  line-height: 1.2;
+  margin-bottom: 1.2em;
 }
 
 ul.posts span {
   color: #aaa;
-  font-family: Monaco, "Courier New", monospace;
   font-size: 80%;
 }
 
+
+.col-left {
+  width: 60%;
+  float:left;
+  margin-bottom: 2em;
+}
+
+.col-right {
+  width: 30%;
+  float: right;
+  margin-bottom: 2em;
+}
+
+dl.current-projects {
+  font-size: 87%;
+  padding-left: 2em;
+}
+
+.current-projects dt {
+  font-weight: bold;
+}
+.current-projects dd {
+  margin-bottom: 1em;
+}
 /*****************************************************************************/
 /*
 /* Site
@@ -61,7 +86,6 @@ ul.posts span {
 
 .site {
   font-size: 115%;
-  text-align: justify;
   width: 42em;
   margin: 3em auto 2em;
   line-height: 1.5em;
@@ -104,6 +128,7 @@ ul.posts span {
   border-top: 4px solid #eee;
   margin-top: 2em;
   overflow: hidden;
+  clear: both;
 }
 
 .site .footer .contact {

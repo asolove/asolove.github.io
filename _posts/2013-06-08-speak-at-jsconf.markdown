@@ -19,7 +19,7 @@ JSConf has a "community" track where slots are first-come-first-served. I wrote 
 
 ### "But I'm not good at public speaking." No problem. 
 
-[Watch the videos](http://blip.tv/jsconf) from JSConf 2012. You'll see speakers who are painfully shy, too quiet, stuttering, have live demos fail dramatically, and experience everything else that might possibly keep them from speaking. What you won't see is any booing. The audience is rooting for them, and learning things regardless.
+[Watch the videos](http://www.youtube.com/playlist?list=PL37ZVnwpeshGdDgHy6VcrsFu8jCn_h_h6) from JSConf 2012. You'll see speakers who are painfully shy, too quiet, stuttering, have live demos fail dramatically, and experience everything else that might possibly keep them from speaking. What you won't see is any booing. The audience is rooting for them, and learning things regardless.
 
 Let me pick on someone in particular: this year Ben Farrell gave a talk on using the Kinect from JavaScript, and his live demo failed twenty times in a row. No one cared. Then it finally worked by accident and the audience went nuts. 
 
@@ -63,9 +63,9 @@ When I ran across bugs that made me want to punch things, I instead spent twenty
 
 **During the talk** I was scheduled against an awesome live-coding demo, and I remember being bummed about how empty the room looked. Maybe I should have picked a cooler title. That's the end of what I remember, because the talk itself is a complete blur. I look forward to watching the video to see how it went. 
 
-**After the talk** it turned out the audience size didn't matter. The people who should have been there were there. Afterwords I was stopped by lots of people, some well-known and some not, who were interested in what I had said and wanted to follow up. And Bryan Hughes called it "probably my favorite talk of the entire conference" in [a blog post](http://theoreticalideations.com/2013/06/07/jsconf-day-3-ideas-abound/). So that's a success. 
+**After the talk** it turned out the audience size didn't matter. The people who should have been there were there. Afterwords I was stopped by lots of people who were interested in what I had said and wanted to follow up. And Bryan Hughes called it "probably my favorite talk of the entire conference" in [a blog post](http://theoreticalideations.com/2013/06/07/jsconf-day-3-ideas-abound/). So that's a success. 
 
-I feel very confident in this prediction: Whatever you decide to talk about, you will find the right audience. And they will be excited that they just heard you talk from the stage of JSConf. 
+I feel very confident in this prediction: **Whatever you decide to talk about, you will find the right audience.** And they will be excited to hear you talk from the stage of JSConf. 
 
 ### What to do
 

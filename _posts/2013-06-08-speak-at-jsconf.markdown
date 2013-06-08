@@ -67,8 +67,12 @@ When I ran across bugs that made me want to punch things, I instead spent twenty
 
 I feel very confident in this prediction: Whatever you decide to talk about, you will find the right audience. And they will be excited that they just heard you talk from the stage of JSConf. 
 
+### What to do
 
-So don't just make yourself a reminder to get a ticket for JSConf 2014. When you do, take note of when the community track registration opens, and get a speaking slot.
+So don't just make yourself a reminder to get a ticket for JSConf. Consider speaking at JSConf!
+
+* The 2013 [JSConf EU Call for Speakers](http://2013.jsconf.eu/call-for-speakers/) is open until June 12th. I've already applied. That page discusses all the help they give first-time speakers, so you have no excuse!
+* When you register for JSConf 2014, write your description early, and be ready to pounce when the community track registration opens.
 
 I look forward to hearing from you next year.
 

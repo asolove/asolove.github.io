@@ -22,6 +22,8 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-size: 100%; }
 
+h2 { font-size: 120%; } 
+ 
 h1 { margin-bottom: 1em; }
 p { margin: 1em 0; }
 
@@ -91,6 +93,11 @@ dl.current-projects {
   line-height: 1.5em;
 }
 
+.site .header {
+  border-bottom: 2px solid #eee;
+  margin-bottom: 2em;
+}
+
 .site .header a {
   font-weight: bold;
   text-decoration: none;
@@ -98,7 +105,7 @@ dl.current-projects {
 
 .site .header h1.title {
   display: inline-block;
-  margin-bottom: 2em;
+  margin-bottom: .5em;
   margin-right: 1em;
 }
 
@@ -120,6 +127,7 @@ dl.current-projects {
 
 .site .meta {
   color: #aaa;
+  margin-top: 0.4em;
 }
 
 .site .footer {
@@ -163,6 +171,12 @@ dl.current-projects {
   padding: 0 .4em;
 }
 
+#post .abstract {
+  font-size: 108%;
+  line-height: 1.5;
+  width: 30em;
+}
+
 #post ul, #post ol {
   margin-left: 1.35em;
 }
@@ -186,4 +200,14 @@ dl.current-projects {
 
 #post pre.terminal code {
   background-color: #333;
+}
+
+blockquote {
+    padding-left: 2em;
+}
+
+hr {
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom: 2px solid #eee;
 }

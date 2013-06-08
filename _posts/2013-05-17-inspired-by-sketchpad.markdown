@@ -5,7 +5,7 @@ date:   2013-05-17 22:01:39
 categories: js ui
 ---
 
-Ivan Sutherland's Sketchpad was the first graphical user interface. Learning about Sketchpad over the past few months has inpired me to go deeper into the history of user interface programming and to expect more from the interfaces that I build.
+<p class="abstract">Ivan Sutherland's Sketchpad was the first graphical user interface. Learning about Sketchpad over the past few months has inpired me to go deeper into the history of user interface programming and to expect more from the interfaces that I build.</p>
 
 ## Demo
 

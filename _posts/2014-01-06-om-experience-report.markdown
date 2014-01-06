@@ -15,6 +15,20 @@ Below are a few impressions and tips. I'm not an experienced Clojurian nor do I 
 
 <br/>
 
+## What I built 
+
+[CartoCrayon](https://github.com/asolove/carto-crayon) is an early experiment in styling geojson data.
+
+<img alt="CartoCrayon screenshot" src="https://raw.github.com/asolove/carto-crayon/master/resources/public/screenshot.png" style="width:100%">
+
+Right now it only has one baked-in dataset and only works with a specific map, but you can select geographic features and style them manually or based on data. [You can try it out](http://adamsolove.com/carto-crayon/) if you don't mind the poor user experience.
+
+I figured this would be an interesting challenge for Om because it involves some traditional browser UI work but also requires cooperating with a stateful mapping library that can't just be re-rendered each time. 
+
+<hr/>
+
+<br/>
+
 ## Working in ClojureScript
 
 I've been excited about ClojureScript ever since I heard the announcement. I've tried to pick it up for real use three or four times over the past two years and always reached a hurdle I wasn't willing to scale. There were problems getting an environment working, incompatible version issues, debugging pains, really slow builds resulting in really large files, and headaches with js interop. The last time I tried, several months ago, everything about the language clicked really well, but the available options for working with the DOM were either not expressive enough for my needs, or just thin wrappers over the stateful DOM methods, which seemed to mar the beauty of the Clojure code.

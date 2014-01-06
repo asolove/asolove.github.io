@@ -33,7 +33,7 @@ I figured this would be an interesting challenge for Om because it involves some
 
 I've been excited about ClojureScript ever since I heard the announcement. I've tried to pick it up for real use three or four times over the past two years and always reached a hurdle I wasn't willing to scale. There were problems getting an environment working, incompatible version issues, debugging pains, really slow builds resulting in really large files, and headaches with js interop. The last time I tried, several months ago, everything about the language clicked really well, but the available options for working with the DOM were either not expressive enough for my needs, or just thin wrappers over the stateful DOM methods, which seemed to mar the beauty of the Clojure code.
 
-If you experienced these kinds of problems and gave up on ClojureScript in the past, let me be the first to invite you back for a second try. As a language, a toolset, and a library ecosystem, ClojureScript is ready for prime-time. Starting a project, building it, and getting a repl are really easy. Build times and sizes are way down. Interop is a lot easier. Source-maps make debugging usually painless. 
+If you experienced these kinds of problems and gave up on ClojureScript in the past, let me be the first to invite you back for a second try. As a language, a toolset, and a library ecosystem, ClojureScript is ready for prime-time. Starting a project, building it, and getting a repl are really easy. Build times and sizes are way down. Interop is a lot easier. Source-maps make debugging usually painless. The only problem I have is that I still don't understand the advanced compilation options.
 
 And now Om provides an idiomatic, functional DOM abstraction.
 
@@ -149,6 +149,7 @@ I am hesitant to speak about the future of Om, both because David is taking it w
 
 So here is my personal roadmap for getting more used to working in Om:
 
+- Figure out the ClojureScript advanced compilation mode so I can get a real release-quality single-file js build.
 - Clean up my vacation project, refactoring and creating some Om utilities as needed, to see how clean and readable I can make the code. 
 - Try implementing generic, reusable components. I think the biggest challenge will be to establish some conventions for the shape of the data.
 - Learn more core.async. I have [Timothy Baldridge's talk](http://www.youtube.com/watch?v=enwIIGzhahw) queued up to better understand how to think in channels. 

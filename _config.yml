@@ -2,3 +2,4 @@ name: Document Function Model
 description: Adam Solove explores user interface programming
 highlighter: pygments
 url: http://adamsolove.com/
+markdown: kramdown

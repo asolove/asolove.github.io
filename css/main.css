@@ -52,7 +52,7 @@ ul.posts li {
 }
 
 ul.posts span {
-  color: #6b8;
+  color: #444;
   font-size: 80%;
 }
 
@@ -110,19 +110,19 @@ dl.current-projects {
 }
 
 .site .header h1.title a {
-  color: #6b8;
+  color: #375;
 }
 
 .site .header h1.title a:hover {
-  color: #000;
-}
-
-.site .header a.extra {
   color: #6b8;
 }
 
+.site .header a.extra {
+  color: #333;
+}
+
 .site .header a.extra:hover {
-  color: #000;
+  color: #333;
 }
 
 .site .meta {

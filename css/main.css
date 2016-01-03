@@ -13,10 +13,10 @@
 html, body { height: 100%; }
 
 body {
-  background-color: #FFF;
-  font-family: helvetica;
+  background-color: #fff4e9;
+  font-family: "Fira Sans", helvetica, sans-serif;
   text-align: left;
-  color: #444;
+  color: #333;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -27,9 +27,9 @@ h2 { font-size: 120%; }
 h1 { margin-bottom: 1em; }
 p { margin: 1em 0; }
 
-a         { color: #00a; }
-a:hover   { color: #000; }
-a:visited { color: #a0a; }
+a         { color: #375; }
+a:hover   { color: #375; }
+a:visited { color: #6b8; }
 
 table {
   font-size: inherit;
@@ -52,7 +52,7 @@ ul.posts li {
 }
 
 ul.posts span {
-  color: #aaa;
+  color: #6b8;
   font-size: 80%;
 }
 
@@ -110,7 +110,7 @@ dl.current-projects {
 }
 
 .site .header h1.title a {
-  color: #a00;
+  color: #6b8;
 }
 
 .site .header h1.title a:hover {
@@ -118,7 +118,7 @@ dl.current-projects {
 }
 
 .site .header a.extra {
-  color: #aaa;
+  color: #6b8;
 }
 
 .site .header a.extra:hover {
@@ -126,7 +126,7 @@ dl.current-projects {
 }
 
 .site .meta {
-  color: #aaa;
+  color: #6b8;
   margin-top: 0.4em;
 }
 
@@ -145,7 +145,7 @@ dl.current-projects {
 }
 
 .site .footer .contact a {
-  color: #8085C1;
+  color: #375;
 }
 
 .site .footer .rss {

@@ -2,11 +2,14 @@
 <!doctype html>
 <html>
   <head>
-    <title>Adam Solove: Portfolio</title>
+    <title>Adam Solove's Portfolio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Fira+Sans:300,400,700' rel='stylesheet' type='text/css'>
     <style>
+      /* If you read this, add to the list of my attributes:
+         * Knows when to use complex tools and when to do it old-school. */
+
       * {
         box-sizing: border-box;
       }
@@ -20,7 +23,7 @@
       }
 
       section > header {
-        margin: 40px 0 0 -50px;
+        margin: 40px 0 0 -40px;
       }
 
       header img {
@@ -47,6 +50,14 @@
         font-size: 90%;
       }
 
+      @media (max-width: 700px) {
+        aside {
+          float: none;
+          width: auto;
+          margin-left: 0px;
+        }
+      }
+
       aside p {
         margin-top: 0;
       }
@@ -59,67 +70,106 @@
       li { margin-bottom: 8px;}
 
       a:link, a:visited { color: #375; text-decoration: none; border-bottom: 1px solid #6b8;}
+
+      .cta {
+        background-color: rgba(51, 119, 85, 0.2);
+        padding: 20px;
+        display: inline-block;
+        margin-bottom: 50px;
+      }
     </style>
   </head>
   <body>
     <header>
       <img src="https://pbs.twimg.com/profile_images/435790984551489536/1amNSgcp_bigger.jpeg">
-      <h1><a href="http://www.adamsolove.com">Adam Solove</a>'s Portfolio</h1>
+      <h1><a href="http://www.adamsolove.com">Adam Solove</a>&rsquo;s Portfolio</h1>
     </header>
     <section>
       <header>
-        <h2>I build web software and lead teams.<br>And I'm looking for my next challenge.</h2>
+        <h2>I lead teams & build web products.<br>
+          What could we build if I were on your team?</h2>
       </header>
       <aside>
         <p>With tools like:</p>
         <ul>
-          <li>Ruby: Rails</li>
           <li>JS: Node, React, & jQuery</li>
+          <li>Ruby: Rails</li>
+          <li>Bits of Clojure, Elixir, & Haskell</li>
           <li>HTML, CSS, pre-processors, & responsive design</li>
           <li>Postgres & Mongo</li>
-          <li>Heroku, AWS, & Chef</li>
-          <li>A dash of Clojure, Elixir, & Haskell</li>
+          <li>Heroku & AWS</li>
         </ul>
       </aside>
-      <p>Do you need someone who:</p>
+      <p>You could use someone who:</p>
       <ul>
-        <li><strong>Writes code</strong> across the UI, domain, and instrastructure layers.</li>
+        <li><strong>Writes code</strong> across the UI, domain, and infrastructure layers.</li>
         <li><strong>Enjoys talking to real people</strong> like stakeholders and customers in their own language.</li>
         <li><strong>Makes strategic tradeoffs</strong> about what, how, when, and for whom we build.</li>
         <li><strong>Mentors people</strong> and <strong>leads systems</strong> to overall improvement.</li>
+        <li>Works from <strong>Denver</strong> or <strong>remote</strong>.</li>
       </ul>
-      <p><strong>Sound interesting?</strong> <a href="mailto:asolove+jobs@gmail.com">Get in touch</a> or read on.</p>
+      <p class="cta"><strong><a href="mailto:asolove+career@gmail.com">Get in touch and let's build something together.</a></strong></p>
+      <p>Not convinced yet? Read on to learn about my philosophy, community contributions, and experience:</p>
     </section>
     <section>
       <header>
         <h2>I believe order can't be planned, only allowed to grow</h2>
       </header>
-      <p>When applied to different aspects of my work, this means:</p>
       <ul>
-        <li><strong>Leadership</strong> is primarily about listening to people and systems, then gently experimenting with changes to let them naturally reach their potential.</li>
-        <li><strong>User interface design</strong> starts with building less, designing in the browser, and using the right words. Plus most of the rest of what Basecamp have published.</li>
-        <li><strong>Engineering</strong> teams should focus on powering learning, not delivering lists of features.</li>
+        <li><strong>Leadership</strong> is about carefully listening to people and systems, then gently experimenting with changes to let them naturally reach their potential.</li>
+        <li><strong>User interface design</strong> starts with building less, designing in the browser, and finding the right words. Plus most of the rest of what Basecamp and iA have published.</li>
+        <li><strong>Engineering</strong> should focus on powering learning, not just delivering lists of features.</li>
       </ul>
     </section>
     <section>
       <header>
+        <h2>Community contributions</h2>
+        <p>I contribute to open source and the community discussion around web development. My current, nascent projects involve systems programming in Rust and pure functional programming in Haskell. Here are some of my earlier contributions:</p>
+      </header>
+
+      <section class="project">
+        <h3>React & Om Evangelization <time>2014</time></h3>
+        <p>I was an early adopter of React and experimenter with ClojureScript and Om. I wrote the first <a href="http://www.adamsolove.com/js/clojure/2014/01/06/om-experience-report.html">blog post on using Om</a> after David Nolen announced it. I gave one of the first <a href="http://www.adamsolove.com/js/clojure/2014/05/08/react-js-and-om.html">talks on the core ideas of React and Om</a> at a time when React was very misunderstood.</p>
+        <p>Two years ago I was playing with and outlining the philosophy behind the tools that are gaining traction now. <strong>Want to know what's we'll be doing two years from now? <a href="mailto:asolove+career@gmail.com">Let's talk.</a></strong></p>
+      </section>
+
+      <section class="project">
+        <h3>Constraint programming talk, JSConf <time>2013</time></h3>
+        <aside>
+          <iframe width="100%" height="120" src="https://www.youtube.com/embed/72sWgwaAoyk" frameborder="0" allowfullscreen></iframe>
+        </aside>
+        <p>I am very interested in how <strong>computers can extend rather than replace human thinking</strong>. Most user interfaces today rely on humans to provide input but then have computers make the actual decisions. Constraint programming is one model in which human decisions and computer logic can coexist to extend the limits of human thinking. In this talk, I explained the basics of constraint programming, show several basic examples, and speculate on the future of constraint interfaces.</p>
+      </section>
+
+      <section class="project">
+        <h3>Smallest federated wiki <time>2011</time></h3>
+
+        <aside>
+          <iframe width="100%" height="120" src="https://www.youtube.com/embed/l1Oy2AIHyAs" frameborder="0" allowfullscreen></iframe>
+        </aside>
+        <p>Ward Cunningham, the inventor of the wiki, is now exploring a major change to the idea, using a decentralized editing model similar to git. His project, Smallest federated wiki, had a solid API and a great interface concept, but some of the details of getting it to work in the browser had proved difficult to implement. I contributed my browser knowledge, starting with this browser history, animations, and scrolling work. My work <strong>made the interface more fluid and intuitive</strong>.</p>
+      </section>
+    </section>
+    <section>
+      <header>
         <h2>I've worked on a broad array of problems</h2>
-        <p>This isn't my <a href="https://www.linkedin.com/in/adam-solove-9727237b">full work history</a>, just a selection of interesting projects.</p>
+        <p>This isn't my <a href="https://www.linkedin.com/in/adam-solove-9727237b">full work history</a>, just a selection of interesting projects:</p>
       </header>
 
       <section class="project">
         <h3><time>2014&ndash;2016</time> 
           Principal Engineer & Tech Lead,<br>
           Vistaprint Digital Marketing Products</h3>
-        <p>I led three teams with responsibility for a portfolio of products and building a new, service-oriented architecture to replace a legacy product framework.</p>
+        <p>I led three teams across several products and a new, service-oriented architecture to replace a legacy product framework.</p>
         <ul>
-          <li>As lead of the <a href="http://www.pagemodo.com/">Pagemodo</a> and <a href="http://www.vistaprint.com/facebook-business-page-builder.aspx">Vistaprint Social</a> products, helped the team to change its process and priorities. The team's new customer- and metrics-focused way of working doubled conversion rates in our main purchase funnel, improved onboarding to double first-day feature usage, and made core product changes that increased return usage by 500%.</li>
-          <li>As a leader, I poked the organization towards several other changes: championing the adoption of React so our UIs were more testable, building powerful new analytics to guide decisions where we had previously guessed, and conducting the company's first paper prototyping and user experience research.</li>
+          <li>Led the whitelabeling and integration of Rails and Node apps into a service-oriented ecosystem while continuing ongoing product development and support. Refactored old contracts into REST APIs, old user interfaces into modern JavaScript, and old user flows into more pleasant and measurable experiences.</li>
+          <li>In self-directed projects, I worked across marketing, analytics, and product boundaries: identified 40% optimizations to paid search campaigns, quickly proved we could remove six months of work from one product's roadmap, and <strong>quadrupled a large product's repeat engagement in two days of work.</strong></li>
+          <li>As a facilitator and agitator throughout the organization, I championed the adoption of modern UI tools and testing, created powerful new analytics to guide decisions, and conducted the company's first paper prototyping and design thinking sessions.</li>
       </section>
 
       <section class="project">
         <h3>Founder, Snowdrop <time>2015</time></h3>
-        <p>Our family has struggled with post-partum depression for several years. Through the recovery, we learned that while medication and therapy play an important role, we also had to develop new habits and ways of thinking. Currently in a private beta, Snowdrop is a mobile webapp that helps other families to develop those habits. It's built in Rails and uses the Twilio API.</p>
+        <p>Currently in a private beta, Snowdrop is <strong>a mobile webapp that helps  families to fight post-partum depression</strong>. My family has struggled with post-partum depression and its aftermath since the birth of our first child. Through the recovery, we learned that while medication and therapy play an important role, we also had to develop new habits of thought, reflection, and communication. We've tried to turn those habits into a repeatable process and are currently experimenting with it. The software is built on Rails, Heroku and Twilio.</p>
       </section>
 
 
@@ -129,38 +179,43 @@
           <a href="http://www.themillennialexperience.org/it/title-panel/"><img src="/img/me.png" width="100%"></a>
           <p>View the <a href="http://www.themillennialexperience.org/it/title-panel/"> archived site</a> or <a href="https://twitter.com/millennial_one">some of the resulting responses.</a></p>
         </aside>
-        <p>I built a mobile website to accompany this exhibit of millennials' existential questions for Europe's largest summer festival, the Meeting at Rimini. With such an enormous audience, mostly using old Android phones on an over-crowded cell network, the site needed to be very fast. But it also needed to be fast to build and update in several languages, because the content was only available two weeks before the exhibition began, and then changed rapidly.</p>
-        <p>I used React as the site's foundation, allowing me to use react-intl for localization and the full power of JavaScript to generate reusable content components. But the production site could be generated once and served incredibly fast from cacheable static HTML files with resources inlined.</p>
+        <p>I built a mobile website to accompany an exhibit on millennials' existential questions that was displayed at Europe's largest summer festival, the Meeting at Rimini. With such an enormous audience, mostly using old Android phones on an over-crowded cell network, the site needed to be very fast to load. But it also needed to be fast to build and update in several languages, because the content was only available shortly before the exhibition began, and then changed rapidly.</p>
+        <p>I used React as the site's foundation, providing me the convenience of working in JavaScript and its ecosystem of libraries, while still allowing the finished site to be burned out as static HTML with no client-side code.</p>
+        <p><strong>Pages loaded in less than a second even on slow cell connections, but content could be updated across the site and deployed in seconds.</strong></p>
       </section>
-
 
       <section class="project">
-        <h3>Constraint programming talk, JSConf <time>2013</time></h3>
-        <aside>
-          <iframe width="100%" height="120" src="https://www.youtube.com/embed/72sWgwaAoyk" frameborder="0" allowfullscreen></iframe>
-        </aside>
-        <p>I am very interested in how computers can extend rather than replace human decision-making. Most user interfaces today rely on humans to provide input but then allow computers to carry our decisionmaking logic. Constraint programming is one model in which human input and computer logic can coexist to extend the limits of human thinking. In this talk, I explained the basics of constraint programming, show several basic examples, and speculate on the future of constraint interfaces.</p>
+        <h3><time>2011&ndash;2013</time> 
+          UI Engineering Lead,<br>
+          Webs (acquired by Vistaprint)</h3>
+        <p>I led the team building a ground-breaking in-browser website editor and then white-labeling it into a larger service ecosystem.</p>
+        <ul>
+          <li>Designed "The Frontend Amusement Park", a new common architecture for our UI work. It included tooling for MVC JavaScript, unit and simulation tests, modular dependencies, loadtime optimization, easy i18n, etc. It drastically reduced the time-to-market for new feature development while increasing quality.</li>
+          <li>Recruited and mentored a team of front-end developers who knew best practices and loved to follow them because the tooling made it so fun to develop new UIs.</li>
+          <li>The incredibly smooth new website editor was <strong>the demo that drove Webs' $118m acquisition</strong> by Vistaprint.</li>
+          <li>Led a cross-functional renaissance that tore down the walls between front-end, back-end and quality. Championed the first project where REST APIs, UI work, and testing scenarios were developed by the same team, in sync. (This sounds less impressive than the others but believe me it was the hardest and the most important.)</li>
+        </ul>
       </section>
 
-      <h3>Smallest federated wiki <time>2011</time></h3>
-
-      <aside>
-        <iframe width="100%" height="120" src="https://www.youtube.com/embed/l1Oy2AIHyAs" frameborder="0" allowfullscreen></iframe>
-      </aside>
-      <p>Ward Cunningham, the inventor of the wiki, is now exploring a major change to the idea, using a decentralized editing model similar to git. His project, Smallest federated wiki, had a solid API and a great interface concept, but some of the details of getting it to work in the browser had proved difficult to implement. I contributed my browser knowledge, starting with this browser history, animations, and scrolling work. My work made the interface more fluid and intuitive.</p>
-
-      <h3>Deco <time>2010</time></h3>
-      <aside>
-        <object width="100%" height="120">
-          <param name="allowfullscreen" value="true" />
-          <param name="allowscriptaccess" value="always" />
-          <param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=9381921&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=F2629F&amp;fullscreen=1" />
-          <embed src="http://vimeo.com/moogaloop.swf?clip_id=9381921&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=F2629F&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="100%" height="120">
-      </object>
-    </aside>
-    <p>For several years I worked as a freelancer doing typesetting, web design, and development work for various clients. During that time I developed a strong distrust for my clients' descriptions of what they wanted. It was only when we got to visual representations that their opinions began to be consistent. Deco was an experimental online moodboarding tool where clients and I could work together to look for inspiration and agree on the meanings of the words they used.</p>
-    <p>Built in 2010, Deco was a very early experiment in using Node.js, websockets, the html5 File API, and multitouch events.</p>
+      <section class="project">
+        <h3>Deco <time>2010</time></h3>
+        <aside>
+          <object width="100%" height="120">
+            <param name="allowfullscreen" value="true" />
+            <param name="allowscriptaccess" value="always" />
+            <param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=9381921&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=F2629F&amp;fullscreen=1" />
+            <embed src="http://vimeo.com/moogaloop.swf?clip_id=9381921&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=F2629F&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="100%" height="120">
+          </object>
+        </aside>
+        <p>For several years I worked as a freelancer doing typesetting, web design, and development work for various clients. During that time I developed a strong distrust for my clients' descriptions of what they wanted. It was only when we got to visual representations that their opinions began to be consistent. Deco was an experimental online moodboarding tool where clients and I could work together to look for inspiration and agree on the meanings of the words they used.</p>
+        <p>Built in 2010, Deco was a very early experiment in using Node.js, websockets, the html5 File API, and multitouch events.</p>
+      </section>
 
     </section>
+    <section>
+      <header>
+        <h2>Now what could we build if I were on your team?</h2>
+        <p class="cta"><strong><a href="mailto:asolove+career@gmail.com">Send me an email and let's talk already!</a></strong></p>
+      </header>
   </body>
 </html>

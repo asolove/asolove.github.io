@@ -7,7 +7,7 @@ categories: js flow type
 
 (Inspired by reading [Julia Evans’ blog](http://jvns.ca) for the past few months, I’m going to try posting about the things I don’t know very well and my own attempts to learn more about them.)
 
-Today I want to talk about a data modeling problem where I often disliked the solution I used in ORM-based web apps, and how I'm representing that data using ADTs checked by Flow in a way that seems to work better.
+Today I want to talk about a data modeling problem where I often disliked the solution I used in ORM-based web apps, the related-bag-of-attributes problem. And I'll walk through one solution, doing case analysis and modeling the data as an abstract data type. And I'll show a little of the details of doing this in JavaScript, building and type-checking the use of ADTs using [Flow.js](http://flowtype.org).
 
 ## The bag-of-attributes problem
 
@@ -41,11 +41,25 @@ And it was thinking about that problem that reminded me of Yaron Minsky’s grea
 
 I remember watching that talk several years ago and thinking “Well that’s great but I’m never going to get paid to write ML, so whatevs” (Groan. Wish I had stuck with any of the ten times I tried to get into ML or Haskell before.) 
 
-But, as yet another demonstration that nothing exists until it exists in JavaScript, almost everything described in that OCaml talk is doable right now with Flow and JavaScript. (And not by accident. Flow is written in OCaml. Presumably its authors have experience with the patterns Yaron mentions and more.)
-
 ## Reshaping the data to ADTs in Flow
 
-In the book pricing example, we could create different types to model each way of pricing a book. Each type has the data it needs plus a string that tags which type of thing it is. The string tagging the type is necessary because the Flow types only exist at type checking time. In the actual code that branches by which type of pricing we have, you need some way to test it. By providing the type strings, Flow can also be smart about checking whether your branching code has handled all the possible cases. (The Flow docs about [Tagged Unions](http://flowtype.org/docs/dynamic-type-tests.html#tagged-unions) show a good example of this.)
+But, as yet another demonstration that nothing exists until it exists in JavaScript, almost everything described in that OCaml talk is doable right now with Flow and JavaScript. (And not by accident. Flow is written in OCaml. Presumably its authors have experience with the patterns Yaron mentions and more.)
+
+Flow provides an extra syntax on top of JavaScript for providing type annotations, plus a very smart type checker that can analyze the code for potential problems.
+
+Here's a small example from the Flow home page:
+
+```js
+// @flow
+function bar(x: string, y: number): string {
+    return x.length * y;
+}
+bar('Hello', 42); // Flow type checking would fail, saying you can't multiply a number and string
+```
+
+But Flow provides a lot more power than just testing basic types. IMO the most important feature is ["tagged unions"](http://flowtype.org/docs/dynamic-type-tests.html#tagged-unions), which let you create and compose data as powerfully as ADTs in ML and Haskell, but with plain JavaScript objects that can be serialized to json.
+
+In the book pricing example, we could create different types to model each way of pricing a book. Each type has the data it needs plus a string that tags which case it is:
 
 ```js
 type ManualPricing = { type: ‘manual’, price: number };
@@ -53,6 +67,8 @@ type PagesPricing = { type: ‘pages’, pages: number, price_per_page: number }
 type DiscountPricing = { type: ‘discount’, percent: number, basePricing: Pricing };
 type MarkupPricing = { type: ‘markup’, amount: number, basePricing: Pricing };
 ```
+
+The string tags for each case are necessary because the Flow types only exist at type checking time. In the runtime code that branches by which type of pricing we have, you need some way to test it. By providing the type strings, Flow can also be smart about checking whether your branching code has handled all the possible cases. (The Flow docs about [Tagged Unions](http://flowtype.org/docs/dynamic-type-tests.html#tagged-unions) show a good example of this.)
 
 So these are all the different cases. And we can create a single type that is just the union of all these, meaning that a Pricing can be any of them:
 
@@ -62,7 +78,7 @@ type Pricing = ManualPricing | PagesPricing | DiscountPricing | MarkupPricing;
 
 The discount and markup prices take a nested Pricing that they are applied on top of. So you can apply a discount or markup to any other pricing that you have, and the order of nesting of the data structures makes clear in which order they get applied.
 
-And writing the implementation is pretty easy:
+And writing the implementation of calculating the price is obvious:
 
 ```js
 function price(pricing: Pricing): number {

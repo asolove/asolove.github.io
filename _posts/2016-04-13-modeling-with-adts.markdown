@@ -7,15 +7,11 @@ categories: js flow type
 
 (Inspired by reading [Julia Evans’ blog](http://jvns.ca) for the past few months, I’m going to try posting about the things I don’t know very well and my own attempts to learn more about them.)
 
-Two things I don’t know a lot about are: distributed systems and static typing. So needless to say my current work project involves both and there’s been some learning curve. Today I want to talk about one small corner of that work, modeling messy business data with ADTs, and the mechanics of how Flow can make it cleaner.
+Today I want to talk about a data modeling problem where I often disliked the solution I used in ORM-based web apps, and how I'm representing that data using ADTs checked by Flow in a way that seems to work better.
 
 ## The bag-of-attributes problem
 
-Most of the systems I’ve built have had a single database as the source of truth, with object-oriented models to provide a nice interface and guarantee invariants, and an ORM sitting between them. While this approach has its downsides (one specific example shortly), there’s a good body of practice about how to model different types of problems and do specific technical things like validation, data migration, and optimization.
-
-But now I’m working on a system with several sources of data, several running applications, and aspirations to have more of both. And I’m trying to build some shared logic that can work across environments or with different sources of data. This is new and scary territory to me and I’ve made a bunch of mistakes. 
-
-The first bit of logic I had to write suffered from an antipattern most ORM users will be familiar with: the big bag of attributes problem. You can tell you have this antipattern when a table has many nullable attributes, but some of them are related to others in ways the schema can’t express. Like: all of these are nullable, but exactly one of them must be populated, or if this one is populated, this one also has to be.
+I recently had to write some logic that suffered from an antipattern most ORM users will be familiar with: the big bag of attributes problem. You can tell you have this antipattern when a table has many nullable attributes, but some of them are related to others in ways the schema can’t express. Like: all of these are nullable, but exactly one of them must be populated. Or if this one is populated, this one also has to be. Factories and validations can help with this, but at the end of the day I usually ended up with a model with a bunch of attributes, a bunch of random `is_case_a?` helper methods, and one big ugly handler.
 
 Here’s a simple example of a schema with this issue. Imagine we’re a book shop and we need to store enough data to know how much to charge someone for a book. We have a big bag of attributes related to pricing in the books table:
 
@@ -35,9 +31,11 @@ But persisting data in that shape (a recursive tree with different types at each
 
 Instead, you flatten it into one table with a bunch of optional attributes and use factories and methods to guarantee invariants about which attributes have to appear together. And you write one very-well unit-tested method to do the calculation in the exact right order and hope you don’t have to touch it for a while.
 
-## The challenge
+## The background
 
-But now I had this problem plus one more: I needed to have the shared logic work in different applications and ideally give the developers of those applications (e.g. probably me in a few months) an easy way to feel sure they were passing in the right data, or that changes they had made to the data wouldn’t break the shared logic.
+Most of the systems I’ve built have had a single database as the source of truth, with object-oriented models to provide a nice interface and guarantee invariants, and an ORM sitting between them. While this approach has its downsides (one specific example shortly), there’s a good body of practice about how to model different types of problems and do specific technical things like validation, data migration, and optimization.
+
+But now I’m working on a system with several sources of data, several running applications, and aspirations to have more of both. And I’m trying to build some shared logic that can work across environments or with different sources of data. This is new and scary territory to me and I’ve made a bunch of mistakes. 
 
 And it was thinking about that problem that reminded me of Yaron Minsky’s great talk [Effective Ocaml](https://vimeo.com/14313378), which has several pieces of advice about modeling problems in a way that makes it possible for the type system to check that the data makes sense and even to make it more obvious what the code should do with the data. The use of ADTs, pattern matching, and exhaustiveness checking stood out to me as really useful. I have have a problem where I want to add a new case to some data, and it would be amazing if the type checker could not just tell me what I’ve broken, but actively guide me to all the code I will need to touch to make sure my new case is handled everywhere.
 
@@ -85,7 +83,12 @@ function price(pricing: Pricing): number {
 }
 ```
 
-What does this get us? Well, a few things. First, each case is super simple and obvious to implement. Second, Flow will enforce that if someone passes us a Pricing object it has to be one of those types and has to have all the data that type needs to do its job. Third, if we ever add a new pricing strategy to the data types, Flow will tell us this code no longer typechecks (since we've ignored a possible type of Pricing), and guide us to implement it here. Fourth, the code has a nice algebraic completeness to it. It is generic and naturally allows us to do things we didn't even deliberately try to put into it, like being able to apply discounts on top of a markup or the other way around.
+What does this get us? Well, a few things:
+
+1. Each case is super simple and obvious to implement.
+2. Flow will enforce that if someone passes us a Pricing object it has to be one of those types and has to have all the data that type needs to do its job.
+3. If we ever add a new pricing strategy to the data types, Flow will tell us this code no longer typechecks (since we've ignored a possible type of Pricing), and guide us to implement it here.
+4. The code has a nice algebraic completeness to it. It is generic and naturally allows us to do things we didn't even deliberately try to put into it, like being able to apply discounts on top of a markup or the other way around.
 
 Now an application with the original data schema can easily create objects of these types, nested in the order they want. If their business logic says always interpret the books table’s discount as coming after the markup, that’s fine. But if later on they want to send us markups on top of discounts, they can do that and it’ll work fine, because these types are explicit and the code itself is naturally generic.
 

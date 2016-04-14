@@ -31,7 +31,7 @@ Although it looks crazy now, this example could easily have happened entirely th
 
 Now, no one would think an object like this looks like good OOP design. A proper design might instead have a single PricingStrategy interface with several implementations, some of them recursively using other strategies: like `PricePerPageStrategy(pages, price_per_page)` and `DiscountPriceStrategy(discount, pricing_strategy)`.
 
-But persisting data in that shape (a recursive tree with different types at each node) is not particularly easy with an ORM. You could do it with STI, but it wouldn’t be fun, and making it performant (with nested sets: https://en.wikipedia.org/wiki/Nested_set_model) would be a pain. So while you might model business data that is inherently a tree (like reporting relationships) this way, you wouldn’t want to use it for every bit of data that happens to have alternate, recursive strategies.
+But persisting data in that shape (a recursive tree with different types at each node) is not particularly easy with an ORM. You could do it with STI, but it wouldn’t be fun, and making it performant (with [nested sets](https://en.wikipedia.org/wiki/Nested_set_model)?) would be a pain. So while you might model business data that is inherently a tree (like reporting relationships) this way, you wouldn’t want to use it for every bit of data that happens to have alternate, recursive strategies.
 
 Instead, you flatten it into one table with a bunch of optional attributes and use factories and methods to guarantee invariants about which attributes have to appear together. And you write one very-well unit-tested method to do the calculation in the exact right order and hope you don’t have to touch it for a while.
 
@@ -62,9 +62,32 @@ So these are all the different cases. And we can create a single type that is ju
 type Pricing = ManualPricing | PagesPricing | DiscountPricing | MarkupPricing;
 ```
 
-The discount and markup prices take a nested Pricing that they are applied on top of. So you can apply a discount or markup to any other pricing that you have, and the order of nesting of the data structures makes clear in which order they get applied. 
+The discount and markup prices take a nested Pricing that they are applied on top of. So you can apply a discount or markup to any other pricing that you have, and the order of nesting of the data structures makes clear in which order they get applied.
 
-Now someone who has the original data schema can easily create objects of these types, nested in the order they want. If their business logic says always interpret the books table’s discount as coming after the markup, that’s fine. But if later on they want to send us markups on top of discounts, they can do that and it’ll work fine, because these types are explicit and the code itself is naturally generic.
+And writing the implementation is pretty easy:
+
+```js
+function price(pricing: Pricing): number {
+  if (pricing.type === 'manual') {
+    return pricing.price;
+  } else if (pricing.type === 'pages') {
+    return pricing.pages * pricing.price_per_page;
+  } else if (pricing.type === 'discount') {
+    return price(pricing.basePricing) * (1-pricing.percent);
+  } else if (pricing.type === 'markup') {
+    return price(pricing.basePricing) + pricing.amount;
+  } else {
+    // NB: this else case is required for the code to type check.
+    // It seems crazy/invalid. But there's an interesting reason.
+    // Come back for the next post where I'll try to learn why.
+    return pricing;
+  }
+}
+```
+
+What does this get us? Well, a few things. First, each case is super simple and obvious to implement. Second, Flow will enforce that if someone passes us a Pricing object it has to be one of those types and has to have all the data that type needs to do its job. Third, if we ever add a new pricing strategy to the data types, Flow will tell us this code no longer typechecks (since we've ignored a possible type of Pricing), and guide us to implement it here. Fourth, the code has a nice algebraic completeness to it. It is generic and naturally allows us to do things we didn't even deliberately try to put into it, like being able to apply discounts on top of a markup or the other way around.
+
+Now an application with the original data schema can easily create objects of these types, nested in the order they want. If their business logic says always interpret the books table’s discount as coming after the markup, that’s fine. But if later on they want to send us markups on top of discounts, they can do that and it’ll work fine, because these types are explicit and the code itself is naturally generic.
 
 So ADTs are very useful at representing data that might turn into the bag of attributes/nested strategies antipattern in an ORM-based system.
 

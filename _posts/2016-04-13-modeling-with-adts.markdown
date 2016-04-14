@@ -89,6 +89,7 @@ What does this get us? Well, a few things:
 2. Flow will enforce that if someone passes us a Pricing object it has to be one of those types and has to have all the data that type needs to do its job.
 3. If we ever add a new pricing strategy to the data types, Flow will tell us this code no longer typechecks (since we've ignored a possible type of Pricing), and guide us to implement it here.
 4. The code has a nice algebraic completeness to it. It is generic and naturally allows us to do things we didn't even deliberately try to put into it, like being able to apply discounts on top of a markup or the other way around.
+5. Even though Flow knows about the types of these objects and can enforce useful things about them, they're ultimately just json-serializable plain objects with properties. So we can send them over the wire, even through intermediaries that know nothing about the ADTs, and they arrive in a way that can benefit from Flow's analysis in another codebase.
 
 Now an application with the original data schema can easily create objects of these types, nested in the order they want. If their business logic says always interpret the books table’s discount as coming after the markup, that’s fine. But if later on they want to send us markups on top of discounts, they can do that and it’ll work fine, because these types are explicit and the code itself is naturally generic.
 

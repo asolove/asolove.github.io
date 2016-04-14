@@ -7,7 +7,7 @@ categories: js flow type
 
 (Inspired by reading [Julia Evans’ blog](http://jvns.ca) for the past few months, I’m going to try posting about the things I don’t know very well and my own attempts to learn more about them.)
 
-Today I want to talk about a data modeling problem where I often disliked the solution I used in ORM-based web apps, the related-bag-of-attributes problem. And I'll walk through one solution, doing case analysis and modeling the data as an abstract data type. And I'll show a little of the details of doing this in JavaScript, building and type-checking the use of ADTs using [Flow.js](http://flowtype.org).
+Today I want to talk about a data modeling problem where I often disliked the solution I used in ORM-based web apps, the related-bag-of-attributes problem. And I'll walk through one solution, doing case analysis and modeling the data as an algebraic data type. And I'll show a little of the details of doing this in JavaScript, building and type-checking the use of ADTs using [Flow.js](http://flowtype.org).
 
 ## The bag-of-attributes problem
 

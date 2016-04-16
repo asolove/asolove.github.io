@@ -15,13 +15,15 @@ One of the benefits of ADTs and type checkers is "exhaustiveness checking": auto
 
 I first learned about this from Yaron Minsky's advice "Code for exhaustiveness" in his talk Effective ML. It's worth a few minutes to watch that section:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/DM2hEBwEWPc?t=28m30s" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DM2hEBwEWPc?start=1710" frameborder="0" allowfullscreen></iframe>
+
+Summarizing his advice: Write your code in such a way that, if you add extra cases to the data later, you are sure the type checker will force you to consider whether those cases should be handled differently in any code that introspects on that data.
 
 I've written and thought about if statements for some huge number of hours in my life. But the idea he presents here still blows my mind. I know all about patterns for writing easily-refactorable code in object-oriented languages, but I had always thought of functional programming as something static and just correct or incorrect when written. The idea that I could write my types and case analysis today in a way that lets me use the type system as a refactoring tool when business requirements change later was really interesting.
 
 # Checking in Flow
 
-I'll start by transcribing the example from the video into JavaScript. The types involved look something like this:
+To see how this works in Flow, I'll start by transcribing the example from the video into JavaScript. The types involved look something like this:
 
 ```js
 type Order = { type: 'order', id: number }
@@ -68,50 +70,48 @@ At this point, stymied by my experiments, I turned to the #flowtype IRC channel 
 
 Before I present the hack, let's back up and describe the problem we have. We want some way to take the code above, and make it type check now, by returning a value that type-checks against number even if we fall through the cases in the current code. But we want that value to no longer type-check against number if we ever add new cases to `Action` that aren't explicitly checked for in the `if` and `else if`.
 
-The Flow docs have a whole page on [Dynamic type tests](http://flowtype.org/docs/dynamic-type-tests.html) that shows how Flow analyzes programs like this. The variable `action` may start out with the type `Action`, but when flow sees that one branch of an `if` statement checks that the variable is one specific type of `Action`, it's smart enough to realize it must be that type within the code in that branch. It also knows that means the uses of `action` later on in other branches of this if statement will not have that type of `Action`. Let's annotate the code with what I think Flow knows:
+The Flow docs have a whole page on [Dynamic type tests](http://flowtype.org/docs/dynamic-type-tests.html) that shows how Flow analyzes programs like this. The variable `action` may start out with the type `Action`, but flow can look at the type checks in the code and "refine" that type to be more specific based on them.
+
+To illustrate this, I'll annotate how I think Flow is refining types based on its analysis of the program:
 
 ```js
 function positionChange(action: Action): number {
   // action is of type Action, one of (Exec, Order, Cancel)
   if(action.type === 'exec') {
     // action is of type Exec
-    const dir = (action.dir === 'buy' ? 1 : -1);
-    return dir * action.quantity;
-  } // in any later else case of this if, action cannot be an Exec
+  } // Exec is handled, so in any later case of this if, action cannot be an Exec
   else if (action.type === 'order' || action.type === 'cancel') {
     // action is either cancel or order
-    return 0;
   }
 }
 ```
 
-So this is how Flow sees the program. Flow also doesn't realize we logically can't fall through both the `if` and the `else if`. That raises the question: if we added an `else` clause after the current `if`/`else if`, what type would `action` have? It started out as an `Action`, but we've now refined it to subtract the possibility of it being `Exec`, `Order`, or `Cancel`. If it can't be any of those three variants, what type does it have?
+Even though it seems to have enough information, Flow doesn't realize we logically can't fall through both the `if` and the `else if`. That raises the question: if we added an `else` clause after the current `if`/`else if`, what type would `action` have? It started out as an `Action`, but we've now refined it to subtract the possibility of it being `Exec`, `Order`, or `Cancel`. If it can't be any of those three variants, what type does it have?
 
-The answer is : `any`. `Any` is the magic type that every possible JS value can have. It is both the super and sub-type of every other type. It appears that if you refine all the cases off of a type, it curls up and becomes an `any`.
+The answer is : `any`, the unsafe magic type that every possible JS value can have. Any type can be matched to an `any`. And it appears that if you refine away all the possible cases of a variant, it curls up and defaults to `any`.
 
-And this turns out to be incredibly useful for our problem. Since `any` checks against any other type, Flow will happily accept it as a number to be returned from our function:
+While confusing, this turns out to be incredibly useful for our problem. Since `any` checks against any other type, Flow will happily accept it as a number to be returned from our function:
 
 ```js
 function positionChange(action: Action): number {
-  // action is of type Action, one of (Exec, Order, Cancel)
   if(action.type === 'exec') {
-    // action is of type Exec
     const dir = (action.dir === 'buy' ? 1 : -1);
     return dir * action.quantity;
-  } // in any later else case of this if, action cannot be an Exec
-  else if (action.type === 'order' || action.type === 'cancel') {
-    // action is either cancel or order
+  } else if (action.type === 'order' || action.type === 'cancel') {
     return 0;
   } else {
-    // action is of type any
     return action;
   }
 }
 ```
 
-Even though this case will never be reached in running code, it allows the function to type check. And, because `action` only has type `any` because we have specifically checked for the other three cases, if we ever add another type of action, this function will no longer type check. For example, if we added `Correction` as a variant of `Action`, the use of `action` in the `else` case would still have a possible refinement to `Correction`, so it would not be of type `any`, would not match `number`, and Flow would tell us we needed to explicitly check that case.
+Even though this case will never be reached in running code, it allows the function to type check by always returning something matching number.
 
-Now, this technique has some limitations. For one, it only works if the return value of the function is different from the actual type you're doing case analysis on. If you want to return the same type, the final `else` case would continue to type-check even if you added new cases. Bummer.
+Now, `action` only matches number (with type `any`) because we have specifically checked for the other three cases. So if we ever add another type of action, this function will no longer type check. For example, if we added `Correction` as a variant of `Action`, the use of `action` in the `else` case would still have a possible refinement to `Correction`, so it would not be of type `any`, would not match `number`, and Flow would tell us we needed to explicitly check that case.
+
+It's a bit ugly, and anyone reading the code will be surprised and heavily inclined to remove it.
+
+Now, this technique has some limitations. For one, it only works if the return value of the function is different from the actual type you're doing case analysis on. If you want to return the same type, the final `else` case would continue to type-check even if you added new, unhandled cases. Bummer.
 
 So there you go, a crazy hack that lets you get exhaustiveness checking in Flow. Thanks to @marudor for this hack and the Flow devs for all their awesome work. There are already discussions in progress about modifications to variants that would get rid of the need for this hack, so hopefully it will be unnecessary soon.
 

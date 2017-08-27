@@ -88,9 +88,9 @@ function positionChange(action: Action): number {
 
 Even though it seems to have enough information, Flow doesn't realize we logically can't fall through both the `if` and the `else if`. That raises the question: if we added an `else` clause after the current `if`/`else if`, what type would `action` have? It started out as an `Action`, but we've now refined it to subtract the possibility of it being `Exec`, `Order`, or `Cancel`. If it can't be any of those three variants, what type does it have?
 
-The answer is : `any`, the unsafe magic type that every possible JS value can have. Any type can be matched to an `any`. And it appears that if you refine away all the possible cases of a variant, it curls up and defaults to `any`.
+The answer is : `empty`, a special type that means we started out with some other type and now don't have any possible cases left.
 
-While confusing, this turns out to be incredibly useful for our problem. Since `any` checks against any other type, Flow will happily accept it as a number to be returned from our function:
+While confusing, this turns out to be incredibly useful for our problem. We can simply cast the value to `empty` and then throw an exception if we ever make it to this case. The cast to `empty` means the code will fail to type-check if there are cases that haven't been checked. And throwing the exception makes this branch type-check, as it never returns any value at all.
 
 ```js
 function positionChange(action: Action): number {
@@ -100,19 +100,16 @@ function positionChange(action: Action): number {
   } else if (action.type === 'order' || action.type === 'cancel') {
     return 0;
   } else {
-    return action;
+    (action: empty);
+    throw new Error("This can't happen");
   }
 }
 ```
 
-Even though this case will never be reached in running code, it allows the function to type check by always returning something matching number.
+If we ever add another type of action, this function will no longer type check. For example, if we added `Correction` as a variant of `Action`, the use of `action` in the `else` case would still have a possible refinement to `Correction`, so it would not be of type `any`, would not match `number`, and Flow would tell us we needed to explicitly check that case.
 
-Now, `action` only matches number (with type `any`) because we have specifically checked for the other three cases. So if we ever add another type of action, this function will no longer type check. For example, if we added `Correction` as a variant of `Action`, the use of `action` in the `else` case would still have a possible refinement to `Correction`, so it would not be of type `any`, would not match `number`, and Flow would tell us we needed to explicitly check that case.
+It's a bit ugly, and anyone reading the code will be a little surprised, but it works.
 
-It's a bit ugly, and anyone reading the code will be surprised and heavily inclined to remove it.
-
-Now, this technique has some limitations. For one, it only works if the return value of the function is different from the actual type you're doing case analysis on. If you want to return the same type, the final `else` case would continue to type-check even if you added new, unhandled cases. Bummer.
-
-So there you go, a crazy hack that lets you get exhaustiveness checking in Flow. Thanks to @marudor for this hack and the Flow devs for all their awesome work. There are already discussions in progress about modifications to variants that would get rid of the need for this hack, so hopefully it will be unnecessary soon.
+So there you go, a slightly unfortunate workaround that lets you get exhaustiveness checking in Flow. Thanks to @marudor for this hack and the Flow devs for all their awesome work. There are already discussions in progress about modifications to variants that would get rid of the need for this hack, so hopefully it will be unnecessary soon.
 
 

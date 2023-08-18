@@ -20,20 +20,41 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-size: 100%; }
+  font-size: 100%; 
+  margin-bottom: 1em;
+}
 
-h2 { font-size: 120%; } 
+h2 { font-size: 135%; } 
+h3 { font-size: 120%; }
  
 h1 { margin-bottom: 1em; }
 p { margin: 1em 0; }
 
-a         { color: #375; }
-a:hover   { color: #375; }
-a:visited { color: #6b8; }
+a         { color: #132; }
+a:hover   { color: #132; }
+a:visited { color: #375; }
 
 table {
   font-size: inherit;
   font: 100%;
+}
+
+/*****************************************************************************/
+/*
+/* Form stuff
+/*
+/*****************************************************************************/
+
+form.embeddable-buttondown-form {
+  background-color: rgba(50,200,100, 0.5);
+  padding: 1em 1.5em;
+  margin: 1em 0;
+}
+
+input {
+    padding: 3px 5px;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 /*****************************************************************************/
@@ -72,6 +93,15 @@ ul.posts span {
 dl.current-projects {
   font-size: 87%;
   padding-left: 2em;
+}
+
+dt {
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+dd {
+  margin-top: 0.5em;
 }
 
 .current-projects dt {

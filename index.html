@@ -3,49 +3,76 @@ layout: default
 title: "Adam Solove: Document Function Model"
 ---
 
-<div class="col-left">
-
 <h3>About</h3>
 
 <p><strong>I lead teams that build magical web software.</strong> My sharpest weapons are 
   JavaScript, SQL, and the Apple Pencil.</p>
-<p>I am taking a summer sabbatical to contribute to <a href="https://github.com/asolove">open source</a>, go to the pool with my family, and look out for what's next. If you have an interesting problem that I can help solve, please <a href="mailto:asolove@gmail.com">get in touch.</a></p>
 
-<h3>Current projects</h3>
+<p>I am currently head of product @ <a href="https://www.rainforestpay.com/">Rainforest</a>, which helps software platforms integrate payments.</p>
 
-  <p>I'm currently learning <a href="http://facebook.github.io/reason/">Reason</a> and exploring how types and other formal methods can help simplify the complexity that makes UIs so hard to build.</p>
-    
-<h3>Previous projects</h3>
-
-<p>I've studied the history of UI programming and the powerful models behind revolutionary interfaces. From 2012 to 2016 my personal studies centered on constraint programming as a way to build user interfaces that blur the distinction between input and output.</p>
-
-<dl class="current-projects">
-  <dt><a href="https://github.com/asolove/microScopeKanren">MicroScopeKanren</a></dt>
-  <dd>Reimplementing the microKanren constraint solver in JavaScript, then experimenting with ways to visualize how the solver works.</dd>
+<form
+  action="https://buttondown.email/api/emails/embed-subscribe/asolove"
+  method="post"
+  target="popupwindow"
+  onsubmit="window.open('https://buttondown.email/asolove', 'popupwindow')"
+  class="embeddable-buttondown-form"
+>
+  <label for="bd-email">Subscribe to updates</label>
+  <input type="email" name="email" placeholder="email address" id="bd-email" />
   
-  <dt><a href="https://github.com/asolove/Sketchpad">Sketchpad</a></dt>
-  <dd>Recreating Ivan Sutherland's Sketchpad, the 
-    first graphical user interface, in ClojureScript. (Paused because I need to learn more Clojure and math.)</dd>
-    
-  <dt><a href="https://github.com/asolove/scrubbing-budget">Scrubbing budget</a> <span class="in progress"></span></dt>
-  <dd>An experiment in contraint-based user interfaces. This visualization of the US Federal Budget lets you explore questions like: "how much would we have to raise taxes in order to increase education spending?" or "how much could we cut the deficit by raising the retirement age for social security?"</dd>
+  <input type="submit" value="Subscribe" />
+  <p>
+    <a href="https://buttondown.email/refer/asolove" target="_blank">Powered by Buttondown.</a>
+  </p>
+</form>
 
-  <dt><a href="https://github.com/asolove/scrubbing-linear-calculator">Scrubbing linear calculator</a></dt>
-  <dd>Creating a small part of Bret Victor's scrubbing calculator with a linear constraint solver.</dl>
-</div>
+<h3>Projects</h3>
 
-<div class="col-right">
-  <h1>Newer posts on <a href="https://medium.com/@asolove">Medium</a></h1>
-  <ul class="posts">
-    <li><a href="https://medium.com/@asolove/what-are-the-important-problems-in-ui-engineering-8b7f8b305611">What are the important problems in UI engineering?</a> <span>20 April 2017</span></li>
-    <li><a href="https://medium.com/@asolove/preact-in-pictures-2007ebbae54c">Preact in pictures</a> <span>18 April 2017</span></li>
-    <li><a href="https://medium.com/@asolove/the-new-fast-advanced-web-performance-best-practices-for-2017-28d1684414e0">The new fast: advanced web performance best practices for 2017</a> <span>17 April 2017</span></li>
-  </ul>
-    
-  <h1>Older blog posts</h1>
-  <ul class="posts">
-    {% for post in site.posts %}
-      <li><a href="{{ post.url }}">{{ post.title }}</a> <span>{{ post.date | date_to_string }}</span></li>
-    {% endfor %}
-  </ul>
-</div>
+<dl>
+  <dt>Payments, especially embeddable UIs</dt>
+  <dd>
+    Since 2017, my primary professional work has been in building embedded UIs for payments, at <a href="stripe.com">Stripe</a> and now <a href="rainforestpay.com">Rainforest</a>.
+    At Stripe, I was a contributor to 
+      <a href="https://stripe.com/payments/elements">Elements</a>, 
+      <a href="https://stripe.com/payments/checkout">Checkout</a>,
+      <a href="https://stripe.com/blog/payment-api-design">the PaymentIntent API</a>,
+      <a href="https://stripe.com/blog/european-payment-methods-available-worldwide">new payment methods</a>,
+      <a href="https://stripe.com/guides/strong-customer-authentication">PSD2/SCA/3DS2</a>, and the
+      <a href="https://twitter.com/edwinwee/status/1141245532255313920">emoji collection</a>.
+    I also contributed to the W3C's <a href="https://www.w3.org/2018/04/19-wpwg-minutes">Web Payments Working Group</a> and the <a href="https://www.emvco.com/emv-technologies/3-d-secure/">EMVCo 3DS specification committee</a>,
+    eventually serving as <a href="https://github.com/w3c/3ds/issues/2">a translator between them</a> to convince them to <a href="https://www.emvco.com/wp-content/uploads/news/EMVCo-FIDO-Alliance-W3C-Interest-Group-release_FINAL-website-version.pdf">actually work together</a>.
+  </dd>
+
+  <dt>Public good and open source projects</dt>
+  <dd><strong>Education</strong>: <a href="https://pyret.org/index.html">Pyret</a> is an in-browser programming language and environment for use in the <a href="https://www.bootstrapworld.org/blog/index.shtml">Bootstrap curriciulum</a>, 
+    which is built by some wonderful folks who are experts at both pedagogy and programming language design. In 2020 and 21, I spent a lot of time <a href="https://pyret.org/release-notes/summer-2021.html">updating their IDE</a> to be shinier, faster, and easier to use.</dd>
+  <dd><strong><a href="https://www.youtube.com/watch?v=BdwLczSgvcc">Federated Wiki</a></strong> is a new, personal version of the wiki being developed by Ward Cunningham. In 2011, I collaborated with him to design and build the <a href="https://vimeo.com/32051583#">core UI paradigm</a> that still powers it today.</a></dd>
+
+
+  <dt>UI programming models</dt>
+  <dd><a href="https://asolove.medium.com/pure-ui-control-ac8d1be97a8d">Pure UI Control</a>: an essay on why and how to build UIs with state machines.</dd>
+  <dd><a href="https://asolove.medium.com/what-are-the-important-problems-in-ui-engineering-8b7f8b305611">What are the important problems in UI engineering?</a></dd>
+  <dd><strong>Concurrent ML as a model for UI programming:</strong> 
+      <a href="https://asolove.medium.com/synchronizable-abstractions-for-understandable-concurrency-64ae57cd61d1">Synchronizable abstractions for understandable concurrency</a>
+      and <a href="https://asolove.medium.com/concurrent-ml-has-a-branding-problem-ce0286eab598">Concurrent ML has a branding problem</a>
+  <dd><strong>Constraint programming</strong>: <a href="https://www.adamsolove.com/js/2013/10/15/constraint-programming-in-the-browser.html">2013 JS Conf talk</a> and a short essay on
+    <a href="https://www.adamsolove.com/js/ui/2013/05/17/inspired-by-sketchpad.html">Being inspired by Sketchpad</a> and its constraint-oriented UI.</dd>
+  </dd>
+
+  <dt>Web UI engineering</dt>
+  <dd><strong>Preact:</strong>
+    <a href="https://asolove.medium.com/preact-in-pictures-2007ebbae54c">Preact in Pictures</a> is a talk that explains the core virtual dom diffing algorithm.
+    The Preact Internals series discusses <a href="https://asolove.medium.com/preact-internals-1-the-easy-parts-3a081fa36205">helpers</a>,
+      <a href="https://asolove.medium.com/preact-internals-2-the-component-model-36a05e32957b">the component model</a>, and
+      <a href="https://asolove.medium.com/preact-internals-3-some-fiddly-little-bits-f353b1ad7abc">DOM diffing</a>.
+  </dd>
+  <dd><strong>Types:</strong> I spent much of 2017 thinking about how types can help UI programming. I wrote up some now-old advice on
+    <a href="https://www.adamsolove.com/js/flow/type/2016/04/13/modeling-with-adts.html">Modeling with ADTs</a> and
+    <a href="https://www.adamsolove.com/js/flow/type/2016/04/15/flow-exhaustiveness.html">Exhaustiveness checking in Flow</a>. I also spend hundreds of hours cleaning up the Flow.js issue tracker and providing regression testing on new releases, before eventually giving up.
+  </dd>
+  <dd><strong><a href="https://asolove.medium.com/the-new-fast-advanced-web-performance-best-practices-for-2017-28d1684414e0">The new fast</a></strong> was a talk on web performance techniques that were fairly new in 2017 thanks to new browser standards.</dd>
+  <dd><strong>React/Om</strong>: I was an early adopter and (slight) contributor to React and Om, a ClojureScript wrapper for it. 
+      2014 talk on <a href="https://www.adamsolove.com/js/clojure/2014/05/08/react-js-and-om.html">React + Om</a> (a ClojureScript wrapper for React)</dd>
+      and a 2014 <a href="https://www.adamsolove.com/js/clojure/2014/01/06/om-experience-report.html">experience report on working with Om</a>.
+</dl>
+

@@ -1,0 +1,13 @@
+# Adam's personal site
+
+## How it works
+
+For local development, you need [Jekyll](https://jekyllrb.com/docs/installation/macos/):
+
+- basic developer setup (make, gcc, g++)
+- ruby: >2.5 and rubygems
+- `gem install jekyll`
+
+Then you can [build the site locally](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll):
+
+- `jekyll serve`

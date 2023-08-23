@@ -1,0 +1,28 @@
+---
+layout: default
+title: "Adam Solove: Blog"
+---
+
+<section>
+    <div>
+        <h1>Blog</h1>
+    </div>
+</section>
+<section>
+    <div>
+        <h2>Elsewhere</h2>
+        <div>
+            <p>More posts <a href="https://medium.com/@asolove">on Medium</a></p>
+        </div>
+    </div>
+</section>
+<section>
+    <div>
+        <h2>On this site</h2>
+        <ul class="posts">
+        {% for post in site.posts %}
+            <li><a href="{{ post.url }}">{{ post.title }}</a> <span>{{ post.date | date_to_string }}</span></li>
+        {% endfor %}
+        </ul>
+    </div>
+</section>

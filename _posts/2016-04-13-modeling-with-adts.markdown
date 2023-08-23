@@ -111,11 +111,11 @@ Now an application with the original data schema can easily create objects of th
 
 So ADTs are very useful at representing data that might turn into the bag of attributes/nested strategies antipattern in an ORM-based system.
 
-# More to learn
+## More to learn
 
 But there are a lot of things I still need to figure out:
 
-1. Is it useful to try to typecheck across distributed applications? It would be great if I could add a new case to the data in one place and be told all the other places elsewhere that needed to be updated to handle it. (I think the Erlang community with its type checker, Dialyzer, would be a good place to learn more about the benefits and limitations here.) Or should I instead use the types as contracts (there’s a way to do this with Flow type declarations: https://github.com/seanhess/runtime-types) to just check that things are sane at runtime?
+1. Is it useful to try to typecheck across distributed applications? It would be great if I could add a new case to the data in one place and be told all the other places elsewhere that needed to be updated to handle it. (I think the Erlang community with its type checker, Dialyzer, would be a good place to learn more about the benefits and limitations here.) Or should I instead use the types as contracts ([there’s a way to do this with Flow type declarations](https://github.com/seanhess/runtime-types)) to just check that things are sane at runtime?
 
 2. Flow itself has some interesting corner cases or limitations and I would love to understand more about how it works. I evenly mistakenly referred to a few known limitations as bugs on Twitter and GitHub Issues. Sorry, Flow team! Turns out static analysis is really hard even in cases where it’s easy for a human. I want to write a longer post later about the way Flow handles exhaustiveness checking for union types, which has a couple tricky issues and a not documented workaround.
 

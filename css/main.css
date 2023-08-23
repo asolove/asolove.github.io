@@ -1,239 +1,261 @@
-/*****************************************************************************/
-/*
-/* Common
-/*
-/*****************************************************************************/
+html {
+  font-family: 'IBM Plex Serif', georgia, serif;
+  line-height: 1.4em;
+  color: black;
+}
 
-/* Global Reset */
+
 * {
   margin: 0;
   padding: 0;
+  font-size: 100%;
+  font-weight: normal;
+}
+strong {
+  font-weight: 600;
 }
 
-html, body { height: 100%; }
-
-body {
-  background-color: #fff4e9;
-  font-family: "Fira Sans", helvetica, sans-serif;
-  text-align: left;
-  color: #333;
+header, footer {
+  background: rgba(200,100,200, 0.1);
+}
+header, section, footer {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+header > div, section > div, footer > div {
+  display: flow-root;
+  max-width: 800px;
+  margin:0px auto;
+  padding: 2em;
+}
+h2 {
+  margin-bottom: 1.4em;
+}
+div > h2::before,
+h2.logo::before {
+  content: " ";
+  display: block;
+  width: 20px;
+  background-color: rgba(200,100,200, 0.4);
+  height: 3px;
+  margin-top: -5px;
+  margin-bottom: 3px;
+}
+h2.logo::before {
+  background: purple;
+  height: 1.4em;
+  margin-top: 0;
+  margin-bottom: 1.4em;
+}
+header > div > * {
+  display: block;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-size: 100%; 
-  margin-bottom: 1em;
+form.subscribe {
+  float: right;
+  clear: right;
+  width: 120px;
+  text-align: right;
+  padding: 0;
+  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
 }
-
-h2 { font-size: 135%; } 
-h3 { font-size: 120%; }
- 
-h1 { margin-bottom: 1em; }
-p { margin: 1em 0; }
-
-a         { color: #132; }
-a:hover   { color: #132; }
-a:visited { color: #375; }
-
-table {
-  font-size: inherit;
-  font: 100%;
+form.subscribe strong {
+  font-weight: normal;
+  display: block;
+  font-size: 90%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-
-/*****************************************************************************/
-/*
-/* Form stuff
-/*
-/*****************************************************************************/
-
-form.embeddable-buttondown-form {
-  background-color: rgba(50,200,100, 0.5);
-  padding: 1em 1.5em;
-  margin: 1em 0;
+form.subscribe a {
+  display: block;
 }
-
+form.subscribe input {
+  display: inline-block;
+}
+form.subscribe input[type=email] {
+  height: 1.4em;
+  padding: 4px;
+}
+form.subscribe input[type=submit] {
+  width: 40px;
+}
+header p {
+  margin-top: 2.8em;
+}
 input {
-  padding: 3px 5px;
   font-family: inherit;
   font-size: inherit;
 }
 
-/*****************************************************************************/
-/*
-/* Home
-/*
-/*****************************************************************************/
-ul.posts {
-  list-style-type: none;
-  margin-bottom: 2em;
+
+h2.logo {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  font-size: 1em;
+  color: black !important;
+}
+
+div > h2, h2.logo, nav {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 90%;
+  color: gray;
+}
+nav a {
+  display: inline-block;
+  padding-right: 1.4em;
+}
+
+h1 {
+  font-size: 2em;
+  line-height: 1.4em;
+  font-weight: 900;
+}
+h1 + p {
+  padding-top: .7em;
+  font-size: 120%;
+  font-style: italic;
+}
+
+h1, div > h2, h2.logo, nav, dt, input {
+  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
+}
+
+ul, ol {
+  margin-top: 0.6em;
+  margin-bottom: 0.8em;
+  margin-left: 1.4em;
+}
+
+dl {}
+dt {
+  font-weight: bold;
+}
+* + dt {
+  margin-top:1.4em;
+}
+dd {
+  margin-top: 0.6em;
+}
+dd strong {
+  font-style: italic;
+  font-weight: normal;
+}
+img.right,
+.video.right {
+  float: right;
+  clear: right;
+  width: 150px;
+  margin-left: .7em;
+  box-shadow: 0px 2px 2px rgba(100,50,100, 0.4);
+  border: 1px solid white;
+  border-radius: 2px;
+}
+
+.video.right {
+  height: 94px;
+}
+
+a:link, a:visited {
+  color: purple;
 }
 
 ul.posts li {
-  line-height: 1.2;
-  margin-bottom: 1.2em;
+  margin-bottom: .7em;
 }
 
-ul.posts span {
-  color: #444;
-  font-size: 80%;
+ul.posts li a {
+  font-size: 1.2em;
+  font-style: italic;
 }
 
-
-.col-left {
-  width: 68%;
-  float:left;
-  margin-bottom: 2em;
+ul.posts li span {
+  display: block;
+  color: gray;
 }
 
-.col-right {
-  width: 30%;
-  float: right;
-  margin-bottom: 2em;
-}
-
-dl.current-projects {
-  font-size: 87%;
-  padding-left: 2em;
-}
-
-dt {
-  font-weight: bold;
-  margin-top: 1em;
-}
-
-dd {
-  margin-top: 0.5em;
-}
-
-.current-projects dt {
-  font-weight: bold;
-}
-.current-projects dd {
-  margin-bottom: 1em;
-}
-/*****************************************************************************/
-/*
-/* Site
-/*
-/*****************************************************************************/
-
-.site {
-  font-size: 115%;
-  width: 42em;
-  margin: 3em auto 2em;
-  line-height: 1.5em;
-}
-
-.site .header {
-  border-bottom: 2px solid #eee;
-  margin-bottom: 2em;
-}
-
-.site .header a {
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.site .header h1.title {
-  display: inline-block;
-  margin-bottom: .5em;
-  margin-right: 1em;
-}
-
-.site .header h1.title a {
-  color: #375;
-}
-
-.site .header h1.title a:hover {
-  color: #6b8;
-}
-
-.site .header a.extra {
-  color: #333;
-}
-
-.site .header a.extra:hover {
-  color: #333;
-}
-
-.site .meta {
-  color: #6b8;
-  margin-top: 0.4em;
-}
-
-.site .footer {
-  font-size: 80%;
-  color: #666;
-  border-top: 4px solid #eee;
+article h2 {
+  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
+  font-size: 1.4em;
+  font-weight: 800;
+  line-height: 1em;
   margin-top: 2em;
-  overflow: hidden;
-  clear: both;
+  margin-bottom: .5em;
 }
 
-.site .footer .contact {
-  float: left;
-  margin-right: 3em;
+
+article h3 {
+  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
+  font-size: 1.2em;
+  font-weight: 800;
+  line-height: 1em;
+  margin-top: 1.2em;
+  margin-bottom: .6em;
 }
 
-.site .footer .contact a {
-  color: #375;
+
+article p + p {
+  margin-top: .7em;
 }
 
-.site .footer .rss {
-  margin-top: 1.1em;
-  margin-right: -.2em;
-  float: right;
+article hr {
+  margin-top: .7em;
+  margin-bottom: .7em;
 }
 
-.site .footer .rss img {
-  border: 0;
+@media screen and (min-width: 450px) {
+  h2.logo {
+      margin-bottom: 0;
+  }
+
+  header h2 {
+      float: left;
+      clear: both;
+      width: 150px;
+  }
+  header h2 + * {
+      padding-left:150px;
+      padding-right: 210px;
+  }
 }
 
-/*****************************************************************************/
-/*
-/* Posts
-/*
-/*****************************************************************************/
+@media screen and (min-width: 750px) {
 
-/* standard */
-#post pre {
-  padding: 0 .4em;
+  header > div > h2, section > div > h2, h2.logo section > div > h2, footer > div > h2 {
+      float: left;
+      clear: both;
+      width: 150px;
+  }
+
+
+  header > div > h2 + *,
+  section > div > h2 + * {
+      padding-left:150px;
+      padding-right: 210px;
+  }
+
+  h1, h1+p {
+      padding-left: 150px;
+  }
+
+  img.right, .video.right {
+      margin-left: 1.4em;
+      margin-right: -210px;
+      width: 200px;
+  }
+  .video.right { height: 125px; }
+  form.subscribe {
+      width: 200px;
+      text-align: left;
+  }
+  form.subscribe strong {
+      margin-bottom: 1.5em;
+  }
 }
 
-#post .abstract {
-  font-size: 108%;
-  line-height: 1.5;
-  width: 30em;
-}
-
-#post ul, #post ol {
-  margin-left: 1.35em;
-}
-
-#post code {
-  padding: 0 .2em;
-}
-
-#post pre code {
-  border: none;
-}
-
-/* terminal */
-#post pre.terminal {
-  border: 1px solid #000;
-  background-color: #333;
-  color: #FFF;
-}
-
-#post pre.terminal code {
-  background-color: #333;
-}
-
-blockquote {
-    padding-left: 2em;
-}
-
-hr {
-    background-color: transparent;
-    border-color: transparent;
-    border-bottom: 2px solid #eee;
+pre {
+  margin-top: 1.4em;
+  margin-bottom: 0.7em;
 }

@@ -21,7 +21,7 @@ Summarizing his advice: Write your code in such a way that, if you add extra cas
 
 I've written and thought about if statements for some huge number of hours in my life. But the idea he presents here still blows my mind. I know all about patterns for writing easily-refactorable code in object-oriented languages, but I had always thought of functional programming as something static and just correct or incorrect when written. The idea that I could write my types and case analysis today in a way that lets me use the type system as a refactoring tool when business requirements change later was really interesting.
 
-# Checking in Flow
+## Checking in Flow
 
 To see how this works in Flow, I'll start by transcribing the example from the video into JavaScript. The types involved look something like this:
 

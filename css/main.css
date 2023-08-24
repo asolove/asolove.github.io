@@ -129,6 +129,10 @@ ul, ol {
   margin-left: 1.4em;
 }
 
+code {
+  font-family: "IBM Plex Mono", monospace;
+}
+
 dl {}
 dt {
   font-weight: bold;
@@ -144,7 +148,7 @@ dd strong {
   font-weight: normal;
 }
 img.right,
-.video.right {
+.right {
   float: right;
   clear: right;
   width: 150px;
@@ -240,7 +244,7 @@ article hr {
       padding-left: 150px;
   }
 
-  img.right, .video.right {
+  img.right, .right {
       margin-left: 1.4em;
       margin-right: -210px;
       width: 200px;

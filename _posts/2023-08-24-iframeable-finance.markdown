@@ -36,9 +36,6 @@ _The video isn't out yet, but I'll post here as soon as it's available._
 ## Thanks
 
 I want to repeat what I said in the talk: while I have tried to gather together this information
-and make it easily available to more people, I am not primarily responsible for having learned or
-designed most of the things in this talk.
+and make it easily available to more people, I am not primarily responsible for having learned or designed most of the things in this talk.
 
-A huge thanks to the people who taught me or learned by 
-my site, especially: Alex, Jenan, Michelle, David, and Tyler. You know who you are. I'm just trying
-to pay it forward.
+A huge thanks to the people who taught me or learned together with me, especially: Alex, Jenan, Michelle, David, and Tyler. You know who you are. I'm just trying to pay it forward.

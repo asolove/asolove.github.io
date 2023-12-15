@@ -88,6 +88,9 @@ input {
   font-size: inherit;
 }
 
+header > div > a {
+  text-decoration: none;
+}
 
 h2.logo {
   text-transform: uppercase;

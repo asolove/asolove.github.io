@@ -8,6 +8,6 @@ For local development, you need [Jekyll](https://jekyllrb.com/docs/installation/
 - ruby: >2.5 and rubygems
 - `gem install jekyll`
 
-Then you can [build the site locally](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll):
+Then you can [build the site locally](https://gitdocs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/testing-your-github-pages-site-locally-with-jekyll):
 
 - `jekyll serve`

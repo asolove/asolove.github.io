@@ -28,7 +28,7 @@ diagrams have animations that won't work well statically and really need video t
 
 ## Video
 
-_The video isn't out yet, but I'll post here as soon as it's available._
+<iframe src="https://www.youtube-nocookie.com/embed/KDu7A_LcvgY?si=r8eNbDMvmCIxbCnU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ## Thanks
 

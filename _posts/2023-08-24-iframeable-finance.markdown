@@ -13,14 +13,6 @@ on my experiences contributing to Stripe Elements and then to Rainforest's embed
 I got some great comments and questions afterwords and wanted to start a broader conversation to bring together
 engineers and product people working with `<iframe>`s.
 
-## <iframe> friends community
-
-[Email me](mailto:asolove@gmail.com) if you have questions, topics you'd like to see discussed, or a request for
-review on your proposed new embedded UI.
-
-I'll shortly be sending out further resources based on those questions as well as sharing an invite
-for future group discussions.
-
 ## Slides
 
 [<img class="right" src="/img/iframeable-finance2.jpg"/>You can download the slides as a pdf.](/img/iframeable-finance.pdf) although note that some of the

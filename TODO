@@ -1,4 +1,7 @@
-- [X] Force HTTPS
+- [x] Force HTTPS
 - [ ] Newer headshot
-- [ ] Include Stripe stuff: WPWG, 3DS, Elements/Checkout
+- [x] Include Stripe stuff: WPWG, 3DS, Elements/Checkout
 - [ ] Where/how to write new posts that will show up
+- [ ] Move to Cloudflare and set up cacheing
+  - Inital WPT was mediocre: https://www.webpagetest.org/result/240106_BiDc8Z_7KN/1/experiments/#Quick
+  - Run another WPT to check results

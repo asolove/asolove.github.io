@@ -266,3 +266,21 @@ pre {
   margin-top: 1.4em;
   margin-bottom: 0.7em;
 }
+
+table {
+  font-size: 90%;
+  border-collapse: separate;
+  border-spacing: 10px;
+}
+td, th {
+  vertical-align: top;
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+}
+
+small {
+  font-size: 85%;
+}

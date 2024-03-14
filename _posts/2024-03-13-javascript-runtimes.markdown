@@ -35,6 +35,9 @@ That leaves us with 20 available permutations. Many of them would make quite poo
 | nedo | Pronounce it "Neato!"                                                                                                                     |
 | edno | Pronounce it "Edna" and make this a Simpsons reference to Edna Krabappel and you've got a string brand and a cease-and-desist opportunity |     |
 | doen | Pronounce it "Doin'"                                                                                                                      |
+| edon | As in "Garden of": a fresh perspective where no evil exists (get rid of casts)                                                            |
+| oned | 1d, as in, one-dimensional. A JavaScript-to-wasm runtime where 1d is a joke on linear memory                                              |
+| neod | A daemon runner for elite hackers who are trying to find out the truth about the matrix                                                   |
 
 **Hard-to-use names**
 
@@ -43,16 +46,13 @@ dnoe
 edon
 enod
 eodn
-eond
 ndeo
 ndoe
-neod
 noed
 odne
 oedn
 oend
 onde
-oned
 </small>
 
 **An important point**
@@ -76,5 +76,18 @@ To see that we can expect all 24 permutations to be claimed by 2029:
 ![Graph showing trend line of JS implementations over time. 2009: 1, 2018: 2, 2019: 3. Suggests all 24 runtimes will exist by 2029.](/img/js-runtimes-trend.png)
 
 ---
+
+## If you got this far
+
+You might like some of my more serious writing for JavaScript people:
+
+- [Pure UI Control](https://asolove.medium.com/pure-ui-control-ac8d1be97a8d): an essay about how and why to work in state machines for UI.
+- [Synchronizable abstractions for understandable concurrency](https://asolove.medium.com/synchronizable-abstractions-for-understandable-concurrency-64ae57cd61d1): an explanation of the Concurrent ML primitives for UI programming.
+
+---
+
+## Errata
+
+- Thanks to A. Gupta for correcting several mistakes with regard to names that I had claimed were not usable but which did in fact have good branding potential.
 
 <small>So help me, do not send me emails about this post. I do not want to know your thoughts. If you have corrections, please file them directly to the HN comments section.</small>

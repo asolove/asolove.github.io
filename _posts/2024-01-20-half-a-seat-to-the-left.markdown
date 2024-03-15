@@ -2,7 +2,7 @@
 layout: post
 title: Half a seat to the left
 description: A pattern for organization design
-date: 2024-01-20 11:28:00
+date: 2024-03-13 11:28:00
 categories: people
 ---
 

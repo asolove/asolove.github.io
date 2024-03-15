@@ -81,8 +81,8 @@ To see that we can expect all 24 permutations to be claimed by 2029:
 
 You might like some of my more serious writing for JavaScript people:
 
-- [Pure UI Control](https://asolove.medium.com/pure-ui-control-ac8d1be97a8d): an essay about how and why to work in state machines for UI.
-- [Synchronizable abstractions for understandable concurrency](https://asolove.medium.com/synchronizable-abstractions-for-understandable-concurrency-64ae57cd61d1): an explanation of the Concurrent ML primitives for UI programming.
+- [<iframe>able finance](https://www.adamsolove.com/js/2023/08/24/iframeable-finance.html): a talk on working with iframes and building embedded UI products.
+- [Constraint programming in JavaScript](https://www.adamsolove.com/js/2013/10/15/constraint-programming-in-the-browser.html): a talk on why and how to program using constraint solvers.
 
 ---
 

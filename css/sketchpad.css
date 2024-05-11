@@ -1,0 +1,20 @@
+html {
+  font-size: 100%;
+  line-height: 1.4;
+  font-family: georgia, Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+}
+article {
+  width: 40em;
+  padding-left: 100px;
+  padding-right: 300px;
+}
+
+aside { 
+  float: right;
+  margin-right: -300px;
+  width: 280px;
+}
+
+aside img {
+  max-width: 100%;
+}

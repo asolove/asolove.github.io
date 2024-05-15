@@ -4,7 +4,13 @@ layout: sketchpad
 permalink: /sketchpad/
 ---
 
-# Understanding Sketchpad: why it matters
+# &nbsp;
+
+<hr>
+
+# Understanding<br>Sketchpad:<br>why it matters
+
+## The context
 
 In 1962, you interact with computers by meticulously encoding your program and data on punchcards. You turn them in to your local computer operator, who schedules them for some time in the day. The results of the program are encoded back onto punch cards, which you can pick up the next day.
 
@@ -14,13 +20,21 @@ In 1962, you interact with computers by meticulously encoding your program and d
 
 Unless you're Ivan Sutherland.
 
-He's sitting in front of a computer monitor, drawing diagrams with a pointer, issuing commands with buttons, and seeing the result in real time. When the result isn't exactly what he wants, he can drag things around on the monitor. Or he can add new instructions for the computer by pointing.
+If you're Ivan Sutherland, you sit in front of a computer monitor, draw diagrams with a pointer, issue commands with buttons, and see the results in real time. When the result isn't exactly what he wants, he can drag things around on the monitor. Or he can add new instructions for the computer by pointing.
 
-Ivan Sutherland is living in a future that the rest of the world won't know about for twenty years.
+Ivan Sutherland in 1963 is living in a future that will continue to look futuristic 20, 40, and 60 years later.
+
+So what is he doing?
+
+## The program
 
 The program he's built is called Sketchpad. It introduces, or plants the seeds for, many of the core ideas of contemporary computing: graphical user interfaces, direct manipulation, object-oriented programming, windows and pointers. And it inspires an entire generation to think in a new way about what computers are for:
 
-<blockquote>What [Sketchpad] could do was quite remarkable, and completely foreign to any use of a computer I had ever encountered.<br>&mdash; Alan Kay, <cite><a href="https://worrydream.com/EarlyHistoryOfSmalltalk/">The Early History of Smalltalk</a></cite></blockquote>
+<blockquote>What [Sketchpad] could do was quite remarkable, and completely foreign to any use of a computer I had ever encountered.<br><cite>&mdash; Alan Kay, <a href="https://worrydream.com/EarlyHistoryOfSmalltalk/">The Early History of Smalltalk</a></cite></blockquote>
+
+<br>
+<hr>
+<br>
 
 ## Using Sketchpad
 

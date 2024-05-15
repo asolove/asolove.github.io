@@ -1,12 +1,70 @@
 html {
   font-size: 100%;
-  line-height: 1.4;
-  font-family: georgia, Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+  line-height: 1.45;
+  font-family: georgia;
+  background: rgb(246 238 225);
+  color: rgb(43 44 38);
 }
+
+a:link,
+a:visited {
+  color: inherit;
+}
+
+blockquote {
+  font-style: italic;
+  margin-left: 3em; 
+  margin-right: 0;
+}
+
+blockquote cite {
+  display: block;
+  text-align: right;
+  margin-top: .5em;
+  font-size: 12px;
+  font-weight: 200;
+  font-family: futura;
+}
+
+blockquote cite {
+  font-style: normal;
+}
+
 article {
-  width: 40em;
-  padding-left: 100px;
+  width: 35em;
+  margin-left: 50px;
+  padding-left: 50px;
   padding-right: 300px;
+}
+
+article hr {
+  background: transparent;
+  border-width: 0px;
+  border-bottom: 3px solid white;
+  margin-right: -300px;
+  margin-left: -50px;
+}
+
+article p {
+  text-indent: 1.25em;
+  margin: 0;
+}
+
+article h1 + p,
+article h2 + p {
+  text-indent: 0;
+}
+
+h1 {
+  font-size: 200%;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+article h1,
+article h2,
+article h3 {
+  font-family: futura;
 }
 
 aside { 

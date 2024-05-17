@@ -1,8 +1,9 @@
+* { box-sizing: border-box;;}
+
 html {
   font-size: 100%;
-  line-height: 1.45;
-  font-family: georgia;
-  background: rgb(246 238 225);
+  line-height: 1.2;
+  font-family: "Helvetica Neue";
   color: rgb(43 44 38);
 }
 
@@ -12,18 +13,17 @@ a:visited {
 }
 
 blockquote {
-  font-style: italic;
-  margin-left: 3em; 
-  margin-right: 0;
+  /* font-style: italic; */
+  border-left: 3px solid lightgray;
+  padding-left: 1em; 
+  margin: 0;
+  font-size: 83%;
 }
 
 blockquote cite {
   display: block;
   text-align: right;
   margin-top: .5em;
-  font-size: 12px;
-  font-weight: 200;
-  font-family: futura;
 }
 
 blockquote cite {
@@ -31,10 +31,12 @@ blockquote cite {
 }
 
 article {
-  width: 35em;
-  margin-left: 50px;
-  padding-left: 50px;
+  width: 1000px;
+  padding-left: 300px;
   padding-right: 300px;
+  margin-left: 50px;
+  margin-right: 50px;
+  font-size: 120%;
 }
 
 article hr {
@@ -46,33 +48,64 @@ article hr {
 }
 
 article p {
-  text-indent: 1.25em;
+  hanging-punctuation: first last;
+  hyphens: auto;
+}
+
+
+
+article h1, 
+article h2,
+article h3 {
+  float: left;
+  clear: left;
   margin: 0;
+  margin-left: -300px;
+  font-size: 1em;
+  font-weight: bold;
 }
-
-article h1 + p,
-article h2 + p {
-  text-indent: 0;
-}
-
-h1 {
-  font-size: 200%;
-  margin-top: 2em;
+article h1 {
+  float: none;
+  margin-top: 200px;
+  line-height: 0.8;
+  font-size: 500%;
+  font-weight: 900;
+  letter-spacing: -.05em;
   margin-bottom: 1em;
 }
 
-article h1,
-article h2,
-article h3 {
-  font-family: futura;
+article h1 span {
+  font-weight: 100;
+  letter-spacing: 0;
 }
 
 aside { 
-  float: right;
-  margin-right: -300px;
-  width: 280px;
+  float: left;
+  margin-left: -300px;
+  width: 250px;
 }
 
 aside img {
   max-width: 100%;
+}
+
+nav.top {
+  margin-left: 320px;
+}
+
+nav.top ol {
+  list-style-type: none;
+}
+
+nav.top ol li {
+  display: inline-block;
+}
+
+nav.top a { 
+  display: inline-block;
+  padding: 10px 20px;
+  font-weight: bold;
+  text-decoration: none;
+  line-height: 0.5;
+  border-bottom: 3px solid lightgray;
 }

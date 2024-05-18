@@ -3,7 +3,7 @@
 html {
   font-size: 100%;
   line-height: 1.2;
-  font-family: "Helvetica Neue";
+  font-family: system-ui, "Helvetica Neue";
   color: rgb(43 44 38);
 }
 
@@ -13,8 +13,7 @@ a:visited {
 }
 
 blockquote {
-  /* font-style: italic; */
-  border-left: 3px solid lightgray;
+  font-style: italic;
   padding-left: 1em; 
   margin: 0;
   font-size: 83%;
@@ -22,7 +21,6 @@ blockquote {
 
 blockquote cite {
   display: block;
-  text-align: right;
   margin-top: .5em;
 }
 
@@ -31,8 +29,9 @@ blockquote cite {
 }
 
 article {
+  hanging-punctuation: first last;
   width: 1000px;
-  padding-left: 300px;
+  padding-left: 200px;
   padding-right: 300px;
   margin-left: 50px;
   margin-right: 50px;
@@ -43,16 +42,15 @@ article hr {
   background: transparent;
   border-width: 0px;
   border-bottom: 3px solid white;
-  margin-right: -300px;
+  margin-right: -200px;
   margin-left: -50px;
 }
 
 article p {
-  hanging-punctuation: first last;
   hyphens: auto;
 }
 
-
+canvas { float: right; margin-right: -600px; margin-top: -160px;}
 
 article h1, 
 article h2,
@@ -60,7 +58,7 @@ article h3 {
   float: left;
   clear: left;
   margin: 0;
-  margin-left: -300px;
+  margin-left: -200px;
   font-size: 1em;
   font-weight: bold;
 }
@@ -75,13 +73,23 @@ article h1 {
 }
 
 article h1 span {
-  font-weight: 100;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 85%;
+  font-weight: 200;
   letter-spacing: 0;
 }
 
+article h4 {
+  margin-left: -200px;
+  font-size: 160%;
+  font-weight: normal;
+  font-stretch: semi-condensed
+}
+
 aside { 
-  float: left;
-  margin-left: -300px;
+  float: right;
+  margin-right: -300px;
   width: 250px;
 }
 

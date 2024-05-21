@@ -6,7 +6,17 @@ permalink: /sketchpad/impact
 
 <canvas height="512" width="512" id="sketchpad-canvas"></canvas>
 
-# Understanding Sketchpad<br><span>&mdash; why it matters</span>
+<svg width="900" height="700">
+  <line x1="150" y1="100" x2="30" y2="500" stroke="black" stroke-dasharray="-2" stroke-width="1" />
+  <line x1="150" y1="100" x2="30" y2="500" stroke="white" stroke-dasharray="2" stroke-width="1" />
+  <line x1="150" y1="100" x2="760" y2="300" stroke="black" stroke-dasharray="-2" stroke-width="1" />
+  <line x1="150" y1="100" x2="760" y2="300" stroke="white" stroke-dasharray="2" stroke-width="1" />
+  <circle cx="150" cy="100" r="10" fill="blue" />
+  <circle cx="30" cy="500" r="10" fill="green" />
+  <circle cx="760" cy="300" r="10" fill="red" />
+</svg>
+
+# Understanding Sketchpad<br><span>&amp; its enduring impact</span>
 
 #### The first software user interface remains one of the most interesting. What was its impact and why can it still inspire us today?
 

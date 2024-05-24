@@ -1,5 +1,5 @@
 html {
-  font-family: 'IBM Plex Serif', georgia, serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.4em;
   color: black;
   font-weight: normal;
@@ -59,7 +59,7 @@ form.subscribe {
   width: 120px;
   text-align: right;
   padding: 0;
-  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
+  font-stretch: condensed;
 }
 form.subscribe strong {
   font-weight: normal;
@@ -123,7 +123,8 @@ h1 + p {
 }
 
 h1, div > h2, h2.logo, nav, dt, input {
-  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
+  font-family: inherit;
+  font-stretch: condensed;
 }
 
 ul, ol {
@@ -133,7 +134,7 @@ ul, ol {
 }
 
 code {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: monospace;
 }
 
 dl {}
@@ -150,6 +151,11 @@ dd strong {
   font-style: italic;
   font-weight: normal;
 }
+
+article img.full {
+  width: 100%;
+}
+
 img.right,
 .right {
   float: right;
@@ -169,6 +175,10 @@ a:link, a:visited {
   color: purple;
 }
 
+article a:link {
+  color: blue;
+}
+
 ul.posts li {
   margin-bottom: .7em;
 }
@@ -183,8 +193,13 @@ ul.posts li span {
   color: gray;
 }
 
+ul li {
+  margin-bottom: 0.7em;
+}
+
 article h2 {
-  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
+  font-family: inherit;
+  font-stretch: condensed;
   font-size: 1.4em;
   font-weight: 800;
   line-height: 1em;
@@ -194,7 +209,8 @@ article h2 {
 
 
 article h3 {
-  font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
+  font-family: inherit;
+  font-stretch: condensed;
   font-size: 1.2em;
   font-weight: 800;
   line-height: 1em;

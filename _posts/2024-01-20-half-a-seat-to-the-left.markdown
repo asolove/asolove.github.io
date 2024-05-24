@@ -2,7 +2,7 @@
 layout: post
 title: ":epic-handshake: Reorg half a seat to the left"
 description: "How to avoid handoffs by defining the right roles"
-date: 2024-03-13 11:28:00
+date: 2024-05-24 14:31:00
 categories: people
 ---
 

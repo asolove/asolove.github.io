@@ -284,3 +284,15 @@ th {
 small {
   font-size: 85%;
 }
+
+article a:link {
+  color: blue;
+}
+
+article img.full {
+  width: 100%;
+}
+
+ul li {
+  margin-bottom: 0.7em;
+}

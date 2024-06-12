@@ -70,6 +70,7 @@ permalink: /sketchpad/references/
     Bilzer's PLATO, and, I hope, some of my own
     designs)." (DM 58)
 
+- ["PYGMALION: A Creative Programming Environment](https://worrydream.com/refs/Smith_DC_1975_-_Pygmalion.pdf) cites Sketchpad as an influence (52-55)
 - TODO: re-watch NLS demo for mentions/related material
 - TODO: read "Designing the Star user interface" https://guidebookgallery.org/articles/designingthestaruserinterface/
   - In general, thank GUIdebookgallery site for their help

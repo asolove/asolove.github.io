@@ -78,8 +78,9 @@ permalink: /sketchpad/references/
 - Bill Buxton's [Resource Page on Early HCI Research by the Lincoln Lab TX-2 Group](https://billbuxton.com/Lincoln.html)
   Buxton is himself a well-known HCI practitioner and studied under Ron Baecker, who overlapped with Sutherland at the MIT Lincoln Lab during the 60s. This page includes many links on the TX-0 and TX-2 computers and the HCI work done at Lincoln Lab during this time. Sadly, many of the archive links are now broken.
   - TODO: try broken links in Wayback machine. Archive everything I link to so it can be found even if links break.
-  - TODO: track down 2005 SIGCHI conference session mentioned here: available today?
-  - TODO: track down 1989 SIGGRAPH panel
+  - TODO: Read 2005 SIGCHI conference session
+    - https://www.billbuxton.com/LincolnLab.pdf
+  - TODO: Review 1989 SIGGRAPH panel (https://dl.acm.org/doi/10.1145/77276.77280)
   - TODO read and add https://guidebookgallery.org/articles/thefatherofcomputergraphics (1990 article in BYTE). Mention of "Space War" on the TX-2: find more about that
   - TX-2 program/docs examples: http://www.bitsavers.org/pdf/mit/tx-2/
 - [sutherland](https://github.com/alexwarth/sutherland) is a recreation of the bridge simulation. It has a very interesting constraint solver implementation and several of the bridge images pre-programmed. From what I can tell, it doesn't have arbitrary user input to construct your own pictures or constraints.

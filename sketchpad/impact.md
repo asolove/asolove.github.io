@@ -67,6 +67,10 @@ TODO: find a use-case that illustrates:
 
 "THE AS YET UNDREAMT OF THINGS THAT WILL BE DISPLAYED" (p.86)
 
+- We take for granted a lot of Sketchpad's impact
+
+  - "Isn't this how computers just are?" (Konstan 27)
+
 - Odds and ends
 
   - Meta-object protocol side comment
@@ -75,8 +79,8 @@ TODO: find a use-case that illustrates:
   - Raster font
   - Concurrency bugs (p.48)
   - Windowing: zoom/pan so display shows different portions of underlying document
-  - Pseudo pen location and locking on to objects (p.66) similar to iPad cursor (probably other examples)
-  - Displaying constraints visually so you can hold them in your head and interact with them
+  - Pseudo pen location and locking on to objects (p.66) similar to iPad cursor (probably other examples) (Konstan 24)
+  - Displaying constraints visually so you can hold them in your head and interact with them. (Konstan 25)
   - Data structures: ring bugger, inheritance, etc.: invented for _this_ problem, not abstractly. (Konstan 25)
   - Display twinkling (p.68)
   - "Natural" v reverse scrolling:

@@ -52,6 +52,9 @@ permalink: /sketchpad/references/
 
 - TODO: re-read Computer Lib / Dream Machines for mentions
 - TODO: re-watch NLS demo for mentions/related material
+- TODO: read "Designing the Star user interface" https://guidebookgallery.org/articles/designingthestaruserinterface/
+  - In general, thank GUIdebookgallery site for their help
+- "Your wish is my command" and "Watch what I do"
 - Bill Buxton's [Resource Page on Early HCI Research by the Lincoln Lab TX-2 Group](https://billbuxton.com/Lincoln.html)
   Buxton is himself a well-known HCI practitioner and studied under Ron Baecker, who overlapped with Sutherland at the MIT Lincoln Lab during the 60s. This page includes many links on the TX-0 and TX-2 computers and the HCI work done at Lincoln Lab during this time. Sadly, many of the archive links are now broken.
   - TODO: try broken links in Wayback machine. Archive everything I link to so it can be found even if links break.

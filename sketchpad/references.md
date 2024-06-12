@@ -41,7 +41,7 @@ permalink: /sketchpad/references/
 - van Dam, ["The Shape of Things to Come"](https://dl.acm.org/doi/10.1145/279389.279446) (1998): brief mention of early Sketchpad impact
 - ["The Sketchpad Window"](https://vtechworks.lib.vt.edu/server/api/core/bitstreams/ced55f4b-e70e-44e5-bdb4-2485ba01401e/content): a Ph.D. dissertation seemingly mostly about the impact of Sketchpad on architectural drafting
 - [Daniel Cardoso Llach](http://dcardo.com/) (various works and collaborations)
-  - [The Architecture Machine](https://www.amazon.com/Architecture-Machine-Andres-Fankh%C3%A4nel-Teresa/dp/3035621543/ref=sr_1_1?crid=2E00RB39EZDTO&dib=eyJ2IjoiMSJ9.jZ7lb-Fug6BM3jIH08fvUIxmV1aMD1VmgWHiChm21JsTLzEdQAGYyJB1zEheWiA_zY-p9iacu48E7lgLVM1YndK23l9LUrRSgqo2AS6Qr4yrTUhItuyjWBCYqkjBLxjlS25gcB2zB725M9VrysLlkWAXi1SPdcC0k_cXpkT4TrZkpWOn_Z5oYdYVt6Y2XIU4Bfa1SBDMveC3BWZwlvC9dVys5NRD-xfXDZTRDLkMv7U.FI72ZQ_jAfg8DD7koBxXCs0arFk3PZGmdKM98HRdPIE&dib_tag=se&keywords=the+architecture+machine+role&qid=1715000482&s=books&sprefix=the+architecture+machine+rol%2Cstripbooks%2C97&sr=1-1) accompanies a museum exhibit that included recreations of Sketchpad. It appears to have 4 pages of Sketchpad and recreation material.
+  - [The Architecture Machine](https://www.amazon.com/Architecture-Machine-Andres-Fankh%C3%A4nel-Teresa/dp/3035621543/ref=sr_1_1?crid=2E00RB39EZDTO&dib=eyJ2IjoiMSJ9.jZ7lb-Fug6BM3jIH08fvUIxmV1aMD1VmgWHiChm21JsTLzEdQAGYyJB1zEheWiA_zY-p9iacu48E7lgLVM1YndK23l9LUrRSgqo2AS6Qr4yrTUhItuyjWBCYqkjBLxjlS25gcB2zB725M9VrysLlkWAXi1SPdcC0k_cXpkT4TrZkpWOn_Z5oYdYVt6Y2XIU4Bfa1SBDMveC3BWZwlvC9dVys5NRD-xfXDZTRDLkMv7U.FI72ZQ_jAfg8DD7koBxXCs0arFk3PZGmdKM98HRdPIE&dib_tag=se&keywords=the+architecture+machine+role&qid=1715000482&s=books&sprefix=the+architecture+machine+rol%2Cstripbooks%2C97&sr=1-1) accompanies a museum exhibit that included recreations of Sketchpad. The Sketchpad chapter is a short overview of Sketchpad along with photographs of a physical recreation of Sketchpad made for a museum exhibition. It has a realistic physical terminal with buttons, an Android tablet emulating the original CRT screen, and a physical lightpen for interacting with it.
   - [Recreation of Sketchpad](http://dcardo.com/projects/archaeology_of_cad/index.html) has pictures and video of a physically accurate recreation, including a light pen, buttons, and a physical console matching the original.
   - [Algorithmic Tectonics: How Cold War Era Research Shaped Our Imagination of Design](https://onlinelibrary.wiley.com/doi/abs/10.1002/ad.1546): seems to be a cultural study of how DoD funding for e.g. Sketchpad led to changes in building design and production
 - [Curiosity and Possibility: The Ivan Sutherland Story](https://www.youtube.com/watch?v=vPsFPmgT0YM)
@@ -49,6 +49,14 @@ permalink: /sketchpad/references/
 
 ### User interfaces
 
+- TODO: mentions in Computer Lib / Dream Machines?
+- Bill Buxton's [Resource Page on Early HCI Research by the Lincoln Lab TX-2 Group](https://billbuxton.com/Lincoln.html)
+  Buxton is himself a well-known HCI practitioner and studied under Ron Baecker, who overlapped with Sutherland at the MIT Lincoln Lab during the 60s. This page includes many links on the TX-0 and TX-2 computers and the HCI work done at Lincoln Lab during this time. Sadly, many of the archive links are now broken.
+  - TODO: try broken links in Wayback machine. Archive everything I link to so it can be found even if links break.
+  - TODO: track down 2005 SIGCHI conference session mentioned here: available today?
+  - TODO: track down 1989 SIGGRAPH panel
+  - TODO read and add https://guidebookgallery.org/articles/thefatherofcomputergraphics (1990 article in BYTE). Mention of "Space War" on the TX-2: find more about that
+  - TX-2 program/docs examples: http://www.bitsavers.org/pdf/mit/tx-2/
 - [sutherland](https://github.com/alexwarth/sutherland) is a recreation of the bridge simulation. It has a very interesting constraint solver implementation and several of the bridge images pre-programmed. From what I can tell, it doesn't have arbitrary user input to construct your own pictures or constraints.
 - Overveld
   - ["30 Years after Sketchpad: relaxation of geometric constraints revisited"](https://www.researchgate.net/publication/254868876_30_Years_after_Sketchpad_relaxation_of_geometric_constraints_revisited_II)

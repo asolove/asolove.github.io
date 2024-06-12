@@ -18,6 +18,8 @@ permalink: /sketchpad/references/
 - [Sketchpad III](https://dspace.mit.edu/handle/1721.1/11559) a thesis adding 3D to Sketchpad, from around the same time.
   May have interesting material on someone else learning to use the system and expand its codebase. - [Video of Sketchpad III](https://www.youtube.com/watch?v=t3ZsiBMnGSg&list=PLKTTWvMgeg0ZJTk-3DY_pwvoih9_gsAw4) showing a single 3d object projected in multiple ways
 - [Photographs from Lincoln Labs archive](https://tx-2.github.io/photographs) showing TX-2 and Sketchpad in use. These are much higher-resolution images than the ones you normally see, and some are in color.
+- [On the design of display processors](http://cva.stanford.edu/classes/cs99s/papers/myer-sutherland-design-of-display-processors.pdf). T. H. Myer and I. E. Sutherland. 1968. Commun. ACM 11, 6 (June 1968), 410–414.
+  The "Wheel of Incarnation" article, which describes the process by which the simple controllers for IO devices become more complicated until they eventually take on all the behavior of a generic processor, including jumps, subroutines, etc. Today, we would say "everything is a computer", but at the time the interesting discovery is that "every part of a computer will eventually be its own computer". In modern terms, we might point out the similarity that systems intended just for graphics display (like TeX, PostScript, and 3D rendering engines) inevitably have entire programming languages inside them, or that the GPU hardware originally built for display calculation is now used for cryptocurrency and AI.
 
 ## Other work by Ivan Sutherland
 
@@ -50,7 +52,24 @@ permalink: /sketchpad/references/
 
 ### User interfaces
 
-- TODO: re-read Computer Lib / Dream Machines for mentions
+- Citation for Computer Lib / Dream machines, summary of Sketchpad on DM23.
+
+  - Also cites "wheel of reincarnation" paper, above
+  - "For some reason, however, the most important aspect of such systems
+    has been neglected, We do not make important decisions, we should not
+    make delicate decisions, serially and irreversibly. Rather, the power of
+    the computer display (and its computing and filing support) must be so
+    crafted that we may develop alternatives, spin out their complications
+    and interrelationships, and visualize these upon a screen." (DM 52)
+
+  - "Since hundreds of such systems are now
+    being built, many of them all wrong, we must
+    teach designers (end certain others) the basics
+    of computers , and give them some good examples
+    lo emulate (such as Sutherland's Sketchpad,
+    Bilzer's PLATO, and, I hope, some of my own
+    designs)." (DM 58)
+
 - TODO: re-watch NLS demo for mentions/related material
 - TODO: read "Designing the Star user interface" https://guidebookgallery.org/articles/designingthestaruserinterface/
   - In general, thank GUIdebookgallery site for their help

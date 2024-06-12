@@ -1,0 +1,138 @@
+* { box-sizing: border-box;;}
+
+html {
+  font-size: 100%;
+  line-height: 1.2;
+  font-family: system-ui, "Helvetica Neue";
+  color: rgb(43 44 38);
+}
+
+a:link,
+a:visited {
+  color: inherit;
+}
+
+blockquote {
+  font-style: italic;
+  padding-left: 1em; 
+  margin: 0;
+  font-size: 83%;
+}
+
+blockquote cite {
+  display: block;
+  margin-top: .5em;
+}
+
+blockquote cite {
+  font-style: normal;
+}
+
+article {
+  hanging-punctuation: first last;
+  width: 1000px;
+  padding-left: 200px;
+  padding-right: 300px;
+  margin-left: 50px;
+  margin-right: 50px;
+  font-size: 120%;
+}
+
+article hr {
+  background: transparent;
+  border-width: 0px;
+  border-bottom: 3px solid white;
+  margin-right: -200px;
+  margin-left: -50px;
+}
+
+article p {
+  hyphens: auto;
+}
+
+canvas { float: right; margin-right: -600px; margin-top: -160px;}
+
+article h1, 
+article h2,
+article h3 {
+  float: left;
+  clear: left;
+  margin: 0;
+  margin-left: -200px;
+  font-size: 1em;
+  font-weight: bold;
+}
+article h1 {
+  float: none;
+  margin-top: 200px;
+  line-height: 0.8;
+  font-size: 500%;
+  font-weight: 900;
+  letter-spacing: -.05em;
+  margin-bottom: 1em;
+}
+
+article h1 span {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 85%;
+  font-weight: 200;
+  letter-spacing: 0;
+}
+
+article h4 {
+  margin-left: -200px;
+  font-size: 160%;
+  font-weight: normal;
+  font-stretch: semi-condensed
+}
+
+svg {
+  position: absolute; left: 0; top: 0;
+  pointer-events: none;
+}
+
+aside { 
+  float: right;
+  margin-right: -300px;
+  width: 250px;
+}
+
+aside img {
+  max-width: 100%;
+}
+
+nav.top {
+  margin-left: 320px;
+}
+
+nav.top ol {
+  list-style-type: none;
+}
+
+nav.top ol li {
+  display: inline-block;
+}
+
+nav.top a { 
+  display: inline-block;
+  padding: 10px 10px;
+  font-weight: bold;
+  line-height: 0.5;
+}
+
+a[href="/sketchpad/"] {
+  color: tan;
+}
+a[href$=impact] {
+  color: orange;
+}
+a[href$=internals] {
+  color: blue;
+}
+a[href$=references] {
+  color: green;
+}
+a[href$=about] {
+  color: purple;
+}

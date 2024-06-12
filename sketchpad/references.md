@@ -37,6 +37,7 @@ permalink: /sketchpad/references/
 
 - Konstan, ["Drawing on Sketchpad: Reflections on Computer Science and HCI"](https://direct.mit.edu/books/edited-volume/3814/chapter-abstract/125135/Drawing-on-SketchPad-Reflections-on-Computer?redirectedFrom=fulltext)
   - Appears in ["HCI Remixed"](https://search.libraries.emory.edu/catalog/990007904240302486)
+  - This is a retrospective on Sketchpad's impact on the field of HCI and the author's own career. It briefly describes the ways in which Sketchpad anticipated later systems and passes on a story of a graduate student being puzzled by the paper, wondering "isn't this how computers just are?". The paper's main argument is "HCI belongs as part of computer science because the needs of innovative interfaces drive forward the science of computing."
 - Risenfeld, ["Static Image Generation"](https://www.spiedigitallibrary.org/conference-proceedings-of-spie/0059/0000/Static-Image-Generation/10.1117/12.954347.short), (1975) early paper describing impact of Sketchpad
 - van Dam, ["The Shape of Things to Come"](https://dl.acm.org/doi/10.1145/279389.279446) (1998): brief mention of early Sketchpad impact
 - ["The Sketchpad Window"](https://vtechworks.lib.vt.edu/server/api/core/bitstreams/ced55f4b-e70e-44e5-bdb4-2485ba01401e/content): a Ph.D. dissertation seemingly mostly about the impact of Sketchpad on architectural drafting
@@ -49,7 +50,8 @@ permalink: /sketchpad/references/
 
 ### User interfaces
 
-- TODO: mentions in Computer Lib / Dream Machines?
+- TODO: re-read Computer Lib / Dream Machines for mentions
+- TODO: re-watch NLS demo for mentions/related material
 - Bill Buxton's [Resource Page on Early HCI Research by the Lincoln Lab TX-2 Group](https://billbuxton.com/Lincoln.html)
   Buxton is himself a well-known HCI practitioner and studied under Ron Baecker, who overlapped with Sutherland at the MIT Lincoln Lab during the 60s. This page includes many links on the TX-0 and TX-2 computers and the HCI work done at Lincoln Lab during this time. Sadly, many of the archive links are now broken.
   - TODO: try broken links in Wayback machine. Archive everything I link to so it can be found even if links break.

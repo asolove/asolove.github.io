@@ -20,6 +20,9 @@ permalink: /sketchpad/references/
 - [Photographs from Lincoln Labs archive](https://tx-2.github.io/photographs) showing TX-2 and Sketchpad in use. These are much higher-resolution images than the ones you normally see, and some are in color.
 - [On the design of display processors](http://cva.stanford.edu/classes/cs99s/papers/myer-sutherland-design-of-display-processors.pdf). T. H. Myer and I. E. Sutherland. 1968. Commun. ACM 11, 6 (June 1968), 410–414.
   The "Wheel of Incarnation" article, which describes the process by which the simple controllers for IO devices become more complicated until they eventually take on all the behavior of a generic processor, including jumps, subroutines, etc. Today, we would say "everything is a computer", but at the time the interesting discovery is that "every part of a computer will eventually be its own computer". In modern terms, we might point out the similarity that systems intended just for graphics display (like TeX, PostScript, and 3D rendering engines) inevitably have entire programming languages inside them, or that the GPU hardware originally built for display calculation is now used for cryptocurrency and AI.
+- Sutherland, I. E., [“Computer Graphics; Ten Unsolved Problems"](http://bitsavers.informatik.uni-stuttgart.de/magazines/Datamation/196605.pdf), Datamation, Vol. 12, No. 5 (May, 1966), pp. 22-27. Sutherland discussed several long-solved problems, such as needing faster-refreshing displays, better raster graphics support, and ray-tracing for 3D rendering. He also describes the goal of using a computer to simulate complex systems to understand them better than we can with abstract symbols and equations. In particular, he describes the symbolism he uses to he visually understand circuits, which breaks down when they get too complex. He wonders if a computer display could do the calculations to show his symbolism for him, so that he can use it even for more complex circuits. This is exactly the problem taken up by Bret Victor in [Media for Thinking the Unthinkable](https://worrydream.com/MediaForThinkingTheUnthinkable/)'s Demo 2.
+- Sutherland, W. R., On-Line Graphical Specification of Computer Procedures, M.I.T. Lincoln Lab., Tech. Report No. 405, Lexington, Mass. (May, 1966).
+- [Graphical communication and control languages]
 
 ## Other work by Ivan Sutherland
 
@@ -50,8 +53,17 @@ permalink: /sketchpad/references/
 - [Curiosity and Possibility: The Ivan Sutherland Story](https://www.youtube.com/watch?v=vPsFPmgT0YM)
   A retrospective video made by the National Inventors' Hall of Fame
 
+### Programming languages and styles
+
+- [Graphical Communication and Control Languages](https://archive.org/details/TN_Graphical_Communication_and_Control_Languages_20171030_0025/page/n3/mode/2up), L.B. Roberts, Information System Sciences: Proc Second Congress, 1965 describes a new programming language built after the influence of Sketchpad, CORAL (Class Oriented Ring Association Language)
+- [Associated processing of line drawings](https://dl.acm.org/doi/pdf/10.1145/1478786.1478864) describes Sketchpad and subseequent attempts to represent graphical data in memory for efficient processing and display. Discusses CORAL and GRAPHIC-2
+- [Machine perception of three-dimensional solids](https://dspace.mit.edu/handle/1721.1/11589) was Lawrence Roberts' Ph.D. dissertation, submitted the same year as Sutherland's. It is one of the first papers in computer vision, tackling the problem of taking a 2D line drawing and having the computer reconstruct the 3D solids that are represented. The ring structure used is a lightly-modified version of the one used in Sketchpad. Sutherland is credited several times for providing inspiration and debugging help. The object detection algorithm also uses a generic error minimization approach that shares a lot in common with Sketchpad's constraint solver.
+
+- "Programming Languages: History and Fundamentals", Sammet, Jean E., P-H 1969. An early catalog of programming languages. CORAL is mentioned on p.462, in the same chapter ("String and List Programming Languages") as Lisp and SNOBOL.
+
 ### User interfaces
 
+- [paint: a history](https://kristenroos.ca/timeline) traces the timeline of UIs for drawing via computers, noting Sketchpad and later programs.
 - Citation for Computer Lib / Dream machines, summary of Sketchpad on DM23.
 
   - Also cites "wheel of reincarnation" paper, above

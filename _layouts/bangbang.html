@@ -1,0 +1,67 @@
+<style>
+  body {
+    background: #eae1df;
+    background: #081617;
+    color: #d1c6c2;
+    font-family: georgia;
+    line-height: 1.4;
+    margin: 20px auto;
+    max-width: 45em;
+  }
+
+  a:link,
+  a:visited {
+    color: #c59c40;
+  }
+
+  img {
+    border: 5px solid white;
+  }
+
+  h1 {
+    margin-top: 2em;
+    font-size: 350%;
+    font-weight: 300;
+  }
+
+  .pull {
+    font-style: italic;
+    font-size: 1.3em;
+    margin-bottom: 20px;
+  }
+
+  .aside {
+    display: block;
+    padding: 20px;
+    border: 1px solid black;
+    background: rgb(255 255 255 / 0.1);
+  }
+
+  .right {
+    float: right;
+    clear: right;
+    width: 300px;
+    margin-left: 40px;
+    margin-bottom: 30px;
+  }
+
+  .left {
+    float: left;
+    width: 300px;
+    margin-right: 40px;
+    margin-bottom: 30px;
+  }
+</style>
+
+<section>
+  <div>
+    <h1>{{ page.title }}</h1>
+    <p>{{page.description }}</p>
+  </div>
+</section>
+<section>
+  <div>
+    <date>{{ page.date | date_to_string }}</date>
+    <article>{{content}}</article>
+  </div>
+</section>

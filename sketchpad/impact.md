@@ -81,7 +81,7 @@ TODO: find a use-case that illustrates:
   - Windowing: zoom/pan so display shows different portions of underlying document
   - Pseudo pen location and locking on to objects (p.66) similar to iPad cursor (probably other examples) (Konstan 24)
   - Displaying constraints visually so you can hold them in your head and interact with them. (Konstan 25)
-  - Data structures: ring bugger, inheritance, etc.: invented for _this_ problem, not abstractly. (Konstan 25)
+  - Data structures: ring buffer, inheritance, etc.: invented for _this_ problem, not abstractly. (Konstan 25)
   - Display twinkling (p.68)
   - "Natural" v reverse scrolling:
     > "It is possible to think of moving the scope window above the page or moving the drawing beneath the window." (p.74)

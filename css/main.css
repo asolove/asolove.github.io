@@ -178,7 +178,8 @@ ul.posts li a {
   font-style: italic;
 }
 
-ul.posts li span {
+time {
+  font-size: 90%;
   display: block;
   color: gray;
 }
@@ -193,7 +194,7 @@ article h2 {
 }
 
 
-article h3 {
+h3 {
   font-family: "IBM Plex Sans Condensed", helvetica, sans-serif;
   font-size: 1.2em;
   font-weight: 800;

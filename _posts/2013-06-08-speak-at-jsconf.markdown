@@ -33,9 +33,7 @@ When it was about time for the community track slots to open up, I didn't have a
 
 So [my talk proposal](https://github.com/jsconf/jsconfus2013/issues/30) was actually just a summary of everything I knew about Cassowary at the time. Plus I promised:
 
-> This talk will provide an introduction to constraint programming, 
-> a walkthrough of the JavaScript Cassowary library, and an implementation 
-> of several "how the heck did you do that" programs with constraints.
+| This talk will provide an introduction to constraint programming, a walkthrough of the JavaScript Cassowary library, and an implementation of several "how the heck did you do that" programs with constraints.
 
 At the time I wrote this sentence it was pretty much a lie: I understood the API reasonably well, but I had only used it for simple things, and I had no impressive demos.
 
@@ -63,7 +61,7 @@ When I ran across bugs that made me want to punch things, I instead spent twenty
 
 **During the talk** I was scheduled against an awesome live-coding demo, and I remember being bummed about how empty the room looked. Maybe I should have picked a cooler title. That's the end of what I remember, because the talk itself is a complete blur. I look forward to watching the video to see how it went. 
 
-**After the talk** it turned out the audience size didn't matter. The people who should have been there were there. Afterwords I was stopped by lots of people who were interested in what I had said and wanted to follow up. And Bryan Hughes called it "probably my favorite talk of the entire conference" in [a blog post](http://theoreticalideations.com/2013/06/07/jsconf-day-3-ideas-abound/). So that's a success. 
+**After the talk** it turned out the audience size didn't matter. The people who should have been there were there. Afterwords I was stopped by lots of people who were interested in what I had said and wanted to follow up. And Bryan Hughes called it "probably my favorite talk of the entire conference" in [a blog post](https://theoreticalideations.com/jsconf-day-3-ideas-abound/). So that's a success. 
 
 I feel very confident in this prediction: **Whatever you decide to talk about, you will find the right audience.** And they will be excited to hear you talk from the stage of JSConf. 
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Om Experience Report"
+title:  "Om experience report"
 date:   2014-01-06 08:00:00
 categories: js clojure
 ---

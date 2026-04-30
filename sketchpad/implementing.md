@@ -6,9 +6,9 @@ Need to understand that it's a core data structure but is used to represent diff
 - Ownership / relationship (line ending on a point)
 - Namespacing / modularization (topos as part of the universe)
 
-> "Its data structures were hard to understand—the only vaguely familiar construct was the embedding of pointers to procedures and using a process called reverse indexing to jump through them to routines, like the 220 file system" - Kay
+| "Its data structures were hard to understand—the only vaguely familiar construct was the embedding of pointers to procedures and using a process called reverse indexing to jump through them to routines, like the 220 file system" - Kay
 
-> "It is to be hoped that future workers can either grasp the power of generality at once and strive for it or have the courage to stumble along a trail like mine until they achieve it."
+| "It is to be hoped that future workers can either grasp the power of generality at once and strive for it or have the courage to stumble along a trail like mine until they achieve it."
 
 # How was it built?
 

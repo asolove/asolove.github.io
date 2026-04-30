@@ -293,6 +293,21 @@ article img.full {
   width: 100%;
 }
 
+article figure {
+  margin: 1.4em 0;
+}
+article figure img {
+  width: 100%;
+  display: block;
+}
+article figcaption {
+  font-size: 90%;
+  font-style: italic;
+  color: #555;
+  margin-top: 0.4em;
+  line-height: 1.4em;
+}
+
 ul li {
   margin-bottom: 0.7em;
 }

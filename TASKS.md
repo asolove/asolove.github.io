@@ -41,6 +41,14 @@ From `next/TODO-content.md`:
 
 When we get to this phase, Claude should run the review scaffold and prompt the user to type in problems as they are found. Claude should add each item to the list here, spin off a subagent to start working on it, and then continue prompting for more problems as we go.
 
+- [x] Home page: numbered entries (`No. 01`, etc.) felt arbitrary. Removed the number column; entry bodies now sit flush with the section headings ("Thinking", "Work", "Projects").
+- [ ] Topbar nav: `/notes` and `/work` are broken placeholder links. Decide whether to remove from nav or build stub pages. (Awaiting decision.)
+- [ ] Inline `<img>` followed by markdown on the next line is being treated as an HTML block by CommonMark, suppressing markdown parsing. Affects `half-a-seat-to-the-left` lead paragraph and `iframeable-finance` lead paragraph. Fix: keep the `<img>` inline at the start of the paragraph so it stays in the paragraph block.
+- [ ] `.right`, `.full` image classes used by older posts have no CSS in `next/`. Diagrams overflow the page and floated images render at intrinsic size. Add helpers to `post.css`; add `.narrow` for ~200–300px images that should stay native-width and hang in the margin.
+- [ ] Kramdown `| ...` blockquotes don't parse in CommonMark. Convert `> ...` in `learning-about-learning` (1 instance) and `important-problems-ui-engineering` (3 instances).
+- [ ] Audit all post descriptions: replace any auto-truncated (ellipsis-ending) descriptions with hand-written one-liners. At minimum `pure-ui-control`, `preact-internals-2`, `learning-about-learning` are known to be auto-generated.
+- [ ] Pure UI Control: figure 1 is ~200–300px native but rendered full-bleed by `.full`. Either change its class or add a `.narrow` helper.
+
 ## Phase 4 — Review pass
 
 - [ ] Build both sites, open `review/index.html`, walk every URL marked `both`

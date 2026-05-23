@@ -39,7 +39,6 @@ import Base from '../layouts/Base.astro';
       </p>
 
       <section class="entry">
-        <div class="entry-num">No. 01</div>
         <div class="entry-body">
           <h3>What should we learn from the history of UI engineering?</h3>
           <p>
@@ -59,7 +58,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 02</div>
         <div class="entry-body">
           <h3>How do we build great embedded UIs?</h3>
           <p>
@@ -75,7 +73,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 03</div>
         <div class="entry-body">
           <h3>How can we collaborate on complex UIs?</h3>
           <p>
@@ -90,7 +87,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 04</div>
         <div class="entry-body">
           <h3>How should we structure UI concurrency?</h3>
           <p>
@@ -106,7 +102,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 05</div>
         <div class="entry-body">
           <h3>How does React work?</h3>
           <p>
@@ -129,7 +124,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 06</div>
         <div class="entry-body">
           <h3>How do we make websites faster?</h3>
           <p>
@@ -153,7 +147,6 @@ import Base from '../layouts/Base.astro';
       </p>
 
       <section class="entry">
-        <div class="entry-num">No. 07</div>
         <div class="entry-body">
           <h3>Payments</h3>
           <p>
@@ -170,7 +163,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 08</div>
         <div class="entry-body">
           <h3>Design tools</h3>
           <p>
@@ -182,7 +174,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 09</div>
         <div class="entry-body">
           <h3>Full history</h3>
           <p>
@@ -200,7 +191,6 @@ import Base from '../layouts/Base.astro';
       </p>
 
       <section class="entry">
-        <div class="entry-num">No. 10</div>
         <div class="entry-body">
           <h3>Read Japanese Literature</h3>
           <p>
@@ -216,7 +206,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 11</div>
         <div class="entry-body">
           <h3>Pyret</h3>
           <p>
@@ -231,7 +220,6 @@ import Base from '../layouts/Base.astro';
       </section>
 
       <section class="entry">
-        <div class="entry-num">No. 12</div>
         <div class="entry-body">
           <h3>Federated Wiki</h3>
           <p>
@@ -308,26 +296,16 @@ import Base from '../layouts/Base.astro';
     font-variation-settings: "opsz" 28;
   }
 
-  /* Entry: hanging number on the left, body in middle, thumbnail on right.
-     Uses a sub-sub-grid inside the entry. */
+  /* Entry: body on the left (flush with the section heading), thumbnail on the right. */
   .body.home .entry {
     display: grid;
-    grid-template-columns: 5em 1fr 12em;
+    grid-template-columns: 1fr 12em;
     gap: 0 1.2rem;
     padding: 1.1rem 0;
     border-bottom: 1px solid var(--rule-soft);
     align-items: start;
   }
   .body.home .entry:last-of-type { border-bottom: none; }
-
-  .body.home .entry-num {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--spot);
-    letter-spacing: 0.08em;
-    padding-top: 0.4rem;
-    text-transform: uppercase;
-  }
 
   .body.home .entry-body { min-width: 0; }
   .body.home .entry-body h3 {
@@ -387,7 +365,7 @@ import Base from '../layouts/Base.astro';
 
   @media (max-width: 980px) {
     .body.home .entry {
-      grid-template-columns: 4em 1fr;
+      grid-template-columns: 1fr;
     }
     .body.home .entry-thumb {
       grid-column: 1 / -1;

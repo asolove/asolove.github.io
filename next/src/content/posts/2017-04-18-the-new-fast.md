@@ -1,0 +1,1 @@
+../../../../_posts/2017-04-18-the-new-fast.markdown

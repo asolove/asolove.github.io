@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from 'astro:content';
+import Post from '../layouts/Post.astro';
+import { parseFilename, urlDateParts, adjacentPosts } from '../lib/post-helpers';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => {
+    const { slug } = parseFilename(post.id);
+    const { year, month, day } = urlDateParts(post.data.date);
+    const cats = post.data.categories.join('/');
+    return {
+      params: { slug: `${cats}/${year}/${month}/${day}/${slug}` },
+      props: { post, all: posts },
+    };
+  });
+}
+
+const { post, all } = Astro.props;
+const { Content, headings } = await render(post);
+const { prev, next } = adjacentPosts(all, post);
+---
+<Post post={post} headings={headings} prev={prev} next={next}>
+  <Content />
+</Post>

@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Review: old Jekyll vs new Astro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #fafafa;
+    --ink: #1c1c1c;
+    --ink-soft: #6b6b6b;
+    --rule: #d6d6d6;
+    --ok: #2a7a3a;
+    --warn: #b85c00;
+    --bad: #b8231a;
+    --accent: #b8231a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  header.controls {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+    border-bottom: 1px solid var(--rule);
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+  }
+  header h1 {
+    font-size: 1rem;
+    margin: 0 1.5rem 0 0;
+    font-weight: 600;
+  }
+  .stat { color: var(--ink-soft); }
+  .stat strong { color: var(--ink); }
+  .filters { display: flex; gap: 0.4rem; }
+  .filters button {
+    border: 1px solid var(--rule);
+    background: white;
+    padding: 0.3rem 0.7rem;
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .filters button.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  ul.rows { list-style: none; margin: 0; padding: 0; }
+  li.row {
+    border-bottom: 1px solid var(--rule);
+    background: white;
+  }
+  li.row.hidden { display: none; }
+
+  details summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.7rem 1.2rem;
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    align-items: baseline;
+    gap: 1rem;
+    user-select: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] summary {
+    background: #f0f0f0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .chev::before { content: "▶"; color: var(--ink-soft); font-size: 0.7em; }
+  details[open] .chev::before { content: "▼"; }
+
+  .date { font-family: ui-monospace, monospace; color: var(--ink-soft); font-size: 0.82rem; min-width: 6em; }
+  .meta-title { font-weight: 500; }
+  .url { font-family: ui-monospace, monospace; color: var(--ink-soft); font-size: 0.78rem; }
+  .badges { display: flex; gap: 0.4rem; }
+  .badge {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+  .badge.both { color: var(--ok); border-color: var(--ok); }
+  .badge.old { color: var(--warn); border-color: var(--warn); }
+  .badge.new { color: var(--accent); border-color: var(--accent); }
+
+  .status-pick { display: flex; gap: 0; }
+  .status-pick button {
+    border: 1px solid var(--rule);
+    background: white;
+    padding: 0.18rem 0.5rem;
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .status-pick button:first-child { border-radius: 3px 0 0 3px; }
+  .status-pick button:last-child { border-radius: 0 3px 3px 0; border-left: none; }
+  .status-pick button:not(:first-child):not(:last-child) { border-left: none; }
+  .status-pick button.picked-ok { background: var(--ok); color: white; border-color: var(--ok); }
+  .status-pick button.picked-todo { background: var(--warn); color: white; border-color: var(--warn); }
+  .status-pick button.picked-bad { background: var(--bad); color: white; border-color: var(--bad); }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    padding: 1px;
+  }
+  .pane {
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+  .pane h3 {
+    margin: 0;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--rule);
+    background: #f7f7f7;
+    display: flex;
+    justify-content: space-between;
+  }
+  .pane h3 a { color: var(--ink-soft); text-decoration: none; }
+  .pane h3 a:hover { color: var(--ink); }
+  .pane iframe {
+    width: 100%;
+    height: 1400px;
+    border: none;
+    background: white;
+  }
+  .missing {
+    height: 1400px;
+    background: #f7f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<header class="controls">
+  <h1>Review harness</h1>
+  <div class="stat"><strong>26</strong> URLs · <strong>24</strong> in both · <strong class="old-count">2</strong> old only · <strong class="new-count">0</strong> new only</div>
+  <div class="stat" id="review-stat"><strong id="ok-count">0</strong> ok / <strong id="todo-count">0</strong> todo / <strong id="bad-count">0</strong> issues</div>
+  <div class="filters">
+    <button data-filter="all" class="active">All</button>
+    <button data-filter="unreviewed">Unreviewed</button>
+    <button data-filter="todo">Todo</button>
+    <button data-filter="bad">Issues</button>
+    <button data-filter="ok">Reviewed</button>
+  </div>
+</header>
+
+<ul class="rows">
+
+<li class="row" data-url="/404.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">—</span>
+      <span>
+        <span class="meta-title">(no title)</span>
+        <span class="url">/404.html</span>
+      </span>
+      <div class="badges"><span class="badge old">old only</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/404.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/404.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) </h3>
+        <div class="missing">Not in new build</div>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/blog.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">—</span>
+      <span>
+        <span class="meta-title">Adam Solove: Blog</span>
+        <span class="url">/blog.html</span>
+      </span>
+      <div class="badges"><span class="badge old">old only</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/blog.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/blog.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) </h3>
+        <div class="missing">Not in new build</div>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/index.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">—</span>
+      <span>
+        <span class="meta-title">Adam Solove</span>
+        <span class="url">/index.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/index.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/index.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/index.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/index.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/people/2024/05/24/half-a-seat-to-the-left.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2024-05-24</span>
+      <span>
+        <span class="meta-title">Epic handshake: reorg half a seat to the left</span>
+        <span class="url">/people/2024/05/24/half-a-seat-to-the-left.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/people/2024/05/24/half-a-seat-to-the-left.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/people/2024/05/24/half-a-seat-to-the-left.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/people/2024/05/24/half-a-seat-to-the-left.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/people/2024/05/24/half-a-seat-to-the-left.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/2024/03/13/javascript-runtimes.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2024-03-13</span>
+      <span>
+        <span class="meta-title">Only 20 JavaScript runtimes left</span>
+        <span class="url">/js/2024/03/13/javascript-runtimes.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/2024/03/13/javascript-runtimes.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/2024/03/13/javascript-runtimes.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/2024/03/13/javascript-runtimes.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/2024/03/13/javascript-runtimes.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/2023/08/24/iframeable-finance.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2023-08-24</span>
+      <span>
+        <span class="meta-title">&amp;lt;iframe&amp;gt;able finance</span>
+        <span class="url">/js/2023/08/24/iframeable-finance.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/2023/08/24/iframeable-finance.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/2023/08/24/iframeable-finance.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/2023/08/24/iframeable-finance.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/2023/08/24/iframeable-finance.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/learning/2018/01/23/learning-about-learning.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2018-01-23</span>
+      <span>
+        <span class="meta-title">Learning about learning</span>
+        <span class="url">/learning/2018/01/23/learning-about-learning.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/learning/2018/01/23/learning-about-learning.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/learning/2018/01/23/learning-about-learning.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/learning/2018/01/23/learning-about-learning.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/learning/2018/01/23/learning-about-learning.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/07/14/pure-ui-control.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-07-14</span>
+      <span>
+        <span class="meta-title">Pure UI control</span>
+        <span class="url">/js/ui/2017/07/14/pure-ui-control.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/07/14/pure-ui-control.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/07/14/pure-ui-control.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/07/14/pure-ui-control.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/07/14/pure-ui-control.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/04/21/important-problems-ui-engineering.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-04-21</span>
+      <span>
+        <span class="meta-title">What are the important problems in UI engineering?</span>
+        <span class="url">/js/ui/2017/04/21/important-problems-ui-engineering.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/04/21/important-problems-ui-engineering.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/04/21/important-problems-ui-engineering.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/04/21/important-problems-ui-engineering.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/04/21/important-problems-ui-engineering.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/04/19/preact-in-pictures.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-04-19</span>
+      <span>
+        <span class="meta-title">Preact in pictures</span>
+        <span class="url">/js/ui/2017/04/19/preact-in-pictures.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/04/19/preact-in-pictures.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/04/19/preact-in-pictures.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/04/19/preact-in-pictures.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/04/19/preact-in-pictures.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/perf/2017/04/18/the-new-fast.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-04-18</span>
+      <span>
+        <span class="meta-title">The new fast: advanced web performance best practices for 2017</span>
+        <span class="url">/js/perf/2017/04/18/the-new-fast.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/perf/2017/04/18/the-new-fast.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/perf/2017/04/18/the-new-fast.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/perf/2017/04/18/the-new-fast.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/perf/2017/04/18/the-new-fast.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/04/02/concurrent-ml-branding-problem.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-04-02</span>
+      <span>
+        <span class="meta-title">Concurrent ML has a branding problem</span>
+        <span class="url">/js/ui/2017/04/02/concurrent-ml-branding-problem.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/04/02/concurrent-ml-branding-problem.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/04/02/concurrent-ml-branding-problem.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/04/02/concurrent-ml-branding-problem.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/04/02/concurrent-ml-branding-problem.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/04/01/synchronizable-abstractions.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-04-01</span>
+      <span>
+        <span class="meta-title">Synchronizable abstractions for understandable concurrency</span>
+        <span class="url">/js/ui/2017/04/01/synchronizable-abstractions.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/04/01/synchronizable-abstractions.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/04/01/synchronizable-abstractions.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/04/01/synchronizable-abstractions.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/04/01/synchronizable-abstractions.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/03/27/preact-internals-3.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-03-27</span>
+      <span>
+        <span class="meta-title">Preact internals #3: some fiddly little bits</span>
+        <span class="url">/js/ui/2017/03/27/preact-internals-3.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/03/27/preact-internals-3.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/03/27/preact-internals-3.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/03/27/preact-internals-3.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/03/27/preact-internals-3.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/03/14/preact-internals-2.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-03-14</span>
+      <span>
+        <span class="meta-title">Preact internals #2: the component model</span>
+        <span class="url">/js/ui/2017/03/14/preact-internals-2.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/03/14/preact-internals-2.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/03/14/preact-internals-2.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/03/14/preact-internals-2.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/03/14/preact-internals-2.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2017/03/11/preact-internals-1.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-03-11</span>
+      <span>
+        <span class="meta-title">Preact internals #1: the easy parts</span>
+        <span class="url">/js/ui/2017/03/11/preact-internals-1.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2017/03/11/preact-internals-1.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2017/03/11/preact-internals-1.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2017/03/11/preact-internals-1.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2017/03/11/preact-internals-1.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/service-worker/stream/2017/03/04/streaming-cache-mismatch.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2017-03-04</span>
+      <span>
+        <span class="meta-title">Mismatched assets with streaming service workers</span>
+        <span class="url">/js/service-worker/stream/2017/03/04/streaming-cache-mismatch.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/service-worker/stream/2017/03/04/streaming-cache-mismatch.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/service-worker/stream/2017/03/04/streaming-cache-mismatch.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/service-worker/stream/2017/03/04/streaming-cache-mismatch.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/service-worker/stream/2017/03/04/streaming-cache-mismatch.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/flow/type/2016/04/15/flow-exhaustiveness.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2016-04-15</span>
+      <span>
+        <span class="meta-title">Exhaustiveness checking in Flow</span>
+        <span class="url">/js/flow/type/2016/04/15/flow-exhaustiveness.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/flow/type/2016/04/15/flow-exhaustiveness.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/flow/type/2016/04/15/flow-exhaustiveness.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/flow/type/2016/04/15/flow-exhaustiveness.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/flow/type/2016/04/15/flow-exhaustiveness.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/flow/type/2016/04/13/modeling-with-adts.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2016-04-13</span>
+      <span>
+        <span class="meta-title">Modeling business problems with ADTs in Flow/js</span>
+        <span class="url">/js/flow/type/2016/04/13/modeling-with-adts.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/flow/type/2016/04/13/modeling-with-adts.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/flow/type/2016/04/13/modeling-with-adts.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/flow/type/2016/04/13/modeling-with-adts.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/flow/type/2016/04/13/modeling-with-adts.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/clojure/2014/05/08/react-js-and-om.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2014-05-08</span>
+      <span>
+        <span class="meta-title">React.js &amp;amp; Om talk</span>
+        <span class="url">/js/clojure/2014/05/08/react-js-and-om.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/clojure/2014/05/08/react-js-and-om.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/clojure/2014/05/08/react-js-and-om.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/clojure/2014/05/08/react-js-and-om.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/clojure/2014/05/08/react-js-and-om.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/clojure/2014/01/06/om-experience-report.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2014-01-06</span>
+      <span>
+        <span class="meta-title">Om experience report</span>
+        <span class="url">/js/clojure/2014/01/06/om-experience-report.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/clojure/2014/01/06/om-experience-report.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/clojure/2014/01/06/om-experience-report.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/clojure/2014/01/06/om-experience-report.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/clojure/2014/01/06/om-experience-report.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/2013/10/15/constraint-programming-in-the-browser.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2013-10-15</span>
+      <span>
+        <span class="meta-title">Constraint programming in the browser</span>
+        <span class="url">/js/2013/10/15/constraint-programming-in-the-browser.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/2013/10/15/constraint-programming-in-the-browser.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/2013/10/15/constraint-programming-in-the-browser.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/2013/10/15/constraint-programming-in-the-browser.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/2013/10/15/constraint-programming-in-the-browser.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/2013/06/08/speak-at-jsconf.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2013-06-08</span>
+      <span>
+        <span class="meta-title">You should speak at JSConf</span>
+        <span class="url">/js/2013/06/08/speak-at-jsconf.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/2013/06/08/speak-at-jsconf.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/2013/06/08/speak-at-jsconf.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/2013/06/08/speak-at-jsconf.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/2013/06/08/speak-at-jsconf.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/ui/2013/05/17/inspired-by-sketchpad.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2013-05-17</span>
+      <span>
+        <span class="meta-title">Being inspired by Sketchpad</span>
+        <span class="url">/js/ui/2013/05/17/inspired-by-sketchpad.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/ui/2013/05/17/inspired-by-sketchpad.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/ui/2013/05/17/inspired-by-sketchpad.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/ui/2013/05/17/inspired-by-sketchpad.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/ui/2013/05/17/inspired-by-sketchpad.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/view/2012/09/27/stateful-views.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2012-09-27</span>
+      <span>
+        <span class="meta-title">Stateful views</span>
+        <span class="url">/js/view/2012/09/27/stateful-views.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/view/2012/09/27/stateful-views.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/view/2012/09/27/stateful-views.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/view/2012/09/27/stateful-views.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/view/2012/09/27/stateful-views.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+
+<li class="row" data-url="/js/functional/2012/09/19/deferred-method-combinator.html">
+  <details>
+    <summary>
+      <span class="chev"></span>
+      <span class="date">2012-09-19</span>
+      <span>
+        <span class="meta-title">Deferred method combinator</span>
+        <span class="url">/js/functional/2012/09/19/deferred-method-combinator.html</span>
+      </span>
+      <div class="badges"><span class="badge both">both</span></div>
+      <div class="status-pick" data-status>
+        <button data-set="ok" title="Reviewed, looks good">ok</button>
+        <button data-set="todo" title="Needs work">todo</button>
+        <button data-set="bad" title="Broken">issue</button>
+      </div>
+    </summary>
+    <div class="compare">
+      <div class="pane">
+        <h3>Old (Jekyll) <a href="http://localhost:8001/js/functional/2012/09/19/deferred-method-combinator.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8001/js/functional/2012/09/19/deferred-method-combinator.html"></iframe>
+      </div>
+      <div class="pane">
+        <h3>New (Astro) <a href="http://localhost:8002/js/functional/2012/09/19/deferred-method-combinator.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/js/functional/2012/09/19/deferred-method-combinator.html"></iframe>
+      </div>
+    </div>
+  </details>
+</li>
+</ul>
+
+<script>
+  // Per-URL review status, persisted in localStorage.
+  const STORAGE_KEY = 'review-status-v1';
+  const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); refreshStats(); applyFilter(); }
+
+  function refreshStats() {
+    let ok = 0, todo = 0, bad = 0;
+    for (const v of Object.values(state)) {
+      if (v === 'ok') ok++;
+      else if (v === 'todo') todo++;
+      else if (v === 'bad') bad++;
+    }
+    document.getElementById('ok-count').textContent = ok;
+    document.getElementById('todo-count').textContent = todo;
+    document.getElementById('bad-count').textContent = bad;
+  }
+
+  function paintRow(row) {
+    const url = row.dataset.url;
+    const status = state[url];
+    const pick = row.querySelector('[data-status]');
+    for (const btn of pick.querySelectorAll('button')) {
+      btn.classList.remove('picked-ok', 'picked-todo', 'picked-bad');
+      if (btn.dataset.set === status) btn.classList.add('picked-' + status);
+    }
+  }
+
+  let currentFilter = 'all';
+  function applyFilter() {
+    for (const row of document.querySelectorAll('li.row')) {
+      const status = state[row.dataset.url];
+      let show = true;
+      if (currentFilter === 'unreviewed') show = !status;
+      else if (currentFilter === 'todo') show = status === 'todo';
+      else if (currentFilter === 'bad') show = status === 'bad';
+      else if (currentFilter === 'ok') show = status === 'ok';
+      row.classList.toggle('hidden', !show);
+    }
+  }
+
+  // Wire up status buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-set]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const row = btn.closest('li.row');
+    const url = row.dataset.url;
+    const set = btn.dataset.set;
+    if (state[url] === set) delete state[url]; else state[url] = set;
+    paintRow(row);
+    save();
+  });
+
+  // Wire up filter buttons
+  for (const btn of document.querySelectorAll('.filters button')) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filters button').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      applyFilter();
+    });
+  }
+
+  // Initial paint
+  for (const row of document.querySelectorAll('li.row')) paintRow(row);
+  refreshStats();
+</script>
+
+</body>
+</html>

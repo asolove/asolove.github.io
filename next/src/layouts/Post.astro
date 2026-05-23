@@ -1,0 +1,119 @@
+---
+import Base from './Base.astro';
+import { categoryLabel, postPath, readingTime } from '../lib/post-helpers';
+import type { CollectionEntry, MarkdownHeading } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  headings: MarkdownHeading[];
+  prev?: CollectionEntry<'posts'>;
+  next?: CollectionEntry<'posts'>;
+}
+
+const { post, headings, prev, next } = Astro.props;
+const { title, description, date, categories, companion, related_to } = post.data;
+
+// Breadcrumb: Essays / [most-specific category] / [post title]
+const lastCategory = categories[categories.length - 1];
+const breadcrumb = [
+  { label: 'Essays', href: '/' },
+  ...(lastCategory ? [{ label: categoryLabel(lastCategory) }] : []),
+  { label: title },
+];
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const formatShortDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+const formatYear = (d: Date) => d.getFullYear();
+
+const minutes = readingTime(post.body ?? '');
+// Suppress reading-time on short posts (talk announcements, link posts, etc).
+const showReadingTime = minutes >= 2;
+// Drop-cap looks unbalanced on short pieces; only apply on real long-form.
+const isLongForm = (post.body?.split(/\s+/).length ?? 0) > 800;
+
+// Filter the auto-generated TOC: only show h2 and h3.
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
+---
+<Base
+  title={title}
+  description={description}
+  breadcrumb={breadcrumb}
+  date={date}
+>
+  <div class:list={['page', !hasSidebar && 'no-sidebar']}>
+
+    <div class="titleblock">
+      <h1>{title}</h1>
+      {description && <p class="standfirst">{description}</p>}
+    </div>
+
+    {hasSidebar && (
+      <aside class="siderail">
+        {toc.length > 0 && (
+          <>
+            <h3>Contents</h3>
+            <ul>
+              {toc.map((h) => (
+                <li><a href={`#${h.slug}`}>{h.text}</a></li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {companion && companion.length > 0 && (
+          <>
+            <h3>Companion</h3>
+            <ul>
+              {companion.map((c) => (
+                <li><a href={c.url}>▸ {c.label}</a></li>
+              ))}
+            </ul>
+          </>
+        )}
+      </aside>
+    )}
+
+    <div class="meta">
+      <span><strong>By</strong> Adam Solove</span>
+      <span class="sep">·</span>
+      <span><strong>Published</strong> {formatDate(date)}</span>
+      {showReadingTime && (<>
+        <span class="sep">·</span>
+        <span><strong>Reading time</strong> {minutes} min</span>
+      </>)}
+      {related_to && (<>
+        <span class="sep">·</span>
+        <span><strong>Companion to</strong> {related_to}</span>
+      </>)}
+    </div>
+
+    <article class:list={['body', isLongForm && 'longform']}>
+      <slot />
+    </article>
+
+    <footer class="docfoot">
+      {prev ? (
+        <a href={postPath(prev)} class="nav-prev">
+          <span class="label">← Previous</span>
+          <span class="title-link">{prev.data.title}</span>
+          <span class="nav-date">{formatShortDate(prev.data.date)}</span>
+        </a>
+      ) : <span class="nav-prev" />}
+      {next ? (
+        <a href={postPath(next)} class="nav-next">
+          <span class="label">Next →</span>
+          <span class="title-link">{next.data.title}</span>
+          <span class="nav-date">{formatShortDate(next.data.date)}</span>
+        </a>
+      ) : <span class="nav-next" />}
+      <div class="colophon">
+        <span class="cite">Cite as: Solove, A. <em>{title}</em>. adamsolove.com, {formatYear(date)}.</span>
+        <span class="reply">Comments or questions? <a href="mailto:asolove@gmail.com">asolove@gmail.com</a></span>
+      </div>
+    </footer>
+
+  </div>
+</Base>

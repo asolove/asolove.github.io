@@ -1,0 +1,1 @@
+../../../../_posts/2024-01-20-half-a-seat-to-the-left.markdown

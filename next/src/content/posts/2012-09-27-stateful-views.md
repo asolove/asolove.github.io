@@ -1,0 +1,1 @@
+../../../../_posts/2012-09-27-stateful-views.markdown

@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Preact in pictures — Broadsheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #efe9df;
+    --paper-deep: #e6dfd1;
+    --ink: #141414;
+    --ink-soft: #565148;
+    --rule: #1a1a1a;
+    --accent: #e8a200;     /* cadmium yellow */
+    --accent-deep: #b87d00;
+    --serif: 'Fraunces', 'Times New Roman', serif;
+    --sans: 'Public Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-family: var(--serif); font-size: 17px; line-height: 1.5; color: var(--ink); background: var(--paper); }
+  body { padding: 0; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 2rem 2rem 6rem; }
+
+  /* masthead */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 0.5rem;
+    border-bottom: 4px solid var(--rule);
+    margin-bottom: 0.4rem;
+  }
+  .masthead .name {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 1.4rem;
+    letter-spacing: -0.01em;
+    font-variation-settings: "opsz" 144;
+  }
+  .masthead .nav {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 500;
+  }
+  .masthead .nav a { color: var(--ink); text-decoration: none; margin-left: 1.5rem; }
+  .submast {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+  }
+
+  /* article slab */
+  .slab {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 3rem;
+  }
+  .kicker {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-weight: 700;
+    color: var(--accent-deep);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(3.5rem, 9vw, 7.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    font-variation-settings: "opsz" 144, "SOFT" 0;
+    margin-bottom: 1.5rem;
+    margin-left: -0.05em;
+  }
+  h1 em { font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
+
+  .standfirst {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 1.45rem;
+    line-height: 1.35;
+    color: var(--ink);
+    max-width: 38rem;
+    margin-bottom: 1.5rem;
+    font-variation-settings: "opsz" 36;
+  }
+  .byline {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    padding-top: 0.8rem;
+    border-top: 3px double var(--rule);
+    display: flex;
+    justify-content: space-between;
+  }
+  .byline strong { color: var(--ink); font-weight: 700; }
+
+  /* body — two columns */
+  .body {
+    column-count: 2;
+    column-gap: 2.5rem;
+    column-rule: 1px solid var(--rule);
+    margin-bottom: 3rem;
+  }
+  @media (max-width: 760px) {
+    .body { column-count: 1; }
+  }
+  .body > * { break-inside: avoid-column; }
+  .body p { margin-bottom: 1em; orphans: 3; widows: 3; }
+  .body p:first-of-type::first-line {
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+  .body p:first-of-type::first-letter {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 4.2em;
+    line-height: 0.85;
+    float: left;
+    padding-right: 0.08em;
+    padding-top: 0.05em;
+    color: var(--accent-deep);
+    font-variation-settings: "opsz" 144;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
+    font-variation-settings: "opsz" 48;
+  }
+  h2::before {
+    content: "§ ";
+    color: var(--accent-deep);
+    font-weight: 400;
+  }
+  ul { margin: 1em 0 1em 1.2em; }
+  li { margin-bottom: 0.3em; }
+
+  a { color: var(--ink); text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-size: 100% 0.3em; background-position: 0 88%; background-repeat: no-repeat; }
+  a:hover { background-size: 100% 100%; }
+
+  blockquote.pull {
+    column-span: all;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+    line-height: 1.15;
+    text-align: center;
+    margin: 2.5rem auto;
+    max-width: 30rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-variation-settings: "opsz" 72;
+  }
+
+  /* footnotes — bottom of column */
+  ol.footnotes {
+    column-span: all;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    list-style-position: inside;
+    columns: 2;
+    column-gap: 2rem;
+  }
+  ol.footnotes li { margin-bottom: 0.6em; break-inside: avoid; }
+  sup.ref {
+    font-family: var(--sans);
+    color: var(--accent-deep);
+    font-weight: 700;
+    font-size: 0.72em;
+    background: none;
+    padding-left: 0.1em;
+  }
+
+  /* code */
+  pre {
+    column-span: all;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.55;
+    background: var(--paper-deep);
+    padding: 1.4rem 1.6rem;
+    margin: 2rem 0;
+    overflow-x: auto;
+    border-top: 3px solid var(--rule);
+    border-bottom: 3px solid var(--rule);
+    color: var(--ink);
+  }
+  pre .kw { color: var(--accent-deep); font-weight: 700; }
+  pre .str { color: var(--ink-soft); }
+  pre .com { color: var(--ink-soft); font-style: italic; }
+  code { font-family: var(--mono); font-size: 0.85em; background: var(--paper-deep); padding: 0.05em 0.3em; }
+
+  /* figure — full bleed */
+  figure {
+    margin: 0 -2rem 3rem;
+    padding: 0 2rem;
+    background: var(--paper-deep);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-top: 6px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  figure img, figure iframe {
+    width: 100%;
+    display: block;
+    background: white;
+  }
+  figure iframe { aspect-ratio: 16/9; border: none; }
+  figcaption {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+    align-items: baseline;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--ink);
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--rule);
+  }
+  figcaption .num {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--accent-deep);
+    font-variation-settings: "opsz" 48;
+  }
+  figcaption .credit {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+  }
+
+  .colophon {
+    margin-top: 4rem;
+    padding-top: 1rem;
+    border-top: 4px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="name">Adam Solove</div>
+    <div class="nav">
+      <a href="#">Essays</a>
+      <a href="#">Notes</a>
+      <a href="#">Talks</a>
+      <a href="#">RSS</a>
+    </div>
+  </div>
+  <div class="submast">
+    <span>Vol. XIII · No. 4</span>
+    <span>Wednesday, 19 April 2017</span>
+    <span>Posted from Denver</span>
+  </div>
+
+  <div class="slab">
+    <div class="kicker">A talk · Virtual DOM · ReactJS Denver Meetup</div>
+    <h1>Preact, <em>in pictures</em>.</h1>
+    <p class="standfirst">A thirty-minute walk through what a tiny React-alike does inside — and what its small, legible algorithm can teach us about the larger one.</p>
+    <div class="byline">
+      <span>By <strong>Adam Solove</strong></span>
+      <span>Reading time · 4 minutes</span>
+      <span>Filed under <strong>JS · UI</strong></span>
+    </div>
+  </div>
+
+  <div class="body">
+    <p>I gave a talk at tonight’s <a href="#">ReactJS Denver</a> meetup about <a href="#">Preact</a>. The video is embedded below the body; the slides are higher resolution if you’d rather flip through them at your own pace.<sup class="ref">1</sup></p>
+
+    <p>The talk comes in two parts.</p>
+
+    <ul>
+      <li><strong>Part 1</strong> describes Preact, why you might want to use it, and the tradeoffs you make by not using full React.</li>
+      <li><strong>Part 2</strong> walks through what Preact is doing internally to render and diff a simple application.</li>
+    </ul>
+
+    <blockquote class="pull">The virtual DOM is not a deep mystery. It is a small algorithm with a few fiddly details.</blockquote>
+
+    <p>To many people, the virtual DOM and component model seem like deep mysteries that mere mortals shouldn’t try to understand. As I hopefully demonstrated, this isn’t true. It’s a reasonably simple algorithm with a few fiddly little details. While React is implemented somewhat differently, knowing Preact’s internals is still a good first mental model for approaching it.</p>
+
+    <h2>The core diff loop</h2>
+    <p>The heart of the renderer is roughly this: a recursive walk that reconciles a virtual node against the DOM node it last produced, returning the (possibly new) DOM node to its parent.<sup class="ref">2</sup></p>
+
+<pre><span class="com">// Preact: diff a vnode against an existing dom node.</span>
+<span class="kw">function</span> diff(dom, vnode, parent) {
+  <span class="kw">if</span> (<span class="kw">typeof</span> vnode === <span class="str">'string'</span>) {
+    <span class="kw">return</span> diffText(dom, vnode);
+  }
+  <span class="kw">if</span> (<span class="kw">typeof</span> vnode.nodeName === <span class="str">'function'</span>) {
+    <span class="kw">return</span> buildComponentFromVNode(dom, vnode);
+  }
+  <span class="kw">return</span> innerDiffNode(dom, vnode);
+}</pre>
+
+    <p>Everything else in the codebase is in service of those three branches: handling text nodes, building up component instances, and walking the children of an element. Once you can hold those branches in your head, the rest is bookkeeping.</p>
+
+    <ol class="footnotes">
+      <li>The video doesn’t pick up details on the slides, so the linked deck is the better artifact for studying individual frames.</li>
+      <li>Simplified for clarity. The real <code>diff</code> in Preact 8 also threads context, an SVG flag, and a hydration mode through every call.</li>
+    </ol>
+  </div>
+
+  <figure>
+    <img src="/img/preact-in-pictures/preact-in-pictures-7dccd42b.png" alt="Diagram of the Preact algorithm — boxes representing virtual nodes, DOM nodes, and component instances connected by arrows showing the render and diff flow.">
+    <figcaption>
+      <span class="num">Fig. 1</span>
+      <span>The complete Preact render-and-diff algorithm. Drawn from the final state of the talk slides; the slide build animates each box in sequence.</span>
+      <span class="credit">A. Solove · 2017</span>
+    </figcaption>
+  </figure>
+
+  <div class="colophon">First published Medium · April 2017 · Reset May 2026</div>
+
+</div>
+</body>
+</html>

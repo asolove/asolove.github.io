@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Preact in pictures — Bell</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Hanken+Grotesk:wght@400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #faf7f0;
+    --paper-deep: #f2eee2;
+    --ink: #1c1c1c;
+    --ink-soft: #5a5a5a;
+    --ink-faint: #9a9690;
+    --rule: #1c1c1c;
+    --rule-soft: #c8c2b2;
+    --spot: #b8231a;          /* TAOCP / BSTJ cover red */
+    --spot-soft: #e2867e;
+    --spot-wash: #f7e4e1;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --sans: 'Hanken Grotesk', system-ui, sans-serif;
+    --mono: 'Fragment Mono', ui-monospace, 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  ::selection { background: var(--spot-wash); color: var(--ink); }
+  html { font-family: var(--serif); font-size: 17px; line-height: 1.55; color: var(--ink); background: var(--paper); }
+  body { padding: 0; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ─────────────────────────────────────────────────────────
+     Top bar: bracket-framed identity + nav
+     ───────────────────────────────────────────────────────── */
+  .topbar {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 1.2rem 2rem 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar .brand { display: flex; align-items: baseline; gap: 0.5em; }
+  .topbar .brand .br { color: var(--spot); }
+  .topbar .brand .name { color: var(--ink); letter-spacing: 0.04em; }
+  .topbar nav { display: flex; gap: 1.4rem; }
+  .topbar nav a { color: var(--ink-soft); position: relative; }
+  .topbar nav a.current { color: var(--ink); }
+  .topbar nav a.current::before { content: "["; color: var(--spot); margin-right: 0.25em; }
+  .topbar nav a.current::after { content: "]"; color: var(--spot); margin-left: 0.25em; }
+
+  /* breadcrumb strip */
+  .crumb {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0.7rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .crumb .path span { color: var(--ink-faint); margin: 0 0.4em; }
+  .crumb .path em { font-style: normal; color: var(--ink); }
+  .crumb .date { color: var(--ink-soft); }
+
+  /* ─────────────────────────────────────────────────────────
+     Main grid (12 col)
+     ───────────────────────────────────────────────────────── */
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0 1.5rem;
+  }
+
+  /* title block */
+  .titleblock { grid-column: 1 / span 8; margin-bottom: 0.5rem; }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.012em;
+    margin-bottom: 1.1rem;
+    font-variation-settings: "opsz" 60;
+  }
+  .standfirst {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 36rem;
+    margin-bottom: 1.6rem;
+    font-variation-settings: "opsz" 32;
+  }
+
+  /* meta line — real info, not LARP */
+  .meta {
+    grid-column: 1 / span 8;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.4rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+  }
+  .meta strong { color: var(--ink); font-weight: 400; }
+  .meta .sep { color: var(--spot); }
+
+  /* ─────────────────────────────────────────────────────────
+     Side rail (top-aligned, not sticky — sidenotes flow below it
+     in the same column further down the page)
+     ───────────────────────────────────────────────────────── */
+  .siderail {
+    grid-column: 10 / span 3;
+    grid-row: 1 / span 2;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    border-left: 1px solid var(--rule-soft);
+    padding-left: 1rem;
+    align-self: start;
+  }
+  .siderail h3 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--spot);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 400;
+    margin: 1.4rem 0 0.4rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .siderail h3:first-child { margin-top: 0; }
+  .siderail ul { list-style: none; margin: 0; padding: 0; }
+  .siderail li { padding: 0.2rem 0; }
+  .siderail li:has(.n) {
+    display: grid;
+    grid-template-columns: 3.2em 1fr;
+    gap: 0 0.5em;
+    align-items: baseline;
+  }
+  .siderail li .n { color: var(--spot); }
+  .siderail a { color: var(--ink); border-bottom: 1px solid transparent; }
+  .siderail a:hover { border-bottom-color: var(--spot); }
+
+  /* ─────────────────────────────────────────────────────────
+     Sections: inherit the page's 12-col grid via subgrid, so
+     body content sits in cols 2-8 and sidenotes sit in cols
+     10-12 (the same column as the side rail above). dense
+     auto-flow snaps each sidenote up to share a row with the
+     paragraph it references.
+     ───────────────────────────────────────────────────────── */
+  section.s {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-auto-flow: row dense;
+    gap: 0 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  section.s > .sigil {
+    grid-column: 1;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--spot);
+    text-align: right;
+    padding-top: 0.55rem;
+    white-space: nowrap;
+  }
+  section.s > .sigil .sym { opacity: 0.85; margin-right: 0.15em; }
+  /* non-paragraph body items span past col 9 so the sidenote
+     can't dense-flow into their row */
+  section.s > h2,
+  section.s > ul,
+  section.s > blockquote,
+  section.s > .listing {
+    grid-column: 2 / -1;
+  }
+  /* paragraphs leave cols 10-12 empty so the sidenote lands
+     in the row of the paragraph that references it */
+  section.s > p {
+    grid-column: 2 / span 7;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    font-variation-settings: "opsz" 32;
+  }
+  section.s p { margin-bottom: 1em; max-width: 38rem; }
+  section.s ul.body-list { list-style: none; margin: 0.5em 0 1.2em 0; max-width: 38rem; }
+  section.s ul.body-list li { padding-left: 1.6em; position: relative; margin-bottom: 0.4em; }
+  section.s ul.body-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--spot);
+    font-family: var(--mono);
+  }
+
+  /* inline links */
+  section.s a, .figure-credit a {
+    color: var(--ink);
+    border-bottom: 1px solid var(--spot);
+    transition: background 0.15s;
+  }
+  section.s a:hover { background: var(--spot-wash); }
+
+  /* inline footnote reference markers */
+  sup.ref {
+    font-family: var(--mono);
+    font-size: 0.68em;
+    color: var(--spot);
+    margin-left: 0.05em;
+    vertical-align: super;
+    line-height: 0;
+    font-weight: 400;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     Contextual sidenotes — placed in cols 10-12 of the
+     section's subgrid (same column as the side rail). dense
+     auto-flow pulls them up to share a grid row with the
+     paragraph that references them.
+     ───────────────────────────────────────────────────────── */
+  section.s > aside.sn {
+    grid-column: 10 / span 3;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    padding-left: 1rem;
+    border-left: 1px solid var(--spot);
+    align-self: start;
+  }
+  aside.sn .num {
+    color: var(--spot);
+    margin-right: 0.4em;
+    font-weight: 400;
+  }
+
+  /* pull quote */
+  blockquote.pull {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.35rem;
+    line-height: 1.35;
+    color: var(--ink);
+    margin: 1.8rem 0;
+    padding: 0.4rem 0 0.4rem 1.4rem;
+    border-left: 3px solid var(--spot);
+    max-width: 34rem;
+    font-variation-settings: "opsz" 36;
+  }
+
+  /* code listing */
+  .listing {
+    margin: 1.8rem 0;
+    max-width: 42rem;
+  }
+  .listing-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .listing-head .label {
+    color: var(--spot);
+    letter-spacing: 0.08em;
+  }
+  .listing-head .lang { color: var(--ink-faint); }
+  .listing pre {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.65;
+    background: transparent;
+    padding: 1rem 0 1rem 0;
+    overflow-x: auto;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+  .listing pre .kw { color: var(--spot); }
+  .listing pre .str { color: var(--ink-soft); font-style: italic; }
+  .listing pre .com { color: var(--ink-faint); font-style: italic; }
+  .listing-foot {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    padding-top: 0.3rem;
+    text-align: right;
+  }
+  code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    color: var(--ink);
+    background: var(--paper-deep);
+    padding: 0.04em 0.3em;
+    border-radius: 1px;
+  }
+
+  /* figure — spans wider (cols 1-9) */
+  figure.wide {
+    grid-column: 1 / span 9;
+    margin: 1rem 0 2.5rem;
+  }
+  .figure-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .figure-head .label { color: var(--spot); letter-spacing: 0.08em; }
+  .figure-head .credit { color: var(--ink-faint); }
+  figure img, figure iframe {
+    width: 100%;
+    display: block;
+    background: white;
+    border: 1px solid var(--rule-soft);
+  }
+  figure iframe { aspect-ratio: 16/9; }
+  figcaption {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--ink);
+    margin-top: 0.6rem;
+    line-height: 1.4;
+    max-width: 36rem;
+  }
+
+  /* section break / end mark */
+  .end-section {
+    grid-column: 1 / span 8;
+    text-align: center;
+    color: var(--spot);
+    font-size: 0.9rem;
+    margin: 1rem 0 2rem;
+    letter-spacing: 1em;
+    padding-left: 1em;
+  }
+
+  /* article end mark */
+  .end-mark {
+    display: inline-block;
+    color: var(--spot);
+    margin-left: 0.4em;
+    vertical-align: 0.05em;
+  }
+
+  /* ─────────────────────────────────────────────────────────
+     Footer
+     ───────────────────────────────────────────────────────── */
+  footer.docfoot {
+    grid-column: 1 / -1;
+    margin-top: 4rem;
+    padding-top: 0.8rem;
+    border-top: 3px double var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+  footer.docfoot .nav-prev, footer.docfoot .nav-next {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  footer.docfoot .nav-next { text-align: right; align-items: flex-end; }
+  footer.docfoot .label {
+    color: var(--spot);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  footer.docfoot .title-link {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    max-width: 22rem;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  footer.docfoot .title-link:hover { border-bottom-color: var(--spot); }
+
+  .colophon {
+    grid-column: 1 / -1;
+    margin-top: 2.5rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--rule-soft);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+  }
+  .colophon .cite { color: var(--ink-soft); }
+  .colophon .cite em { font-style: italic; color: var(--ink); }
+  .colophon .reply { color: var(--ink-soft); }
+  .colophon .reply a { color: var(--ink); border-bottom: 1px solid var(--spot); }
+  .colophon .reply a:hover { background: var(--spot-wash); }
+
+  /* ─────────────────────────────────────────────────────────
+     Narrow screens: sidenotes flow inline; side rail collapses
+     under content; sections drop subgrid and become block flow.
+     ───────────────────────────────────────────────────────── */
+  @media (max-width: 980px) {
+    .titleblock, .meta, figure.wide, .end-section { grid-column: 1 / -1; }
+    .siderail {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      border-left: none;
+      border-top: 1px solid var(--rule-soft);
+      padding-left: 0;
+      padding-top: 1rem;
+      margin: 2rem 0;
+    }
+    section.s {
+      grid-column: 1 / -1;
+      display: block;
+    }
+    section.s > .sigil { text-align: left; margin-bottom: 0.4rem; padding-top: 0; }
+    section.s > aside.sn {
+      max-width: 32rem;
+      margin: 1rem 0 1.5rem 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="br">[</span><span class="name">Adam Solove</span><span class="br">]</span>
+  </div>
+  <nav>
+    <a href="#" class="current">Essays</a>
+    <a href="#">Notes</a>
+    <a href="#">Work</a>
+    <a href="#">RSS</a>
+  </nav>
+</div>
+
+<div class="crumb">
+  <div class="path">
+    Essays <span>/</span> UI engineering <span>/</span> <em>Preact in pictures</em>
+  </div>
+  <div class="date">19 Apr 2017</div>
+</div>
+
+<div class="page">
+
+  <div class="titleblock">
+    <h1>Preact in pictures.</h1>
+    <p class="standfirst">A thirty-minute walk through what a tiny React-alike does inside — and what its small, legible algorithm can teach us about the larger one.</p>
+  </div>
+
+  <aside class="siderail">
+    <h3>Contents</h3>
+    <ul>
+      <li><span class="n">§1.1</span><a href="#">The talk in two parts</a></li>
+      <li><span class="n">§1.2</span><a href="#">The core diff loop</a></li>
+      <li><span class="n">Fig.1</span><a href="#">The talk video</a></li>
+      <li><span class="n">Fig.2</span><a href="#">The finished diagram</a></li>
+    </ul>
+
+    <h3>Companion</h3>
+    <ul>
+      <li><a href="#">▸ Slide deck (PDF)</a></li>
+      <li><a href="#">▸ Talk video on YouTube</a></li>
+      <li><a href="#">▸ Preact source on GitHub</a></li>
+    </ul>
+  </aside>
+
+  <div class="meta">
+    <span><strong>By</strong> Adam Solove</span>
+    <span class="sep">§</span>
+    <span><strong>Talk delivered</strong> ReactJS Denver, Apr 2017</span>
+    <span class="sep">§</span>
+    <span><strong>Reading time</strong> 4 min</span>
+    <span class="sep">§</span>
+    <span><strong>Companion to</strong> Preact Internals, parts 1–3</span>
+  </div>
+
+  <section class="s">
+    <div class="sigil"><span class="sym">§</span>1.1</div>
+    <h2>The talk in two parts</h2>
+    <p>I gave a talk at tonight’s <a href="#">ReactJS Denver</a> meetup about <a href="#">Preact</a>. The video is embedded below; the slide deck is higher resolution if you’d rather flip through frames at your own pace.<sup class="ref">[1]</sup></p>
+    <aside class="sn"><span class="num">[1]</span> The video doesn’t pick up details on the slides, so the linked deck is the better artifact for studying individual frames.</aside>
+    <ul class="body-list">
+      <li><strong>Part 1</strong> describes Preact, why you might want to use it, and the tradeoffs you make by not using full React.</li>
+      <li><strong>Part 2</strong> walks through what Preact is doing internally to render and diff a simple application.</li>
+    </ul>
+    <blockquote class="pull">The virtual DOM is not a deep mystery. It is a small algorithm with a few fiddly details.</blockquote>
+    <p>To many people, the virtual DOM and component model seem like mysteries that mere mortals shouldn’t try to understand. As I hopefully demonstrated, this isn’t true. It’s a reasonably simple algorithm with a few fiddly details. While React is implemented somewhat differently, knowing Preact’s internals is still a good first mental model for approaching it.</p>
+  </section>
+
+  <figure class="wide">
+    <div class="figure-head">
+      <span class="label">Figure 1.</span>
+      <span class="credit">ReactJS Denver · April 2017 · 30 min</span>
+    </div>
+    <iframe src="https://www.youtube-nocookie.com/embed/CAg3eJ_pXgc?start=2206" title="Preact in pictures" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <figcaption>“Preact in pictures.” Talk video from ReactJS Denver. The recording does not capture slide details cleanly — see the linked PDF deck for high-resolution frames.</figcaption>
+  </figure>
+
+  <div class="end-section">◆ ◆ ◆</div>
+
+  <section class="s">
+    <div class="sigil"><span class="sym">§</span>1.2</div>
+    <h2>The core diff loop</h2>
+    <p>The heart of the renderer is roughly this — a recursive walk that reconciles a virtual node against the DOM node it last produced, returning the (possibly new) DOM node to its parent.<sup class="ref">[2]</sup></p>
+    <aside class="sn"><span class="num">[2]</span> Simplified for clarity. The real <code>diff</code> in Preact 8 also threads context, an SVG flag, and a hydration mode through every call.</aside>
+
+    <div class="listing">
+      <div class="listing-head">
+        <span class="label">Listing 1.</span>
+        <span class="lang">preact / src / diff.js</span>
+      </div>
+<pre><span class="com">// Diff a vnode against an existing dom node.</span>
+<span class="kw">function</span> diff(dom, vnode, parent) {
+  <span class="kw">if</span> (<span class="kw">typeof</span> vnode === <span class="str">'string'</span>) {
+    <span class="kw">return</span> diffText(dom, vnode);
+  }
+  <span class="kw">if</span> (<span class="kw">typeof</span> vnode.nodeName === <span class="str">'function'</span>) {
+    <span class="kw">return</span> buildComponentFromVNode(dom, vnode);
+  }
+  <span class="kw">return</span> innerDiffNode(dom, vnode);
+}</pre>
+      <div class="listing-foot">Simplified from preact 8.x &middot; 9 lines</div>
+    </div>
+
+    <p>Everything else in the codebase is in service of those three branches: handling text nodes, building up component instances, and walking the children of an element. Once you can hold those branches in your head, the rest is bookkeeping.<span class="end-mark">■</span></p>
+  </section>
+
+  <figure class="wide">
+    <div class="figure-head">
+      <span class="label">Figure 2.</span>
+      <span class="credit">A. Solove · April 2017</span>
+    </div>
+    <img src="/img/preact-in-pictures/preact-in-pictures-7dccd42b.png" alt="Diagram of the Preact algorithm — boxes representing virtual nodes, DOM nodes, and component instances connected by arrows showing the render and diff flow.">
+    <figcaption>The complete Preact render-and-diff algorithm. Drawn from the final state of the talk slides; the slide build animates each box in sequence.</figcaption>
+  </figure>
+
+  <footer class="docfoot">
+    <a href="#" class="nav-prev">
+      <span class="label">← Previous</span>
+      <span class="title-link">Preact internals #3: the children diff</span>
+    </a>
+    <a href="#" class="nav-next">
+      <span class="label">Next →</span>
+      <span class="title-link">Important problems in UI engineering</span>
+    </a>
+    <div class="colophon">
+      <span class="cite">Cite as: Solove, A. <em>Preact in pictures</em>. adamsolove.com, 19 Apr 2017.</span>
+      <span class="reply">Comments or questions? <a href="mailto:asolove@gmail.com">asolove@gmail.com</a></span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

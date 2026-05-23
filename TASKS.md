@@ -26,7 +26,7 @@ Pages the old site has that the new site doesn't yet. Verified by running the re
 - [x] `/blog.html` — chronological list of all posts. Migrate as `next/src/pages/blog.astro`. (Note: the Jekyll source uses `<h3>` inside `<a>` and `<p>` wrapping `<h3>` — not valid HTML, redesign while migrating)
 - [x] Sketchpad subsite (`/sketchpad/*`) — frozen as static HTML in `next/public/sketchpad/` (plus `next/public/css/sketchpad.css` for styling). Not linked from anywhere; reachable only by direct URL. Decision was to freeze rather than migrate or re-host.
 - [x] Verify favicon resolves (`/img/favicon.png` — works via the `next/public/img` symlink to repo `img/`; `dist/img/favicon.png` builds correctly and `Base.astro` already includes the `<link rel="icon">`)
-- [ ] Confirm no other top-level files are needed (`_site/css/` is not needed — new site has its own CSS)
+- [x] Confirm no other top-level files are needed (`_site/css/` is not needed — new site has its own CSS). Survey confirmed: only un-covered top-level entries in `_site/` are the `learning/` and `people/` directories, which contain post permalinks only (no category index pages); both are emitted by the post route.
 
 ## Phase 2 — Content fixes
 

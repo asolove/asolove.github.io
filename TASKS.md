@@ -21,7 +21,7 @@ Single source of truth for migration progress. Read `CLAUDE.md` before working o
 Pages the old site has that the new site doesn't yet. Verified by running the review harness against existing `_site/` and `next/dist/` builds — only two URLs are "old only" (`/404.html`, `/blog.html`), plus the harness-skipped `/sketchpad/*` subtree, plus a few root-level files the harness doesn't index (CNAME, the Clojure RSS feed).
 
 - [x] `CNAME` at `next/public/CNAME` so `dist/CNAME` ends up with `www.adamsolove.com`
-- [ ] `/404.html` — the Jekyll version is a one-line redirect to `/`; reproduce in `next/public/404.html` (or design a real 404 page, see Phase 3)
+- [x] `/404.html` — the Jekyll version is a one-line redirect to `/`; reproduced verbatim in `next/public/404.html`. A real designed 404 page can come later in Phase 3.
 - [ ] `/clojure.xml` — category-filtered RSS feed for posts in the `clojure` category. RSS 2.0 (not Atom) despite the filename. Migrate as `next/src/pages/clojure.xml.ts`
 - [ ] `/blog.html` — chronological list of all posts. Migrate as `next/src/pages/blog.astro`. (Note: the Jekyll source uses `<h3>` inside `<a>` and `<p>` wrapping `<h3>` — not valid HTML, redesign while migrating)
 - [ ] Sketchpad subsite (`/sketchpad/*`) — currently skipped by the review harness. Has its own Jekyll layout (`sketchpad.css`, `_layouts/sketchpad.html`). Decide: migrate to Astro, leave on Jekyll forever, or freeze the current `_site/sketchpad/` as static HTML in `next/public/sketchpad/`

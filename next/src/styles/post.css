@@ -328,6 +328,9 @@ h1 {
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   max-width: calc(42rem + 2.4rem);
+  /* Override Shiki's inline white background so code blocks sit on the
+     same warm paper tone as inline code, not on a bright white panel. */
+  background: var(--paper-deep) !important;
 }
 .body :not(pre) > code {
   font-family: var(--mono);

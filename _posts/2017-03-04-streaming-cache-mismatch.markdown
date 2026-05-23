@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Mismatched assets with streaming service workers"
+description: "An open question: when a service worker caches the header but streams the body, how do you keep CSS and markup from drifting?"
 date:   2017-03-04 21:43:39
 categories: js service-worker stream
 ---

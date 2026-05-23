@@ -15,15 +15,15 @@ A good description is 1 sentence, ~120–160 characters, answers "what is this p
 
 ### The list
 
-- [ ] `_posts/2012-09-19-deferred-method-combinator.markdown` — Deferred method combinator
-- [ ] `_posts/2012-09-27-stateful-views.markdown` — Stateful views
-- [ ] `_posts/2013-05-17-inspired-by-sketchpad.markdown` — Being inspired by Sketchpad
-- [ ] `_posts/2013-06-08-speak-at-jsconf.markdown` — You should speak at JSConf
-- [ ] `_posts/2013-10-15-constraint-programming-in-the-browser.markdown` — Constraint programming in the browser
-- [ ] `_posts/2014-01-06-om-experience-report.markdown` — Om experience report
-- [ ] `_posts/2014-05-08-react-js-and-om.markdown` — React.js & Om talk
-- [ ] `_posts/2016-04-13-modeling-with-adts.markdown` — Modeling business problems with ADTs in Flow/js
-- [ ] `_posts/2016-04-15-flow-exhaustiveness.markdown` — Exhaustiveness checking in Flow
-- [ ] `_posts/2017-03-04-streaming-cache-mismatch.markdown` — Mismatched assets with streaming service workers
+- [x] `_posts/2012-09-19-deferred-method-combinator.markdown` — Deferred method combinator
+- [x] `_posts/2012-09-27-stateful-views.markdown` — Stateful views
+- [x] `_posts/2013-05-17-inspired-by-sketchpad.markdown` — Being inspired by Sketchpad
+- [x] `_posts/2013-06-08-speak-at-jsconf.markdown` — You should speak at JSConf
+- [x] `_posts/2013-10-15-constraint-programming-in-the-browser.markdown` — Constraint programming in the browser
+- [x] `_posts/2014-01-06-om-experience-report.markdown` — Om experience report
+- [x] `_posts/2014-05-08-react-js-and-om.markdown` — React.js & Om talk
+- [x] `_posts/2016-04-13-modeling-with-adts.markdown` — Modeling business problems with ADTs in Flow/js
+- [x] `_posts/2016-04-15-flow-exhaustiveness.markdown` — Exhaustiveness checking in Flow
+- [x] `_posts/2017-03-04-streaming-cache-mismatch.markdown` — Mismatched assets with streaming service workers
 
 To edit: open the file, add a `description: "..."` line in the frontmatter (between `title:` and `date:`), commit. Cross off the box here.

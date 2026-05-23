@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Deferred method combinator"
+description: "Wrapping async dependencies with a higher-order function, so callers can keep treating a method as fire-and-forget."
 date:   2012-09-19 17:43:39
 categories: js functional
 ---

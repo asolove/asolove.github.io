@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Being inspired by Sketchpad"
+description: "What Ivan Sutherland’s 1963 thesis still has to teach us — method dispatch, prototypical inheritance, and constraint-driven UI."
 date: 2013-05-17 22:01:39
 categories: js ui
 ---

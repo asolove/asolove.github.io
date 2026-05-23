@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Stateful views"
+description: "MV* frameworks handle stateless event bindings well, but drag-and-drop and other multi-step interactions want state machines."
 date:   2012-09-27 17:43:39
 categories: js view
 ---

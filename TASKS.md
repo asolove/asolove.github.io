@@ -32,8 +32,8 @@ Pages the old site has that the new site doesn't yet. Verified by running the re
 
 From `next/TODO-content.md`:
 
-- [ ] Add `description:` frontmatter to 10 posts missing it (list lives in `next/TODO-content.md`)
-- [ ] Decide on auto-generated fallback (truncated first sentence with ellipsis) vs. requiring a hand-written description for all posts
+- [x] Add `description:` frontmatter to 10 posts missing it (list lives in `next/TODO-content.md`)
+- [x] Decide on auto-generated fallback (truncated first sentence with ellipsis) vs. requiring a hand-written description for all posts — decision: **require hand-written descriptions** for all posts going forward; no auto-fallback. Backfilled the 10 missing ones with hand-written one-liners.
 - [ ] Verify all migrated post bodies render correctly — code blocks, images, sidenotes, figure numbers, smartquotes
 - [ ] Verify legacy URLs still resolve — old Jekyll category-permalink format (`/js/ui/2017/04/19/preact-in-pictures.html` etc.)
 

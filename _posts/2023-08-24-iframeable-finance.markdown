@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "&lt;iframe&gt;able finance"
+title: "<iframe>able finance"
 description: "Designing and building embedded UIs"
 date: 2023-08-24 11:28:00
 categories: js

@@ -2,3 +2,12 @@ name: Adam Solove
 description: Personal site
 url: http://adamsolove.com/
 markdown: kramdown
+
+# Exclude the redesign work-in-progress from Jekyll builds.
+exclude:
+  - next/
+  - prototypes/
+  - review/
+  - node_modules/
+  - README
+  - TODO

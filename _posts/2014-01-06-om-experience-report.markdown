@@ -44,7 +44,7 @@ And now Om provides an idiomatic, functional DOM abstraction.
 ## How to start
 
 
-0. Learn ClojureScript. You can pick up enough of it to be dangerous with [ClojureScript: Up and Running](http://shop.oreilly.com/product/0636920025139.do) although you'll eventually want to read a full Clojure book to understand all the details.
+1. Learn ClojureScript. You can pick up enough of it to be dangerous with [ClojureScript: Up and Running](http://shop.oreilly.com/product/0636920025139.do) although you'll eventually want to read a full Clojure book to understand all the details.
 
 1. Understand React. Start with the very good [React Tutorial](http://facebook.github.io/react/docs/tutorial.html). It's also worth skimming the Guides linked on that page. And bookmark the [Component Lifecycle doc](http://facebook.github.io/react/docs/component-specs.html), which you will want to refer to often.
 

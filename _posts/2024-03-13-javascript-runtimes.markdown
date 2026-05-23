@@ -30,10 +30,10 @@ That leaves us with 20 available permutations. Many of them would make quite poo
 **Plausible names**
 
 | Name | Brand possibilities                                                                                                                       |
-| ---- | ----------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | oden | Strong mythology/comics reference possibilities here for logo branding.                                                                   |
 | nedo | Pronounce it "Neato!"                                                                                                                     |
-| edno | Pronounce it "Edna" and make this a Simpsons reference to Edna Krabappel and you've got a string brand and a cease-and-desist opportunity |     |
+| edno | Pronounce it "Edna" and make this a Simpsons reference to Edna Krabappel and you've got a string brand and a cease-and-desist opportunity |
 | doen | Pronounce it "Doin'"                                                                                                                      |
 | edon | As in "Garden of": a fresh perspective where no evil exists (get rid of casts)                                                            |
 | oned | 1d, as in, one-dimensional. A JavaScript-to-wasm runtime where 1d is a joke on linear memory                                              |
@@ -81,7 +81,7 @@ To see that we can expect all 24 permutations to be claimed by 2029:
 
 You might like some of my more serious writing for JavaScript people:
 
-- [<iframe>able finance](https://www.adamsolove.com/js/2023/08/24/iframeable-finance.html): a talk on working with iframes and building embedded UI products.
+- [&lt;iframe&gt;able finance](https://www.adamsolove.com/js/2023/08/24/iframeable-finance.html): a talk on working with iframes and building embedded UI products.
 - [Constraint programming in JavaScript](https://www.adamsolove.com/js/2013/10/15/constraint-programming-in-the-browser.html): a talk on why and how to program using constraint solvers.
 
 ---

@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { post, headings, prev, next } = Astro.props;
-const { title, description, date, categories, companion, related_to } = post.data;
+const { title, description, date, categories, companion, related_to, dropcap } = post.data;
 
 // Breadcrumb: Essays / [most-specific category] / [post title]
 const lastCategory = categories[categories.length - 1];
@@ -31,7 +31,10 @@ const minutes = readingTime(post.body ?? '');
 // Suppress reading-time on short posts (talk announcements, link posts, etc).
 const showReadingTime = minutes >= 2;
 // Drop-cap looks unbalanced on short pieces; only apply on real long-form.
+// `dropcap: false` in frontmatter is an explicit opt-out (use when the
+// first paragraph is a parenthetical aside or other bad target).
 const isLongForm = (post.body?.split(/\s+/).length ?? 0) > 800;
+const useDropcap = isLongForm && dropcap !== false;
 
 // Filter the auto-generated TOC: only show h2 and h3.
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
@@ -90,7 +93,7 @@ const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
       </>)}
     </div>
 
-    <article class:list={['body', isLongForm && 'longform']}>
+    <article class:list={['body', isLongForm && 'longform', useDropcap && 'has-dropcap']}>
       <slot />
     </article>
 

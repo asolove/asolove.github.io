@@ -14,7 +14,7 @@ But experts in this material may have noticed something odd about my post: I tri
 
 *However,* over the last few weeks I spent a lot of time reading through the online discussion about CML (especially as compared with Go’s synchronous messages and Erlang’s asynchronous ones) and I came to a clear conclusion:
 
-| There is no convenient, generally-useful way to refer to the core ideas of CML, and this naming problem makes it harder to introduce new people to the ideas.
+> There is no convenient, generally-useful way to refer to the core ideas of CML, and this naming problem makes it harder to introduce new people to the ideas.
 
 The two obvious names to use both have significant problems:
 

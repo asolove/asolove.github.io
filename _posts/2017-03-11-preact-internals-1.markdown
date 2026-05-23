@@ -10,7 +10,7 @@ categories: js ui
 
 I assume you are already familiar with the React component model and virtual dom rendering. A [first React book](http://shop.oreilly.com/product/0636920042266.do) or [online course](https://egghead.io/courses/react-fundamentals) should be enough background. I also assume you know what Preact is and are interested in it either to make your applications load faster or just because you have a better chance of understanding its implementation than reading the whole React codebase. I won’t try to sell you on Preact, and this is the last bit of marketing in the series:
 
-| Preact is the fast 3kB alternative to React with the same ES6 API.
+> Preact is the fast 3kB alternative to React with the same ES6 API.
 
 I don’t assume any familiarity with how (P)react might be implemented: learning that is the point! At suitable moments I may also link to the React codebase for comparison, but understanding React’s much more ambitious implementation is way outside of our scope.
 

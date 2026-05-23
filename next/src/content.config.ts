@@ -29,6 +29,9 @@ const posts = defineCollection({
       .array(z.object({ label: z.string(), url: z.string() }))
       .optional(),
     related_to: z.string().optional(),
+    // Opt out of the auto-dropcap on long-form posts when the first paragraph
+    // is a parenthetical aside, a blockquote, or otherwise a bad target.
+    dropcap: z.boolean().optional(),
   }),
 });
 

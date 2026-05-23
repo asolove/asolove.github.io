@@ -34,7 +34,7 @@ When it was about time for the community track slots to open up, I didn't have a
 
 So [my talk proposal](https://github.com/jsconf/jsconfus2013/issues/30) was actually just a summary of everything I knew about Cassowary at the time. Plus I promised:
 
-| This talk will provide an introduction to constraint programming, a walkthrough of the JavaScript Cassowary library, and an implementation of several "how the heck did you do that" programs with constraints.
+> This talk will provide an introduction to constraint programming, a walkthrough of the JavaScript Cassowary library, and an implementation of several "how the heck did you do that" programs with constraints.
 
 At the time I wrote this sentence it was pretty much a lie: I understood the API reasonably well, but I had only used it for simple things, and I had no impressive demos.
 

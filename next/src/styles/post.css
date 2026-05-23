@@ -252,7 +252,7 @@ h1 {
 
 /* Drop-cap on the first paragraph of long-form posts. The body subgrid
    places p at cols 2-8, so the float stays within the column. */
-.body.longform > p:first-of-type::first-letter {
+.body.has-dropcap > p:first-of-type::first-letter {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 4.4em;

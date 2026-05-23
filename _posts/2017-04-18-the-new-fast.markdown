@@ -2,6 +2,7 @@
 layout: post
 title: "The new fast: advanced web performance best practices for 2017"
 description: "Or: what Souders’ books didn’t tell you because it only happened in the last two years."
+dropcap: false
 date: 2017-04-18 09:00:00
 categories: js perf
 ---

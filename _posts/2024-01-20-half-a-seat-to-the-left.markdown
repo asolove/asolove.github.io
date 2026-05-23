@@ -59,7 +59,10 @@ _An aside:_ at this point, someone will object that they follow Agile or Lean UX
 
 Handoffs happen because we have someone working in one tool to make one artifact, and then we have to communicate that to a different person working in a different tool to make a different artifact.
 
-<img class="full" alt="Diagram showing research, product, and engineering roles, with each person aligned with their respective artifact: a researcher making a powerpoint presentation, a product manager writing a product brief, and an engineer writing code." src="/img/role-per-artifact.jpg">
+<figure>
+  <img alt="Diagram showing research, product, and engineering roles, with each person aligned with their respective artifact: a researcher making a powerpoint presentation, a product manager writing a product brief, and an engineer writing code." src="/img/role-per-artifact.jpg">
+  <figcaption>One role per artifact — handoffs at every boundary.</figcaption>
+</figure>
 
 **Handoffs are painful** because we take all of the complex thinking that happened in one area, reduce it to just a static artifact like a finished design or user story, and then ask people to act based on that artifact without seeing the thinking behind it. This produces a series of antipatterns:
 
@@ -95,7 +98,10 @@ An alternative is to move roles "half a seat over", so that they are aligned not
 
 Imagine we're starting a new product and need to do some user research, scope the product, and build a prototype of its UI. And we're going to reorg half a seat over, aligning roles to translations, rather than artifacts:
 
-<img class="full" alt="Diagram showing an alternate org arrangement in which the product manager is aligned to translating between market research and product design, and a product engineer is aligned to translating between a product design and code." src="/img/role-per-translation.jpg"/>
+<figure>
+  <img alt="Diagram showing an alternate org arrangement in which the product manager is aligned to translating between market research and product design, and a product engineer is aligned to translating between a product design and code." src="/img/role-per-translation.jpg"/>
+  <figcaption>One role per translation — each hybrid role bridges two disciplines.</figcaption>
+</figure>
 
 - The PM will spend half of their effort outside of the team, directly working on user research, partnered with someone who is an expert in that area.
 - The PM and product engineer will then work directly together to write a product brief. The PM can use the research that they are directly involved in, while the engineer brings their knowledge of our existing systems and technical tradeoffs. But they work together to bring all that knowledge to bear on the product brief.

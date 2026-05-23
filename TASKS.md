@@ -18,17 +18,15 @@ Single source of truth for migration progress. Read `CLAUDE.md` before working o
 
 ## Phase 1 — Page coverage (the special cases)
 
-Pages the old site has that the new site doesn't yet, or has but wrong:
+Pages the old site has that the new site doesn't yet. Verified by running the review harness against existing `_site/` and `next/dist/` builds — only two URLs are "old only" (`/404.html`, `/blog.html`), plus the harness-skipped `/sketchpad/*` subtree, plus a few root-level files the harness doesn't index (CNAME, the Clojure RSS feed).
 
-- [ ] Blog index / archive page (Jekyll has `/index.html` listing all posts? confirm — and any category index pages)
-- [ ] Sketchpad subsite (`/sketchpad/*`) — currently skipped by the review harness; decide whether to migrate it, leave it on Jekyll, or freeze it as static HTML inside `next/public/`
-- [ ] Clojure-only Atom feed (Jekyll has one — check `atom.xml` variants)
-- [ ] 404 page
-- [ ] Any redirects the Jekyll site relies on (check `_config.yml` and `_redirects` if any)
-- [ ] Static assets: `/img/*`, `/css/main.css` references in post bodies, fonts, favicon — confirm they're served from `next/public/`
-- [ ] `CNAME` file gets emitted to `next/dist/` for the eventual GitHub Pages cutover
-
-> **Run the review harness** (`node review/build.mjs` after both builds) to populate this list with anything else that's "old only."
+- [ ] `CNAME` at `next/public/CNAME` so `dist/CNAME` ends up with `www.adamsolove.com`
+- [ ] `/404.html` — the Jekyll version is a one-line redirect to `/`; reproduce in `next/public/404.html` (or design a real 404 page, see Phase 3)
+- [ ] `/clojure.xml` — category-filtered RSS feed for posts in the `clojure` category. RSS 2.0 (not Atom) despite the filename. Migrate as `next/src/pages/clojure.xml.ts`
+- [ ] `/blog.html` — chronological list of all posts. Migrate as `next/src/pages/blog.astro`. (Note: the Jekyll source uses `<h3>` inside `<a>` and `<p>` wrapping `<h3>` — not valid HTML, redesign while migrating)
+- [ ] Sketchpad subsite (`/sketchpad/*`) — currently skipped by the review harness. Has its own Jekyll layout (`sketchpad.css`, `_layouts/sketchpad.html`). Decide: migrate to Astro, leave on Jekyll forever, or freeze the current `_site/sketchpad/` as static HTML in `next/public/sketchpad/`
+- [ ] Verify favicon resolves (`/img/favicon.png` — should work via the `next/public/img` symlink to repo `img/`, but confirm)
+- [ ] Confirm no other top-level files are needed (`_site/css/` is not needed — new site has its own CSS)
 
 ## Phase 2 — Content fixes
 

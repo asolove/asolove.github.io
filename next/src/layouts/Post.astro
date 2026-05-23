@@ -16,7 +16,7 @@ const { title, description, date, categories, companion, related_to } = post.dat
 // Breadcrumb: Essays / [most-specific category] / [post title]
 const lastCategory = categories[categories.length - 1];
 const breadcrumb = [
-  { label: 'Essays', href: '/' },
+  { label: 'Blog', href: '/blog.html' },
   ...(lastCategory ? [{ label: categoryLabel(lastCategory) }] : []),
   { label: title },
 ];

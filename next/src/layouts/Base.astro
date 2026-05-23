@@ -6,10 +6,10 @@ interface Props {
   description?: string;
   breadcrumb?: Array<{ label: string; href?: string }>;
   date?: Date;
-  current?: 'essays' | 'notes' | 'work';
+  current?: 'blog' | 'notes' | 'work';
 }
 
-const { title, description, breadcrumb = [], date, current = 'essays' } = Astro.props;
+const { title, description, breadcrumb = [], date, current = 'blog' } = Astro.props;
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -33,7 +33,7 @@ const formatDate = (d: Date) =>
     <span class="name">Adam Solove</span>
   </a>
   <nav>
-    <a href="/" class={current === 'essays' ? 'current' : ''}>Essays</a>
+    <a href="/blog.html" class={current === 'blog' ? 'current' : ''}>Blog</a>
     <a href="/notes" class={current === 'notes' ? 'current' : ''}>Notes</a>
     <a href="/work" class={current === 'work' ? 'current' : ''}>Work</a>
     <a href="/atom.xml">RSS</a>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Understanding Sketchpad—References</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/sketchpad.css" />
+
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="All posts"
+      href="/atom.xml"
+    />
+    <link rel="icon" href="/img/favicon.png" />
+
+    <!-- Privacy-respecting analytics -->
+    <script
+      src="https://cdn.usefathom.com/script.js"
+      data-site="GBQNSZEZ"
+      defer
+    ></script>
+  </head>
+  <body>
+    <header></header>
+
+    <nav class="top">
+      <ol>
+        <li><a href="/sketchpad/">Home</a></li>
+        <li><a href="/sketchpad/impact">Impact</a></li>
+        <li><a href="/sketchpad/internals">Internals</a></li>
+        <li><a href="/sketchpad/references">References</a></li>
+        <li><a href="/sketchpad/about">About</a></li>
+      </ol>
+    </nav>
+
+    <article><h1 id="references">References</h1>
+
+<h2 id="primary-resources">Primary resources</h2>
+
+<ul>
+  <li>✅ <a href="https://dspace.mit.edu/handle/1721.1/14979">Sketchpad thesis</a>
+    <ul>
+      <li><a href="https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-574.pdf">Newer, nicely-typeset version</a></li>
+    </ul>
+  </li>
+  <li>✅ [[Sutherland Turing Interview]]</li>
+  <li>👀 <a href="https://computerhistory.org/blog/the-remarkable-ivan-sutherland/">Interviews with Sutherland</a> at Computer History Museum</li>
+  <li>✅ <a href="https://www.youtube.com/watch?v=HnvckW1FMHc">Sutherland interview</a> for HLF</li>
+  <li><a href="https://amturing.acm.org/award_winners/sutherland_3467412.cfm">Long biography from ACM</a></li>
+  <li><a href="https://www.youtube.com/watch?v=T7dC98PNxyE&amp;list=PLKTTWvMgeg0ZJTk-3DY_pwvoih9_gsAw4&amp;index=8">Video of Sketchpad in use</a>: this is the video that Kay’s voiceovers are based on, but more complete and higher resolution.</li>
+  <li><a href="https://dspace.mit.edu/handle/1721.1/11559">Sketchpad III</a> a thesis adding 3D to Sketchpad, from around the same time.
+May have interesting material on someone else learning to use the system and expand its codebase. - <a href="https://www.youtube.com/watch?v=t3ZsiBMnGSg&amp;list=PLKTTWvMgeg0ZJTk-3DY_pwvoih9_gsAw4">Video of Sketchpad III</a> showing a single 3d object projected in multiple ways</li>
+  <li><a href="https://tx-2.github.io/photographs">Photographs from Lincoln Labs archive</a> showing TX-2 and Sketchpad in use. These are much higher-resolution images than the ones you normally see, and some are in color.</li>
+  <li><a href="http://cva.stanford.edu/classes/cs99s/papers/myer-sutherland-design-of-display-processors.pdf">On the design of display processors</a>. T. H. Myer and I. E. Sutherland. 1968. Commun. ACM 11, 6 (June 1968), 410–414.
+The “Wheel of Incarnation” article, which describes the process by which the simple controllers for IO devices become more complicated until they eventually take on all the behavior of a generic processor, including jumps, subroutines, etc. Today, we would say “everything is a computer”, but at the time the interesting discovery is that “every part of a computer will eventually be its own computer”. In modern terms, we might point out the similarity that systems intended just for graphics display (like TeX, PostScript, and 3D rendering engines) inevitably have entire programming languages inside them, or that the GPU hardware originally built for display calculation is now used for cryptocurrency and AI.</li>
+  <li>Sutherland, I. E., <a href="http://bitsavers.informatik.uni-stuttgart.de/magazines/Datamation/196605.pdf">“Computer Graphics; Ten Unsolved Problems”</a>, Datamation, Vol. 12, No. 5 (May, 1966), pp. 22-27. Sutherland discussed several long-solved problems, such as needing faster-refreshing displays, better raster graphics support, and ray-tracing for 3D rendering. He also describes the goal of using a computer to simulate complex systems to understand them better than we can with abstract symbols and equations. In particular, he describes the symbolism he uses to he visually understand circuits, which breaks down when they get too complex. He wonders if a computer display could do the calculations to show his symbolism for him, so that he can use it even for more complex circuits. This is exactly the problem taken up by Bret Victor in <a href="https://worrydream.com/MediaForThinkingTheUnthinkable/">Media for Thinking the Unthinkable</a>’s Demo 2.</li>
+  <li>Sutherland, W. R., On-Line Graphical Specification of Computer Procedures, M.I.T. Lincoln Lab., Tech. Report No. 405, Lexington, Mass. (May, 1966).</li>
+  <li>[Graphical communication and control languages]</li>
+</ul>
+
+<h2 id="other-work-by-ivan-sutherland">Other work by Ivan Sutherland</h2>
+
+<ul>
+  <li><a href="https://cseweb.ucsd.edu/~wgg/smli_ps-1.pdf">Technology and courage</a></li>
+  <li><a href="https://www.youtube.com/watch?v=jrMfU2FtSBk">6 legged walker</a>: a 1983 demo of a DARPA-funded walking machine.</li>
+  <li><a href="https://www.youtube.com/watch?v=jR9pAaQlVRc">Some thoughts about concurrency</a>: a lecture at USENIX on how to improve our thinking about concurrent programming.</li>
+  <li><a href="https://www.youtube.com/watch?v=Y2AIDHjylMI">Virtual reality before it had that name</a>: a retrospective on The Sword of Damocles, a very early prototype of head-mounted virtual reality display.</li>
+</ul>
+
+<h2 id="second-hand-demos-or-voiceovers">Second-hand demos or voiceovers</h2>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=6orsmFndx_o">Historical retrospective with 1963 demo clips</a>
+Shows interactive usage and pretty clearly demonstrates the “twinkle” display mode.</li>
+</ul>
+
+<h2 id="impact-of-sketchpad">Impact of Sketchpad</h2>
+
+<h3 id="architecture">Architecture</h3>
+
+<ul>
+  <li>Konstan, <a href="https://direct.mit.edu/books/edited-volume/3814/chapter-abstract/125135/Drawing-on-SketchPad-Reflections-on-Computer?redirectedFrom=fulltext">“Drawing on Sketchpad: Reflections on Computer Science and HCI”</a>
+    <ul>
+      <li>Appears in <a href="https://search.libraries.emory.edu/catalog/990007904240302486">“HCI Remixed”</a></li>
+      <li>This is a retrospective on Sketchpad’s impact on the field of HCI and the author’s own career. It briefly describes the ways in which Sketchpad anticipated later systems and passes on a story of a graduate student being puzzled by the paper, wondering “isn’t this how computers just are?”. The paper’s main argument is “HCI belongs as part of computer science because the needs of innovative interfaces drive forward the science of computing.”</li>
+    </ul>
+  </li>
+  <li>Risenfeld, <a href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/0059/0000/Static-Image-Generation/10.1117/12.954347.short">“Static Image Generation”</a>, (1975) early paper describing impact of Sketchpad</li>
+  <li>van Dam, <a href="https://dl.acm.org/doi/10.1145/279389.279446">“The Shape of Things to Come”</a> (1998): brief mention of early Sketchpad impact</li>
+  <li><a href="https://vtechworks.lib.vt.edu/server/api/core/bitstreams/ced55f4b-e70e-44e5-bdb4-2485ba01401e/content">“The Sketchpad Window”</a>: a Ph.D. dissertation seemingly mostly about the impact of Sketchpad on architectural drafting</li>
+  <li><a href="http://dcardo.com/">Daniel Cardoso Llach</a> (various works and collaborations)
+    <ul>
+      <li><a href="https://www.amazon.com/Architecture-Machine-Andres-Fankh%C3%A4nel-Teresa/dp/3035621543/ref=sr_1_1?crid=2E00RB39EZDTO&amp;dib=eyJ2IjoiMSJ9.jZ7lb-Fug6BM3jIH08fvUIxmV1aMD1VmgWHiChm21JsTLzEdQAGYyJB1zEheWiA_zY-p9iacu48E7lgLVM1YndK23l9LUrRSgqo2AS6Qr4yrTUhItuyjWBCYqkjBLxjlS25gcB2zB725M9VrysLlkWAXi1SPdcC0k_cXpkT4TrZkpWOn_Z5oYdYVt6Y2XIU4Bfa1SBDMveC3BWZwlvC9dVys5NRD-xfXDZTRDLkMv7U.FI72ZQ_jAfg8DD7koBxXCs0arFk3PZGmdKM98HRdPIE&amp;dib_tag=se&amp;keywords=the+architecture+machine+role&amp;qid=1715000482&amp;s=books&amp;sprefix=the+architecture+machine+rol%2Cstripbooks%2C97&amp;sr=1-1">The Architecture Machine</a> accompanies a museum exhibit that included recreations of Sketchpad. The Sketchpad chapter is a short overview of Sketchpad along with photographs of a physical recreation of Sketchpad made for a museum exhibition. It has a realistic physical terminal with buttons, an Android tablet emulating the original CRT screen, and a physical lightpen for interacting with it.</li>
+      <li><a href="http://dcardo.com/projects/archaeology_of_cad/index.html">Recreation of Sketchpad</a> has pictures and video of a physically accurate recreation, including a light pen, buttons, and a physical console matching the original.</li>
+      <li><a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/ad.1546">Algorithmic Tectonics: How Cold War Era Research Shaped Our Imagination of Design</a>: seems to be a cultural study of how DoD funding for e.g. Sketchpad led to changes in building design and production</li>
+    </ul>
+  </li>
+  <li><a href="https://www.youtube.com/watch?v=vPsFPmgT0YM">Curiosity and Possibility: The Ivan Sutherland Story</a>
+A retrospective video made by the National Inventors’ Hall of Fame</li>
+</ul>
+
+<h3 id="programming-languages-and-styles">Programming languages and styles</h3>
+
+<ul>
+  <li><a href="https://archive.org/details/TN_Graphical_Communication_and_Control_Languages_20171030_0025/page/n3/mode/2up">Graphical Communication and Control Languages</a>, L.B. Roberts, Information System Sciences: Proc Second Congress, 1965 describes a new programming language built after the influence of Sketchpad, CORAL (Class Oriented Ring Association Language)</li>
+  <li><a href="https://dl.acm.org/doi/pdf/10.1145/1478786.1478864">Associated processing of line drawings</a> describes Sketchpad and subseequent attempts to represent graphical data in memory for efficient processing and display. Discusses CORAL and GRAPHIC-2</li>
+  <li>
+    <p><a href="https://dspace.mit.edu/handle/1721.1/11589">Machine perception of three-dimensional solids</a> was Lawrence Roberts’ Ph.D. dissertation, submitted the same year as Sutherland’s. It is one of the first papers in computer vision, tackling the problem of taking a 2D line drawing and having the computer reconstruct the 3D solids that are represented. The ring structure used is a lightly-modified version of the one used in Sketchpad. Sutherland is credited several times for providing inspiration and debugging help. The object detection algorithm also uses a generic error minimization approach that shares a lot in common with Sketchpad’s constraint solver.</p>
+  </li>
+  <li>“Programming Languages: History and Fundamentals”, Sammet, Jean E., P-H 1969. An early catalog of programming languages. CORAL is mentioned on p.462, in the same chapter (“String and List Programming Languages”) as Lisp and SNOBOL.</li>
+</ul>
+
+<h3 id="user-interfaces">User interfaces</h3>
+
+<ul>
+  <li><a href="https://kristenroos.ca/timeline">paint: a history</a> traces the timeline of UIs for drawing via computers, noting Sketchpad and later programs.</li>
+  <li>
+    <p>Citation for Computer Lib / Dream machines, summary of Sketchpad on DM23.</p>
+
+    <ul>
+      <li>Also cites “wheel of reincarnation” paper, above</li>
+      <li>
+        <p>“For some reason, however, the most important aspect of such systems
+has been neglected, We do not make important decisions, we should not
+make delicate decisions, serially and irreversibly. Rather, the power of
+the computer display (and its computing and filing support) must be so
+crafted that we may develop alternatives, spin out their complications
+and interrelationships, and visualize these upon a screen.” (DM 52)</p>
+      </li>
+      <li>“Since hundreds of such systems are now
+being built, many of them all wrong, we must
+teach designers (end certain others) the basics
+of computers , and give them some good examples
+lo emulate (such as Sutherland’s Sketchpad,
+Bilzer’s PLATO, and, I hope, some of my own
+designs).” (DM 58)</li>
+    </ul>
+  </li>
+  <li><a href="https://worrydream.com/refs/Smith_DC_1975_-_Pygmalion.pdf">“PYGMALION: A Creative Programming Environment</a> cites Sketchpad as an influence (52-55)</li>
+  <li>TODO: re-watch NLS demo for mentions/related material</li>
+  <li>TODO: read “Designing the Star user interface” https://guidebookgallery.org/articles/designingthestaruserinterface/
+    <ul>
+      <li>In general, thank GUIdebookgallery site for their help</li>
+    </ul>
+  </li>
+  <li>“Your wish is my command” and “Watch what I do”</li>
+  <li>Bill Buxton’s <a href="https://billbuxton.com/Lincoln.html">Resource Page on Early HCI Research by the Lincoln Lab TX-2 Group</a>
+Buxton is himself a well-known HCI practitioner and studied under Ron Baecker, who overlapped with Sutherland at the MIT Lincoln Lab during the 60s. This page includes many links on the TX-0 and TX-2 computers and the HCI work done at Lincoln Lab during this time. Sadly, many of the archive links are now broken.
+    <ul>
+      <li>TODO: try broken links in Wayback machine. Archive everything I link to so it can be found even if links break.</li>
+      <li>TODO: Read 2005 SIGCHI conference session
+        <ul>
+          <li>https://www.billbuxton.com/LincolnLab.pdf</li>
+        </ul>
+      </li>
+      <li>TODO: Review 1989 SIGGRAPH panel (https://dl.acm.org/doi/10.1145/77276.77280)</li>
+      <li>TODO read and add https://guidebookgallery.org/articles/thefatherofcomputergraphics (1990 article in BYTE). Mention of “Space War” on the TX-2: find more about that</li>
+      <li>TX-2 program/docs examples: http://www.bitsavers.org/pdf/mit/tx-2/</li>
+    </ul>
+  </li>
+  <li><a href="https://github.com/alexwarth/sutherland">sutherland</a> is a recreation of the bridge simulation. It has a very interesting constraint solver implementation and several of the bridge images pre-programmed. From what I can tell, it doesn’t have arbitrary user input to construct your own pictures or constraints.</li>
+  <li>Overveld
+    <ul>
+      <li><a href="https://www.researchgate.net/publication/254868876_30_Years_after_Sketchpad_relaxation_of_geometric_constraints_revisited_II">“30 Years after Sketchpad: relaxation of geometric constraints revisited”</a></li>
+      <li><a href="https://github.com/cdglabs/sketchpad14">Sketchpad14</a></li>
+      <li><a href="https://cdglabs.github.io/sketchpad14/blog/">Back to a Half-Century Later: “From Sketchpad61 to Sketchpad14”</a> is a series of essays on using constraints to build explorable environments, illustrated with runnable Sketchpad14 examples.</li>
+    </ul>
+  </li>
+  <li>ThingLab
+    <ul>
+      <li><a href="https://constraints.cs.washington.edu/ui/thinglab-tr.pdf">“Thinglab”</a> was Alan Borning’s Ph.D. thesis that brought constraint-based programming to Smalltalk. Alan Kay described this as, though 15 years later, “the first serious attempt to go beyond Ivan Sutherland’s Sketchpad”.</li>
+      <li><a href="https://worrydream.com/refs/Borning_1981_-_The_Programming_Language_Aspects_of_ThingLab.pdf">“The Programming Language Aspects of ThingLab, a Constraint-Oriented Simulation Laboratory”</a></li>
+      <li>Also see <a href="https://cdglabs.github.io/thinglab/">a recreation of Thinglab</a> runnable in the browser and <a href="https://github.com/cdglabs/thinglab">its source code</a>.</li>
+    </ul>
+  </li>
+  <li><a href="https://www.semanticscholar.org/paper/Introduction-to-the-Special-Issue-Cruz-Marriott/81b02fbb7accd71245cdbdbb8f78188c9b70e825">“Special Issue on Constraints”</a></li>
+  <li><a href="https://worrydream.com/EarlyHistoryOfSmalltalk/">“The Early History of Smalltalk”</a> a retrospective by Alan Kay that mentions Sketchpad as part of the inspiration for OOP, as well as contributing important ideas about windowing and constraints.</li>
+  <li><a href="https://archive.org/details/AlanKeyD1987?start=249.5">“Doing with images makes symbols”</a> is a talk by Alan Kay</li>
+  <li><a href="https://worrydream.com/dbx/">“The future of programming”</a> is a talk by Bret Victor that discusses Sketchpad as an example of direct manipulation and constraints to accomplish goals without direct writing of code.
+    <ul>
+      <li><a href="https://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/">“Additional notes on ‘Drawing Dynamic Visualizations’”</a></li>
+      <li><a href="https://worrydream.com/MagicInk/">“Magic Ink”</a></li>
+      <li><a href="https://vimeo.com/906418692">“Inventing on Principle”</a>
+        <ul>
+          <li>There is an interesting blog post response and a <a href="https://computinged.wordpress.com/2012/02/21/bret-victors-inventing-on-principle-and-the-trade-off-between-usability-and-learning/#div-comment-9525">comment section</a> in which Alan Kay and Bret Victor show up and discuss the ideas, with a passing mention of Sketchpad.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="https://github.com/cdglabs/apparatus">Apparatus</a> is a hybrid graphics/programming environment that has ideas similar to Bret Victor’s talks on dynamic visualizations.</li>
+  <li><a href="https://news.ycombinator.com/item?id=10967103">Hacker News comment by Alan Kay</a> describing the impact of Sketchpad on Smalltalk and other Xerox PARC projects.</li>
+</ul>
+
+<h2 id="to-explore-for-citations">To explore for citations</h2>
+
+<ul>
+  <li>
+    <h2 id="mentions-in-mit-propagator-network-dissertation">Mentions in MIT propagator network dissertation?</h2>
+  </li>
+</ul>
+</article>
+
+    <footer></footer>
+  </body>
+</html>

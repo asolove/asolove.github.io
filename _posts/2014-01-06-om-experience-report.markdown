@@ -73,7 +73,7 @@ My project involved a map with a somewhat expensive DOM setup and big pieces of 
 
 The map gets initialized only once, when the map component is first attached to the DOM, and then saved into the map's state:
 
-{% highlight clojure %}
+```clojure
 (defn map-view [layers]
   (reify
     om/IDidMount
@@ -81,12 +81,12 @@ The map gets initialized only once, when the map component is first attached to 
       (om/set-state! owner [:leaflet-map] 
         (L.mapbox.map "map")))
     ; …))
-{% endhighlight %}
+```
 
 The geographic data gets parsed only once, added to the map, and put into the feature component's state when the component is initialized the first time. Each time the component is updated with new data, we just grab the existing data from the component state and restyle it:
 
 
-{% highlight clojure %}
+```clojure
 (defn map-feature [feature {:keys [map]}]
   (reify
     om/IInitState
@@ -99,7 +99,7 @@ The geographic data gets parsed only once, added to the map, and put into the fe
       (.setStyle (om/get-state owner [:feature-layer]) 
         (resolve-styles feature)))
     ; …))
-{% endhighlight %}
+```
 
 These are examples where we really need to maintain pieces of state and not recalculate them each time. Om handles them quite well, while making functional updates very easy.
 
@@ -113,7 +113,7 @@ When working with object-oriented, stateful UIs, I often add extra bits of displ
 
 For example, when selecting a geographic feature on the map, the feature list should scroll to the newly-selected item. Because this happens in response to a specific user interaction, and not to other interactions that might cause the exact same model-level change, I would normally add this behavior into the right view-level event listener. With React/Om, I made this a responsibility of the component that displays each feature's row in the table. In the `did-update` method, I check the row's current and previous state: if it is now selected but wasn't during the last render, then it scrolls the table to make itself visible:
 
-{% highlight clojure %}
+```clojure
 (defn feature-row [feature {:keys [cols select]}]
   (reify
     om/IDidUpdate
@@ -122,7 +122,7 @@ For example, when selecting a geographic feature on the map, the feature list sh
         (if (and (:selected feature) 
                  (not (:selected prev-data)))
           (ensure-feature-visible node))))))
-{% endhighlight %}
+```
 
 The syntax to get the previous data is a bit ugly and it looks like David is planning to [change it](https://github.com/swannodette/om/issues/24).
 

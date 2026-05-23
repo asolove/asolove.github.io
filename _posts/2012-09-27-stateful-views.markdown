@@ -20,7 +20,7 @@ categories: js view
 <h2>An example stateful view</h2>
 <p>Let's consider the outline of a simple, naive implementation of drag and drop:</p>
 
-{% highlight javascript %}
+```javascript
 var draggable = $("#drag");
 var handle = draggable.find(".handle");
 handle.on("mousedown.drag", function mousedown(e){
@@ -39,14 +39,14 @@ handle.on("mousedown.drag", function mousedown(e){
     draggable.css({ left: e.pageX, top: e.pageY });
   }, 100));
 });
-{% endhighlight %}
+```
 
 <p>There are lots of things we can make better about this code. But even after we refactor each callback into its own method and clean up the access to dom elements, we will still have code with the same shape: manually binding and unbinding events, implicitly tracking the view's state. It's easy to leave events bound which shouldn't be and thereby create memory leaks. And adding even one new state or transition into the mix will require careful thought and some refactoring.</p>
 <h2>States and transitions</h2>
 <p>What if we take the state implicit in the imperative code and make it explicit? Our view has two states: inactive and dragging. While inactive, it is listening for a mousedown to enter the dragging state. While dragging, it is listening for a mouseup to transition back to inactive, or a mousemove to trigger some behavior and remain in the dragging state.</p>
 <p>So let's write that description out as code, a state machine:</p>
 
-{% highlight javascript %}
+```javascript
 var Dragger = StatefulView.extend({
   states: {
     "dragging": function(e){ el.css({ opacity: 0.5 }) },
@@ -60,7 +60,7 @@ var Dragger = StatefulView.extend({
     }
   }
 });
-{% endhighlight %}
+```
 
 <p>The core feature of the view: its states, and the allowed transitions between them, are now explicit. The tedious work of knowing when to bind and unbind event handlers (important for garbage collection as well as logical correctless) can be handled by library code.</p>
 <p>Each state has a function describing what to do when we wnter the state, and each transition can have a function describing what to do when it is triggered. We could add other features, like callbacks when leaving states, transitions with multiple states, etc.</p>

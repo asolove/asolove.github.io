@@ -10,15 +10,15 @@ Very early in my programming career, I read a transcript of the talk [“You and
 
 I was struck by a question which he persistently asked of his colleagues:
 
-| What are the important problems of your field?
+> What are the important problems of your field?
 
 and the observation he made of the successful scientists around him:
 
-| Great scientists have thought through, in a careful way, a number of important problems in their field, and they keep an eye on wondering how to attack them.
+> Great scientists have thought through, in a careful way, a number of important problems in their field, and they keep an eye on wondering how to attack them.
 
 and also by his scheme to devote at least a little time each week to that question and long-term thinking:
 
-| I finally adopted what I called “Great Thoughts Time.’’ When I went to lunch Friday noon, I would only discuss great thoughts after that. By great thoughts I mean ones like: “What will be the role of computers in all of AT&T?’’, “How will computers change science?’’
+> I finally adopted what I called “Great Thoughts Time.’’ When I went to lunch Friday noon, I would only discuss great thoughts after that. By great thoughts I mean ones like: “What will be the role of computers in all of AT&T?’’, “How will computers change science?’’
 
 This evening I spent my regularly-allotted time thinking about the important long-term problems in UI engineering and catching up with the research on attacking them.
 

@@ -6,8 +6,7 @@ date: 2024-05-24 14:31:00
 categories: people
 ---
 
-<img class="right" alt="Epic handshake meme: two strong arms clasping hands together" src="/img/epic-handshake.png">
-**Handoffs suck. They're the worst part of building products.** But many organizations seem designed to maximize the number of handoffs on a project.
+<img class="right" alt="Epic handshake meme: two strong arms clasping hands together" src="/img/epic-handshake.png"> **Handoffs suck. They're the worst part of building products.** But many organizations seem designed to maximize the number of handoffs on a project.
 
 Some teams are experimenting with new hybrid roles, like Product Engineer and Design Engineer, that can reduce handoffs and improve the quality of cross-functional decisions.
 

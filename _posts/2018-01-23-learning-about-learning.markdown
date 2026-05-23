@@ -52,7 +52,7 @@ Several footnotes in *Mindstorms* referenced Bruner’s [*Toward a Theory of Ins
 
 Further on, I was really struck by this idea:
 
-| “It took the efforts of many highly talented mathematicians to discern the underlying structure of the mathematics that was to be taught”
+> “It took the efforts of many highly talented mathematicians to discern the underlying structure of the mathematics that was to be taught”
 
 This is a comforting thought when a subject is hard to learn! It’s not clear to me, but it also wasn’t clear to many of the same people who made progress on particular bits of this material.
 

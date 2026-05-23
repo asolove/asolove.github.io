@@ -162,7 +162,7 @@
 
 <header class="controls">
   <h1>Review harness</h1>
-  <div class="stat"><strong>26</strong> URLs · <strong>24</strong> in both · <strong class="old-count">2</strong> old only · <strong class="new-count">0</strong> new only</div>
+  <div class="stat"><strong>26</strong> URLs · <strong>26</strong> in both · <strong class="old-count">0</strong> old only · <strong class="new-count">0</strong> new only</div>
   <div class="stat" id="review-stat"><strong id="ok-count">0</strong> ok / <strong id="todo-count">0</strong> todo / <strong id="bad-count">0</strong> issues</div>
   <div class="filters">
     <button data-filter="all" class="active">All</button>
@@ -184,7 +184,7 @@
         <span class="meta-title">(no title)</span>
         <span class="url">/404.html</span>
       </span>
-      <div class="badges"><span class="badge old">old only</span></div>
+      <div class="badges"><span class="badge both">both</span></div>
       <div class="status-pick" data-status>
         <button data-set="ok" title="Reviewed, looks good">ok</button>
         <button data-set="todo" title="Needs work">todo</button>
@@ -197,8 +197,8 @@
         <iframe loading="lazy" src="http://localhost:8001/404.html"></iframe>
       </div>
       <div class="pane">
-        <h3>New (Astro) </h3>
-        <div class="missing">Not in new build</div>
+        <h3>New (Astro) <a href="http://localhost:8002/404.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/404.html"></iframe>
       </div>
     </div>
   </details>
@@ -210,10 +210,10 @@
       <span class="chev"></span>
       <span class="date">—</span>
       <span>
-        <span class="meta-title">Adam Solove: Blog</span>
+        <span class="meta-title">Archive</span>
         <span class="url">/blog.html</span>
       </span>
-      <div class="badges"><span class="badge old">old only</span></div>
+      <div class="badges"><span class="badge both">both</span></div>
       <div class="status-pick" data-status>
         <button data-set="ok" title="Reviewed, looks good">ok</button>
         <button data-set="todo" title="Needs work">todo</button>
@@ -226,8 +226,8 @@
         <iframe loading="lazy" src="http://localhost:8001/blog.html"></iframe>
       </div>
       <div class="pane">
-        <h3>New (Astro) </h3>
-        <div class="missing">Not in new build</div>
+        <h3>New (Astro) <a href="http://localhost:8002/blog.html" target="_blank">↗</a></h3>
+        <iframe loading="lazy" src="http://localhost:8002/blog.html"></iframe>
       </div>
     </div>
   </details>

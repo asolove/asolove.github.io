@@ -43,11 +43,12 @@ When we get to this phase, Claude should run the review scaffold and prompt the 
 
 - [x] Home page: numbered entries (`No. 01`, etc.) felt arbitrary. Removed the number column; entry bodies now sit flush with the section headings ("Thinking", "Work", "Projects").
 - [ ] Topbar nav: `/notes` and `/work` are broken placeholder links. Decide whether to remove from nav or build stub pages. (Awaiting decision.)
-- [ ] Inline `<img>` followed by markdown on the next line is being treated as an HTML block by CommonMark, suppressing markdown parsing. Affects `half-a-seat-to-the-left` lead paragraph and `iframeable-finance` lead paragraph. Fix: keep the `<img>` inline at the start of the paragraph so it stays in the paragraph block.
-- [ ] `.right`, `.full` image classes used by older posts have no CSS in `next/`. Diagrams overflow the page and floated images render at intrinsic size. Add helpers to `post.css`; add `.narrow` for ~200–300px images that should stay native-width and hang in the margin.
-- [ ] Kramdown `| ...` blockquotes don't parse in CommonMark. Convert `> ...` in `learning-about-learning` (1 instance) and `important-problems-ui-engineering` (3 instances).
-- [ ] Audit all post descriptions: replace any auto-truncated (ellipsis-ending) descriptions with hand-written one-liners. At minimum `pure-ui-control`, `preact-internals-2`, `learning-about-learning` are known to be auto-generated.
-- [ ] Pure UI Control: figure 1 is ~200–300px native but rendered full-bleed by `.full`. Either change its class or add a `.narrow` helper.
+- [x] Inline `<img>` followed by markdown on the next line is being treated as an HTML block by CommonMark, suppressing markdown parsing. Fixed `half-a-seat-to-the-left` and `iframeable-finance` lead paragraphs by joining the `<img>` onto the same line as the surrounding text so it stays inline within the paragraph.
+- [x] `.right`, `.full`, and a new `.narrow` image class added to `post.css`. `.right`/`.narrow` float inside paragraphs; `.full` is block-level capped at body width. When these images sit as standalone grid items (blank lines around them), float is ignored and they fall back to a grid-column placement.
+- [x] Kramdown `| ...` blockquotes converted to `> ...` in `learning-about-learning` (1) and `important-problems-ui-engineering` (3).
+- [ ] Audit all post descriptions: replace any auto-truncated (ellipsis-ending) descriptions with hand-written one-liners. Identified three: `learning-about-learning`, `pure-ui-control`, `preact-internals-2`.
+- [x] Pure UI Control: figure 1 (small calculator screenshot) was wrapped in `<figure>` with `<img class="full">`, getting promoted to full-bleed. Changed to `<figure class="margin">` so it hangs in the sidenote column at native width.
+- [ ] Figure captions ("Fig. ...") are currently decorative text. Make them anchor links to the figure itself with a small visible affordance (link character) so readers can copy a deep link.
 
 ## Phase 4 — Review pass
 

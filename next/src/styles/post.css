@@ -409,6 +409,51 @@ h1 {
   max-width: none;
 }
 
+/* ─────────────────────────────────────────────────────────
+   Raw-HTML <img class="..."> sizing helpers (legacy from Jekyll posts).
+   For new images prefer <figure class="body"> / <figure class="margin">.
+
+   To make floats work, these images must sit INSIDE a <p> (or list item).
+   Standalone <img> blocks become grid items and ignore `float`, so the
+   .body > img rules fall back to grid placement.
+   ───────────────────────────────────────────────────────── */
+
+/* .right — medium accent image, floats right of the surrounding paragraph */
+.body img.right {
+  float: right;
+  width: 240px;
+  max-width: 50%;
+  margin: 0.2rem 0 0.8rem 1.4rem;
+  shape-margin: 0.5rem;
+}
+
+/* .full — block-level diagram or screenshot at body width */
+.body img.full {
+  display: block;
+  width: 100%;
+  max-width: 38rem;
+  margin: 1.4rem 0;
+}
+
+/* .narrow — small image (~200–300px) that keeps its native width up to a
+   cap, floats right and wraps text. Use for marginalia / small illustrations. */
+.body img.narrow {
+  float: right;
+  width: auto;
+  max-width: 280px;
+  margin: 0.2rem 0 0.8rem 1.4rem;
+  shape-margin: 0.5rem;
+}
+
+/* When these images are direct grid-item children (a blank line in source
+   separates them from surrounding text), grid placement replaces the float. */
+.body > img.full,
+.body > img.narrow,
+.body > img.right {
+  grid-column: 2 / -1;
+  justify-self: start;
+}
+
 .end-mark {
   display: inline-block;
   color: var(--spot);

@@ -37,7 +37,13 @@ let Person = (props, _context) =>   <div>{props.name}</div>
 We could build the same stateless behavior with a class:
 
 ```javascript
-class Person extends Component {  render(props, _state, _context) {    // In React, props/state/context are not passed as arguments,    // but accessed on `this`. Preact adds them as arguments too.    return <div>{props.name}</div>  }}
+class Person extends Component {
+  render(props, _state, _context) {
+    // In React, props/state/context are not passed as arguments,
+    // but accessed on `this`. Preact adds them as arguments too.
+    return <div>{props.name}</div>;
+  }
+}
 ```
 
 We want these two components to have (mostly) the same behavior, but they need to be called in very different ways. How does the runtime code know which components are which?
@@ -69,21 +75,21 @@ The process starts when we have a vnode tree that we want to diff with a dom nod
   <figcaption>diff(dom, vnode, domParent)</figcaption>
 </figure>
 
-`**diff**` takes care of some bookkeeping and then hands control to a helper function `idiff` to actually do the diffing. After `idiff` is done, `diff` will make sure the updated node gets put into the right parent.
+**`diff`** takes care of some bookkeeping and then hands control to a helper function `idiff` to actually do the diffing. After `idiff` is done, `diff` will make sure the updated node gets put into the right parent.
 
 <figure>
   <img src="/img/preact-internals-2/preact-internals-2-a459f032.png" alt="">
   <figcaption>idiff(dom, vnode) mutates the DOM</figcaption>
 </figure>
 
-`**idiff**`'s behavior depends on the type of vnode it’s given. If the vnode describes a regular HTML element, then `idiff` updates the DOM to have the right element and attributes. Once the current level of the DOM matches the current level of the vnode, `idiff` calls `innerDiffNode` to diff the DOM node’s children against the vnode’s children.
+**`idiff`**'s behavior depends on the type of vnode it’s given. If the vnode describes a regular HTML element, then `idiff` updates the DOM to have the right element and attributes. Once the current level of the DOM matches the current level of the vnode, `idiff` calls `innerDiffNode` to diff the DOM node’s children against the vnode’s children.
 
 <figure>
   <img src="/img/preact-internals-2/preact-internals-2-49b0486d.png" alt="">
   <figcaption>innerDiffNode(dom, vnodes) pairs & diffs children</figcaption>
 </figure>
 
-For each of the child virtual nodes, `**innerDiffNode**` finds or creates a matching child node of the current DOM node. The matching process is a bit complex, and this is where the use of `key` on child components can make things a lot faster. Once the DOM and vnode children are paired up, the function calls `idiff` on them to change the child DOM to match the description.
+For each of the child virtual nodes, **`innerDiffNode`** finds or creates a matching child node of the current DOM node. The matching process is a bit complex, and this is where the use of `key` on child components can make things a lot faster. Once the DOM and vnode children are paired up, the function calls `idiff` on them to change the child DOM to match the description.
 
 Recursive calls between `idiff` and `innerDiffNode` can therefore change a whole tree of DOM nodes to match a whole tree of vnodes describing HTML elements. But what happens when `idiff` reaches a vnode that represents a component? It needs to know what content the component wants to render. To do that, it calls `buildComponentFromVNode`.
 
@@ -91,21 +97,21 @@ Recursive calls between `idiff` and `innerDiffNode` can therefore change a whole
   <img src="/img/preact-internals-2/preact-internals-2-8582a39c.png" alt="">
 </figure>
 
-`**buildComponentFromVNode**` looks for an existing component instance that corresponds to the vnode or creates a new one. Once it has a component instance, it needs to set the vnode’s attributes as the new props on that instance, by calling `setComponentProps`.
+**`buildComponentFromVNode`** looks for an existing component instance that corresponds to the vnode or creates a new one. Once it has a component instance, it needs to set the vnode’s attributes as the new props on that instance, by calling `setComponentProps`.
 
 <figure>
   <img src="/img/preact-internals-2/preact-internals-2-0ba068d5.png" alt="">
   <figcaption>setComponentProps sets instance props</figcaption>
 </figure>
 
-`**setComponentProps**` does some bookkeeping to update the instance’s props while also keeping the old ones around. Now that the component instance has new data, it might want to update what it renders, so it calls `renderComponent` to actually manage the lifecycle callbacks and rendering.
+**`setComponentProps`** does some bookkeeping to update the instance’s props while also keeping the old ones around. Now that the component instance has new data, it might want to update what it renders, so it calls `renderComponent` to actually manage the lifecycle callbacks and rendering.
 
 <figure>
   <img src="/img/preact-internals-2/preact-internals-2-df9dcacd.png" alt="">
   <figcaption>renderComponent sets component content & calls lifecycle methods</figcaption>
 </figure>
 
-`**renderComponent**` calls the lifecycle methods on the component instance to tell it that it will receive new props and ask if it wants to update. If so, `renderComponent` calls the instance’s `render` method to get the content it wants to display.
+**`renderComponent`** calls the lifecycle methods on the component instance to tell it that it will receive new props and ask if it wants to update. If so, `renderComponent` calls the instance’s `render` method to get the content it wants to display.
 
 Now it has a new vnode of content to render into the DOM. How can it do that? Fortunately, we have a function for exactly that purpose: `diff`.
 

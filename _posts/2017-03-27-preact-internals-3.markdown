@@ -37,25 +37,50 @@ Are you ready? Let’s do this.
 We know that `idiff` is responsible for mutating the one DOM node to match a vnode. But most of the actual manipulation is done through helper functions defined in [`src/dom/index.js`](https://github.com/developit/preact/blob/8567c8bc13bc7fc60eeff4cad3bc9217822b4577/src/dom/index.js). There are a couple easy ones, for removing a node from the DOM:
 
 ```javascript
-/** Removes a given DOM Node from its parent. */export function removeNode(node) {  let p = node.parentNode;  if (p) p.removeChild(node);}
+/** Removes a given DOM Node from its parent. */
+export function removeNode(node) {
+  let p = node.parentNode;
+  if (p) p.removeChild(node);
+}
 ```
 
 There’s another for safely setting DOM attributes without throwing exceptions: (although I wonder if it should at least log these to let the developer know)
 
 ```javascript
-/** Attempt to set a DOM property to the given value.   * IE & FF throw for certain property-value combinations. */function setProperty(node, name, value) {  try {    node[name] = value;  } catch (e) { }}
+/** Attempt to set a DOM property to the given value.
+ *  IE & FF throw for certain property-value combinations.
+ */
+function setProperty(node, name, value) {
+  try {
+    node[name] = value;
+  } catch (e) { }
+}
 ```
 
 And a wrapper for DOM event handlers that exposes a global hook for normalizing events, if you should desire. (We’ll see why the indirection of `eventProxy` is useful in just a little while.)
 
 ```javascript
-/** Proxy an event to hooked event handlers   * @private */function eventProxy(e) {  return this._listeners[e.type](    options.event && options.event(e) || e);}
+/** Proxy an event to hooked event handlers
+ *  @private
+ */
+function eventProxy(e) {
+  return this._listeners[e.type](options.event && options.event(e) || e);
+}
 ```
 
 But the real business of this file is in the exported function `setAccessor`, which is used to set an arbitrary key/value pair from a vnode’s props onto a real DOM node. The function’s signature includes some extra information that is sometimes needed, like the vdom value previously assigned for this attribute, and whether we’re inside an SVG context:
 
 ```javascript
-/** Set a named attribute on the given Node, with special behavior for some names and event handlers. * If `value` is `null`, the attribute/handler will be removed. * @param {Element} node An element to mutate * @param {string} name The name/key to set, such as an event or attribute name * @param {any} old The last value that was set for this name/node pair * @param {any} value An attribute value, such as a function to be used as an event handler * @param {Boolean} isSvg Are we currently diffing inside an svg? * @private */export function setAccessor(node, name, old, value, isSvg) {
+/** Set a named attribute on the given Node, with special behavior for some names and event handlers.
+ *  If `value` is `null`, the attribute/handler will be removed.
+ *  @param {Element} node   An element to mutate
+ *  @param {string} name    The name/key to set, such as an event or attribute name
+ *  @param {any} old        The last value that was set for this name/node pair
+ *  @param {any} value      An attribute value, such as a function to be used as an event handler
+ *  @param {Boolean} isSvg  Are we currently diffing inside an svg?
+ *  @private
+ */
+export function setAccessor(node, name, old, value, isSvg) {
 ```
 
 The function then proceeds to consider a bunch of different cases for the `name` and `value` that we want to set on the node.
@@ -85,7 +110,19 @@ If we’re setting the class, it’s already normalized to a string so just set 
 If we’re setting the node’s styles, we first need to clear off the previous styles and then set the new ones, either via a string or an object of property/value pairs. Note the bit about `NON_DIMENSION_PROPS`. That’s so you can use numerical values like `{ width: 10 }` and Preact will automatically add the `'px'` for you, unless the property name is in that list of non-dimensioned property names.
 
 ```javascript
-else if (name==='style') {  if (!value || isString(value) || isString(old)) {       node.style.cssText = value || '';  }  if (value && typeof value==='object') {    if (!isString(old)) {      for (let i in old) if (!(i in value)) node.style[i] = '';    }    for (let i in value) {      node.style[i] =         typeof value[i]==='number' && !NON_DIMENSION_PROPS[i] ?          (value[i]+'px') : value[i];    }  }}
+else if (name==='style') {
+  if (!value || isString(value) || isString(old)) {
+    node.style.cssText = value || '';
+  }
+  if (value && typeof value==='object') {
+    if (!isString(old)) {
+      for (let i in old) if (!(i in value)) node.style[i] = '';
+    }
+    for (let i in value) {
+      node.style[i] = typeof value[i]==='number' && !NON_DIMENSION_PROPS[i] ? (value[i]+'px') : value[i];
+    }
+  }
+}
 ```
 
 Next up is dangerously setting a string as inner html:
@@ -97,7 +134,9 @@ else if (name==='dangerouslySetInnerHTML') {  if (value) node.innerHTML = value.
 Setting event handlers is an interesting optimization. Rather than re-set event handlers every time we render, which could be expensive, we save a map from event names to user-defined handlers on the DOM node as `node._listeners`. Then we only add/remove DOM event listeners if the set of events that is being listened to changes. The actual event handler attached to the DOM is just `eventProxy`, which we saw above, which looks into our map of event handlers to call the right one.
 
 ```javascript
-else if (name[0]=='o' && name[1]=='n') {  let l = node._listeners || (node._listeners = {});      name = toLowerCase(name.substring(2));
+else if (name[0]=='o' && name[1]=='n') {
+  let l = node._listeners || (node._listeners = {});
+  name = toLowerCase(name.substring(2));
 ```
 
 ```
@@ -117,7 +156,17 @@ else if (name!=='list' && name!=='type' && !isSvg && name in node) {  setPropert
 There’s one final case: SVG attributes. For these, we need to use the special namespace-aware attribute methods:
 
 ```javascript
-else {  let ns = isSvg && name.match(/^xlink\:?(.+)/);  if (value==null || value===false) {    if (ns)      node.removeAttributeNS('http://www.w3.org/1999/xlink', toLowerCase(ns[1]));    else      node.removeAttribute(name);  }  else if (typeof value!=='object' && !isFunction(value)) {    if (ns)      node.setAttributeNS('http://www.w3.org/1999/xlink', toLowerCase(ns[1]), value);    else      node.setAttribute(name, value);  }}
+else {
+  let ns = isSvg && name.match(/^xlink\:?(.+)/);
+  if (value==null || value===false) {
+    if (ns) node.removeAttributeNS('http://www.w3.org/1999/xlink', toLowerCase(ns[1]));
+    else node.removeAttribute(name);
+  }
+  else if (typeof value!=='object' && !isFunction(value)) {
+    if (ns) node.setAttributeNS('http://www.w3.org/1999/xlink', toLowerCase(ns[1]), value);
+    else node.setAttribute(name, value);
+  }
+}
 ```
 
 And that’s it. Those are the special cases that of attributes that can be set to the DOM from keys in the vnode’s props. To review, the cases Preact supports are:
@@ -186,13 +235,26 @@ Here’s the overall plan of attack:
 Let’s walk through the code and look at how that happens. First we set up the necessary variables, especially ones that track the state of our indexes of the existing child DOM nodes:
 
 ```javascript
-function innerDiffNode(dom, vchildren, context, mountAll, absorb) {   let originalChildren = dom.childNodes,       children = [],   // array of old child DOM nodes without keys       min = 0,         // minimum index in `children` that has a node       childrenLen = 0, // length of `children`       keyed = {},      // object of old child DOM nodes by key       keyedLen = 0,    // how many nodes are in `keyed`       len = originalChildren.length,       vlen = vchildren && vchildren.length,       j, c, vchild, child;
+function innerDiffNode(dom, vchildren, context, mountAll, absorb) {
+  let originalChildren = dom.childNodes,
+      children = [],   // array of old child DOM nodes without keys
+      min = 0,         // minimum index in `children` that has a node
+      childrenLen = 0, // length of `children`
+      keyed = {},      // object of old child DOM nodes by key
+      keyedLen = 0,    // how many nodes are in `keyed`
+      len = originalChildren.length,
+      vlen = vchildren && vchildren.length,
+      j, c, vchild, child;
 ```
 
 Then we iterate through all the old DOM children and sort them into the right index:
 
 ```javascript
-if (len) {  for (let i=0; i<len; i++) {    let child = originalChildren[i],        props = child[ATTR_KEY], // props from last render        key = vlen ? ((c = child._component) ? c.__key : props ? props.key : null) : null; // key from last render
+if (len) {
+  for (let i=0; i<len; i++) {
+    let child = originalChildren[i],
+        props = child[ATTR_KEY], // props from last render
+        key = vlen ? ((c = child._component) ? c.__key : props ? props.key : null) : null; // key from last render
 ```
 
 ```
@@ -202,7 +264,19 @@ if (len) {  for (let i=0; i<len; i++) {    let child = originalChildren[i],     
 Now that we’ve indexed all the DOM nodes, we loop through all the child vnodes and try to find each of them a match. If the vnode has a key, we look for a match in the `keyed` index; otherwise, we look for a matching tag in `children`.
 
 ```javascript
-for (let i=0; i<vlen; i++) {  vchild = vchildren[i]; // current vnode seeking a match  child = null;          // the matched DOM node    // attempt to find a node based on key matching  let key = vchild.key;  if (key!=null) {    if (keyedLen && key in keyed) {      child = keyed[key];      keyed[key] = undefined; // remove used DOM node from index      keyedLen--;             // and decrement the size of the index    }  }
+for (let i=0; i<vlen; i++) {
+  vchild = vchildren[i]; // current vnode seeking a match
+  child = null;          // the matched DOM node
+
+  // attempt to find a node based on key matching
+  let key = vchild.key;
+  if (key!=null) {
+    if (keyedLen && key in keyed) {
+      child = keyed[key];
+      keyed[key] = undefined; // remove used DOM node from index
+      keyedLen--;             // and decrement the size of the index
+    }
+  }
 ```
 
 ```
@@ -252,13 +326,28 @@ const nodes = {};
 The function `collectNode` removes a node from the DOM and adds it to the cache for elements of its node name:
 
 ```javascript
-export function collectNode(node) {  removeNode(node);  if (node instanceof Element) {    node._component = node._componentConstructor = null;    let name = node.normalizedNodeName || toLowerCase(node.nodeName);    (nodes[name] || (nodes[name] = [])).push(node);  }}
+export function collectNode(node) {
+  removeNode(node);
+
+  if (node instanceof Element) {
+    node._component = node._componentConstructor = null;
+
+    let name = node.normalizedNodeName || toLowerCase(node.nodeName);
+    (nodes[name] || (nodes[name] = [])).push(node);
+  }
+}
 ```
 
 When the diff algorithm needs a new node, it calls `createNode`, which looks in the cache for a suitable node to recycle, or else instantiates a new one:
 
 ```javascript
-export function createNode(nodeName, isSvg) {  let name = toLowerCase(nodeName),      node = nodes[name] && nodes[name].pop() ||       (isSvg ?         document.createElementNS(svgNS, nodeName) :          document.createElement(nodeName));  node.normalizedNodeName = name;  return node;}
+export function createNode(nodeName, isSvg) {
+  let name = toLowerCase(nodeName),
+      node = nodes[name] && nodes[name].pop() ||
+        (isSvg ? document.createElementNS(svgNS, nodeName) : document.createElement(nodeName));
+  node.normalizedNodeName = name;
+  return node;
+}
 ```
 
 The diffing algorithm frequently needs to compare node types. But the DOM [`nodeName`](http://ejohn.org/blog/nodename-case-sensitivity/)[ method is a little confused](http://ejohn.org/blog/nodename-case-sensitivity/) about whether to return capitalized or lowercase names, so it’s convenient to have access to a version of the name that we know will be normalized to lowercase. That’s stored as `node.normalizedNodeName` for use elsewhere.
@@ -268,7 +357,16 @@ Now we know how to recycle individual DOM nodes. But when the diffing algorithm 
 The code for this is pretty clear:
 
 ```javascript
-export function recollectNodeTree(node, unmountOnly) {  let component = node._component;  if (component) {    // if node is owned by a Component, just unmount it    // to let callbacks run before node is removed    unmountComponent(component, !unmountOnly);  } else {    // null out ref pointing to this node    if (node[ATTR_KEY] && node[ATTR_KEY].ref)       node[ATTR_KEY].ref(null);
+export function recollectNodeTree(node, unmountOnly) {
+  let component = node._component;
+  if (component) {
+    // if node is owned by a Component, just unmount it
+    // to let callbacks run before node is removed
+    unmountComponent(component, !unmountOnly);
+  } else {
+    // null out ref pointing to this node
+    if (node[ATTR_KEY] && node[ATTR_KEY].ref)
+      node[ATTR_KEY].ref(null);
 ```
 
 ```
@@ -276,7 +374,11 @@ export function recollectNodeTree(node, unmountOnly) {  let component = node._co
 ```
 
 ```javascript
-    // recurse on child nodes: `lastChild` is faster than other ways    let c;    while ((c=node.lastChild)) recollectNodeTree(c, unmountOnly);  }}
+    // recurse on child nodes: `lastChild` is faster than other ways
+    let c;
+    while ((c=node.lastChild)) recollectNodeTree(c, unmountOnly);
+  }
+}
 ```
 
 And now we understand how `innerDiffNode` deals with no-longer-needed children: it calls `recollectNodeTree` on them and that walks through the tree unmounting the component instances and recycling the nodes.

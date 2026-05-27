@@ -252,12 +252,13 @@ import Base from '../layouts/Base.astro';
   }
 
   /* Home-page body overrides: entries are full-width and use their
-     own internal layout, not the body's paragraph constraint. */
+     own internal layout, not the body's paragraph constraint. They
+     start at column 1 to align flush with the titleblock above. */
   .body.home > .section-head,
   .body.home > .section-lede,
   .body.home > .entry,
   .body.home > .end-rule {
-    grid-column: 2 / -1;
+    grid-column: 1 / -1;
     max-width: none;
   }
 
@@ -296,10 +297,12 @@ import Base from '../layouts/Base.astro';
     font-variation-settings: "opsz" 28;
   }
 
-  /* Entry: body on the left (flush with the section heading), thumbnail on the right. */
+  /* Entry: thumbnail on the left, body on the right. DOM order keeps
+     the text first for screen readers; explicit grid-column swaps
+     them visually so the image leads. */
   .body.home .entry {
     display: grid;
-    grid-template-columns: 1fr 12em;
+    grid-template-columns: 12em 1fr;
     gap: 0 1.2rem;
     padding: 1.1rem 0;
     border-bottom: 1px solid var(--rule-soft);
@@ -307,7 +310,8 @@ import Base from '../layouts/Base.astro';
   }
   .body.home .entry:last-of-type { border-bottom: none; }
 
-  .body.home .entry-body { min-width: 0; }
+  .body.home .entry-body { min-width: 0; grid-column: 2; }
+  .body.home .entry-thumb { grid-column: 1; }
   .body.home .entry-body h3 {
     font-family: var(--serif);
     font-weight: 600;
@@ -367,9 +371,12 @@ import Base from '../layouts/Base.astro';
     .body.home .entry {
       grid-template-columns: 1fr;
     }
+    .body.home .entry-body,
     .body.home .entry-thumb {
       grid-column: 1 / -1;
-      margin-top: 0.8rem;
+    }
+    .body.home .entry-thumb {
+      margin-bottom: 0.8rem;
       max-width: 18rem;
     }
   }

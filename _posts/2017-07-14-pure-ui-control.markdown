@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Pure UI control"
-description: "This month marks 10 years that I’ve been paid to build web user interfaces. And today is the second anniversary of Guillermo Rauch’s essay…"
+description: "If Pure UI gave teams a shared language for display states, what’s the same idea for an interface’s behavior? A case for making control state explicit."
 date: 2017-07-14 09:00:00
 categories: js ui
 ---

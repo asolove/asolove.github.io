@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Preact internals #2: the component model"
-description: "What distinguishes the React component model, the difference between functional and class-based components, and an overview of how it all…"
+description: "What makes React’s component model — composable, stateful, declarative — actually work, and how Preact implements both class-based and functional components."
 date: 2017-03-14 09:00:00
 categories: js ui
 ---

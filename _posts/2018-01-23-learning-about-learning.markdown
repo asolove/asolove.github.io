@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Learning about learning"
-description: "Thanks to an extended holiday vacation and some family illnesses, I was lucky enough to spend two weeks reading about how people and teams…"
+description: "Notes on study skills, meta-cognition, and how organizations learn — distilled from a vacation spent reading about learning."
 date: 2018-01-23 09:00:00
 categories: learning
 ---

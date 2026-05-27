@@ -1,17 +1,12 @@
 ---
-import Base from '../layouts/Base.astro';
+import Base from "../layouts/Base.astro";
 ---
 <Base title="Adam Solove" current="blog">
   <div class="page">
     <div class="titleblock">
       <h1>Adam Solove</h1>
-      <p class="standfirst">If you think hard enough, sometimes the work is easier.</p>
-      <p class="positioning">
-        I build software for a living and write to think clearly about it. I am
-        happiest diving into a complex problem domain, explaining it to others,
-        and helping make hard decisions inside its constraints. What follows is
-        a curated index of recent talks, essays, paid work, and side projects.
-      </p>
+      <p class="standfirst">Almost done thinking on very low effort.</p>
+      <p class="positioning"></p>
     </div>
 
     <aside class="siderail">
@@ -23,14 +18,17 @@ import Base from '../layouts/Base.astro';
       </ul>
       <h3>Elsewhere</h3>
       <ul>
-        <li><a href="https://www.linkedin.com/in/asolove/">&#9656; LinkedIn</a></li>
+        <li>
+          <a href="https://www.linkedin.com/in/asolove/">&#9656; LinkedIn</a>
+        </li>
         <li><a href="/atom.xml">&#9656; RSS feed</a></li>
-        <li><a href="mailto:asolove@gmail.com">&#9656; asolove@gmail.com</a></li>
+        <li>
+          <a href="mailto:asolove@gmail.com">&#9656; asolove@gmail.com</a>
+        </li>
       </ul>
     </aside>
 
     <article class="body home">
-
       <h2 id="thinking" class="section-head">Thinking</h2>
       <p class="section-lede">
         Public explanations &mdash; talks, essays, and series &mdash; on user
@@ -42,17 +40,28 @@ import Base from '../layouts/Base.astro';
         <div class="entry-body">
           <h3>What should we learn from the history of UI engineering?</h3>
           <p>
-            <a href="https://www.youtube.com/watch?v=lIxbSDyHsXs"><strong>Recreating Sketchpad, the first GUI</strong></a>
-            was a talk at <a href="https://bangbangcon.com/">!!con 2024</a> about
-            what we can learn by studying and rebuilding early user interfaces.
-            Earlier, <a href="/js/2013/10/15/constraint-programming-in-the-browser.html"><strong>Constraint programming in the browser</strong></a>
+            <a href="https://www.youtube.com/watch?v=lIxbSDyHsXs"><strong
+              >Recreating Sketchpad, the first GUI</strong></a>
+            was a talk at <a href="https://bangbangcon.com/">!!con 2024</a>
+            about what we can learn by studying and rebuilding early user
+            interfaces. Earlier, <a
+              href="/js/2013/10/15/constraint-programming-in-the-browser.html"
+            ><strong>Constraint programming in the browser</strong></a>
             at JSConf 2013 covered related ground, alongside a short note on
-            <a href="/js/ui/2013/05/17/inspired-by-sketchpad.html">being inspired by Sketchpad</a>
+            <a href="/js/ui/2013/05/17/inspired-by-sketchpad.html"
+            >being inspired by Sketchpad</a>
             and its constraint-oriented UI.
           </p>
         </div>
-        <a class="entry-thumb" href="https://www.youtube.com/watch?v=lIxbSDyHsXs">
-          <img src="/img/sketchpad-talk-preview.jpg" alt="Adam delivers a talk, gesturing at a podium in front of a screen showing the design of a rivet." loading="lazy" />
+        <a
+          class="entry-thumb"
+          href="https://www.youtube.com/watch?v=lIxbSDyHsXs"
+        >
+          <img
+            src="/img/sketchpad-talk-preview.jpg"
+            alt="Adam delivers a talk, gesturing at a podium in front of a screen showing the design of a rivet."
+            loading="lazy"
+          />
           <span class="thumb-credit">Fig. !!con 2024</span>
         </a>
       </section>
@@ -61,13 +70,18 @@ import Base from '../layouts/Base.astro';
         <div class="entry-body">
           <h3>How do we build great embedded UIs?</h3>
           <p>
-            <a href="/js/2023/08/24/iframeable-finance.html"><strong>&lt;iframe&gt;able finance</strong></a>,
-            presented at Fintech Devcon 2023, shares advice and war stories for
-            building embeddable UIs and SDKs using iframes.
+            <a href="/js/2023/08/24/iframeable-finance.html"><strong
+              >&lt;iframe&gt;able finance</strong></a>, presented at Fintech
+            Devcon 2023, shares advice and war stories for building embeddable
+            UIs and SDKs using iframes.
           </p>
         </div>
         <a class="entry-thumb" href="/js/2023/08/24/iframeable-finance.html">
-          <img src="/img/iframeable-finance-talking.png" alt="Screenshot of Adam in purple hair, gesturing dynamically while presenting." loading="lazy" />
+          <img
+            src="/img/iframeable-finance-talking.png"
+            alt="Screenshot of Adam in purple hair, gesturing dynamically while presenting."
+            loading="lazy"
+          />
           <span class="thumb-credit">Fig. Fintech Devcon 2023</span>
         </a>
       </section>
@@ -76,12 +90,15 @@ import Base from '../layouts/Base.astro';
         <div class="entry-body">
           <h3>How can we collaborate on complex UIs?</h3>
           <p>
-            <a href="/js/ui/2017/07/14/pure-ui-control.html"><strong>Pure UI Control</strong></a>
+            <a href="/js/ui/2017/07/14/pure-ui-control.html"><strong>Pure UI
+                Control</strong></a>
             is an essay on how teams can communicate and organize their work
             when building complex UIs. A companion essay,
-            <a href="/js/ui/2017/04/21/important-problems-ui-engineering.html"><strong>What are the important problems in UI engineering?</strong></a>,
-            sketches the open territory I think the field still hasn&rsquo;t
-            properly mapped.
+            <a
+              href="/js/ui/2017/04/21/important-problems-ui-engineering.html"
+            ><strong>What are the important problems in UI
+                engineering?</strong></a>, sketches the open territory I think
+            the field still hasn&rsquo;t properly mapped.
           </p>
         </div>
       </section>
@@ -90,13 +107,22 @@ import Base from '../layouts/Base.astro';
         <div class="entry-body">
           <h3>How should we structure UI concurrency?</h3>
           <p>
-            <a href="/js/ui/2017/04/01/synchronizable-abstractions.html"><strong>Synchronizable abstractions for understandable concurrency</strong></a>
+            <a href="/js/ui/2017/04/01/synchronizable-abstractions.html"><strong
+              >Synchronizable abstractions for understandable
+                concurrency</strong></a>
             is an explanation of the Concurrent ML event system &mdash; the
             small, careful design that later inspired React Fiber.
           </p>
         </div>
-        <a class="entry-thumb" href="/js/ui/2017/04/02/synchronizable-abstractions.html">
-          <img src="/img/cml.png" alt="Sequence diagram of Concurrent ML communication." loading="lazy" />
+        <a
+          class="entry-thumb"
+          href="/js/ui/2017/04/02/synchronizable-abstractions.html"
+        >
+          <img
+            src="/img/cml.png"
+            alt="Sequence diagram of Concurrent ML communication."
+            loading="lazy"
+          />
           <span class="thumb-credit">Fig. CML event sequence</span>
         </a>
       </section>
@@ -105,20 +131,29 @@ import Base from '../layouts/Base.astro';
         <div class="entry-body">
           <h3>How does React work?</h3>
           <p>
-            <a href="/js/ui/2017/04/19/preact-in-pictures.html"><strong>Preact in Pictures</strong></a>
-            is a 2017 talk explaining the core virtual <abbr title="Document object model">DOM</abbr>
+            <a href="/js/ui/2017/04/19/preact-in-pictures.html"><strong>Preact
+                in Pictures</strong></a>
+            is a 2017 talk explaining the core virtual <abbr
+              title="Document object model"
+            >DOM</abbr>
             diffing algorithm, following the code in Preact but with notes on
             how it compares to React. The companion
-            <a href="/js/ui/2017/03/11/preact-internals-1.html"><strong>Preact Internals</strong></a>
+            <a href="/js/ui/2017/03/11/preact-internals-1.html"><strong>Preact
+                Internals</strong></a>
             series goes deeper. Earlier, in 2014, I gave an early talk on
             <a href="/js/clojure/2014/05/08/react-js-and-om.html">React + Om</a>
             and wrote an
-            <a href="/js/clojure/2014/01/06/om-experience-report.html">experience report</a>
+            <a href="/js/clojure/2014/01/06/om-experience-report.html"
+            >experience report</a>
             on shipping a ClojureScript wrapper for React.
           </p>
         </div>
         <a class="entry-thumb" href="/js/ui/2017/04/19/preact-in-pictures.html">
-          <img src="/img/preact-diagram.webp" alt="Diagram visualizing the Preact lifecycle." loading="lazy" />
+          <img
+            src="/img/preact-diagram.webp"
+            alt="Diagram visualizing the Preact lifecycle."
+            loading="lazy"
+          />
           <span class="thumb-credit">Fig. Preact lifecycle</span>
         </a>
       </section>
@@ -127,18 +162,22 @@ import Base from '../layouts/Base.astro';
         <div class="entry-body">
           <h3>How do we make websites faster?</h3>
           <p>
-            <a href="/js/perf/2017/04/18/the-new-fast.html"><strong>The new fast</strong></a>
+            <a href="/js/perf/2017/04/18/the-new-fast.html"><strong>The new
+                fast</strong></a>
             is a talk I gave several times in 2016 sharing advanced web
-            performance techniques that were fairly new at the time &mdash; HTTP/2,
-            server push, advanced CDN usage, and streaming responses.
+            performance techniques that were fairly new at the time &mdash;
+            HTTP/2, server push, advanced CDN usage, and streaming responses.
           </p>
         </div>
         <a class="entry-thumb" href="/js/perf/2017/04/18/the-new-fast.html">
-          <img src="/img/new-fast.png" alt="Slide with stylized network waterfall discussing site performance best practices." loading="lazy" />
+          <img
+            src="/img/new-fast.png"
+            alt="Slide with stylized network waterfall discussing site performance best practices."
+            loading="lazy"
+          />
           <span class="thumb-credit">Fig. The new fast</span>
         </a>
       </section>
-
 
       <h2 id="work" class="section-head">Work</h2>
       <p class="section-lede">
@@ -154,10 +193,15 @@ import Base from '../layouts/Base.astro';
             APIs for payments. At <a href="https://www.figma.com/">Figma</a> I
             worked on payments and billing. At Stripe I worked on
             <a href="https://stripe.com/payments/elements">Elements</a>,
-            <a href="https://stripe.com/blog/payment-api-design">PaymentIntents</a>,
-            <a href="https://stripe.com/guides/strong-customer-authentication">SCA</a>,
-            <a href="https://www.emvco.com/wp-content/uploads/news/EMVCo-FIDO-Alliance-W3C-Interest-Group-release_FINAL-website-version.pdf">W3C</a>,
-            and <a href="https://twitter.com/edwinwee/status/1141245532255313920">emoji</a>.
+            <a href="https://stripe.com/blog/payment-api-design"
+            >PaymentIntents</a>,
+            <a href="https://stripe.com/guides/strong-customer-authentication"
+            >SCA</a>,
+            <a
+              href="https://www.emvco.com/wp-content/uploads/news/EMVCo-FIDO-Alliance-W3C-Interest-Group-release_FINAL-website-version.pdf"
+            >W3C</a>, and <a
+              href="https://twitter.com/edwinwee/status/1141245532255313920"
+            >emoji</a>.
           </p>
         </div>
       </section>
@@ -183,24 +227,28 @@ import Base from '../layouts/Base.astro';
         </div>
       </section>
 
-
       <h2 id="projects" class="section-head">Projects</h2>
       <p class="section-lede">
-        Open-source and volunteer work &mdash; small collaborations that tend
-        to outlast the season I spent on them.
+        Open-source and volunteer work &mdash; small collaborations that tend to
+        outlast the season I spent on them.
       </p>
 
       <section class="entry">
         <div class="entry-body">
           <h3>Read Japanese Literature</h3>
           <p>
-            <a href="https://readjapaneseliterature.com"><strong>Read Japanese Literature</strong></a>
+            <a href="https://readjapaneseliterature.com"><strong>Read Japanese
+                Literature</strong></a>
             is a podcast and blog run by my partner, Alison. I help with the
             website and sound design.
           </p>
         </div>
         <a class="entry-thumb" href="https://readjapaneseliterature.com">
-          <img src="/img/rjl.png" alt="Screenshot of the Read Japanese Literature blog page." loading="lazy" />
+          <img
+            src="/img/rjl.png"
+            alt="Screenshot of the Read Japanese Literature blog page."
+            loading="lazy"
+          />
           <span class="thumb-credit">Fig. readjapaneseliterature.com</span>
         </a>
       </section>
@@ -211,9 +259,10 @@ import Base from '../layouts/Base.astro';
           <p>
             <a href="https://pyret.org/index.html"><strong>Pyret</strong></a> is
             an in-browser programming language and environment used in the
-            <a href="https://www.bootstrapworld.org/blog/index.shtml">Bootstrap curriculum</a>.
-            In 2020 and &rsquo;21, I
-            <a href="https://pyret.org/release-notes/summer-2021.html">updated their IDE</a>
+            <a href="https://www.bootstrapworld.org/blog/index.shtml"
+            >Bootstrap curriculum</a>. In 2020 and &rsquo;21, I
+            <a href="https://pyret.org/release-notes/summer-2021.html"
+            >updated their IDE</a>
             to be shinier, faster, and easier to use.
           </p>
         </div>
@@ -223,162 +272,197 @@ import Base from '../layouts/Base.astro';
         <div class="entry-body">
           <h3>Federated Wiki</h3>
           <p>
-            <a href="https://www.youtube.com/watch?v=BdwLczSgvcc"><strong>Federated Wiki</strong></a>
+            <a href="https://www.youtube.com/watch?v=BdwLczSgvcc"><strong
+              >Federated Wiki</strong></a>
             is a new, personal version of the wiki being developed by Ward
-            Cunningham. In 2011, I collaborated with him to design and build
-            the <a href="https://vimeo.com/32051583#">core UI paradigm</a>
+            Cunningham. In 2011, I collaborated with him to design and build the
+            <a href="https://vimeo.com/32051583#">core UI paradigm</a>
             that still powers it today.<span class="end-mark">&#9632;</span>
           </p>
         </div>
-        <a class="entry-thumb" href="https://www.youtube.com/watch?v=BdwLczSgvcc">
-          <img src="/img/sfw.png" alt="Screenshot of Smallest Federated Wiki UI model." loading="lazy" />
+        <a
+          class="entry-thumb"
+          href="https://www.youtube.com/watch?v=BdwLczSgvcc"
+        >
+          <img
+            src="/img/sfw.png"
+            alt="Screenshot of Smallest Federated Wiki UI model."
+            loading="lazy"
+          />
           <span class="thumb-credit">Fig. Smallest Federated Wiki</span>
         </a>
       </section>
-
     </article>
   </div>
 </Base>
 
 <style>
-  /* Positioning paragraph under the standfirst */
-  .titleblock .positioning {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    line-height: 1.5;
-    color: var(--ink);
-    max-width: 36rem;
-    margin-bottom: 1.6rem;
-  }
+/* Positioning paragraph under the standfirst */
+.titleblock .positioning {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink);
+  max-width: 36rem;
+  margin-bottom: 1.6rem;
+}
 
-  /* Home-page body overrides: entries are full-width and use their
-     own internal layout, not the body's paragraph constraint. They
-     start at column 1 to align flush with the titleblock above. */
-  .body.home > .section-head,
-  .body.home > .section-lede,
-  .body.home > .entry,
-  .body.home > .end-rule {
-    grid-column: 1 / -1;
-    max-width: none;
-  }
+/* Home-page body overrides: entries are full-width and use their
+   own internal layout, not the body's paragraph constraint. They
+   start at column 1 to align flush with the titleblock above. */
+.body.home > .section-head,
+.body.home > .section-lede,
+.body.home > .entry,
+.body.home > .end-rule {
+  grid-column: 1 / -1;
+  max-width: none;
+}
 
-  .body.home .section-head {
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: 1.6rem;
-    line-height: 1.2;
-    margin-top: 2.2rem;
-    margin-bottom: 0.4rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--rule);
-    font-variation-settings: "opsz" 32;
-    display: flex;
-    align-items: baseline;
-    gap: 0.7em;
-  }
-  .body.home .section-head:first-child { margin-top: 0; }
-  .body.home .section-head .section-label {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--spot);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 400;
-  }
+.body.home .section-head {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin-top: 2.2rem;
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-variation-settings: "opsz" 32;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+}
+.body.home .section-head:first-child {
+  margin-top: 0;
+}
+.body.home .section-head .section-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--spot);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
 
-  .body.home .section-lede {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 1.05rem;
-    line-height: 1.45;
-    color: var(--ink-soft);
-    max-width: 38rem;
-    margin: 0.6rem 0 1.6rem;
-    font-variation-settings: "opsz" 28;
-  }
+.body.home .section-lede {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 38rem;
+  margin: 0.6rem 0 1.6rem;
+  font-variation-settings: "opsz" 28;
+}
 
-  /* Entry: thumbnail on the left, body on the right. DOM order keeps
-     the text first for screen readers; explicit grid-column swaps
-     them visually so the image leads. */
+/* Entry: thumbnail on the left, body on the right. DOM order keeps
+   the text first for screen readers; grid-template-areas places the
+   thumb visually to the left of the body regardless of source order.
+
+   When an entry has no thumb, the left cell is just empty space — body
+   content still aligns at the same x as other entries' bodies, which
+   keeps the vertical text column consistent down the page. */
+.body.home .entry {
+  display: grid;
+  grid-template-columns: 12em 1fr;
+  grid-template-areas: "thumb body";
+  gap: 0 1.2rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+  align-items: start;
+}
+.body.home .entry:last-of-type {
+  border-bottom: none;
+}
+
+.body.home .entry-body {
+  grid-area: body;
+  min-width: 0;
+}
+.body.home .entry-thumb {
+  grid-area: thumb;
+}
+.body.home .entry-body h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0 0 0.4rem;
+  font-variation-settings: "opsz" 28;
+}
+.body.home .entry-body p {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+  max-width: 36rem;
+}
+.body.home .entry-body a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--spot);
+  transition: background 0.15s;
+}
+.body.home .entry-body a:hover {
+  background: var(--spot-wash);
+}
+
+.body.home .entry-thumb {
+  display: block;
+  align-self: start;
+  /* Block link wrapping an image — opt out of the text-link underline. */
+  text-decoration: none;
+}
+.body.home .entry-thumb img {
+  width: 100%;
+  display: block;
+  background: white;
+  border: 1px solid var(--rule-soft);
+  /* outline sits outside the border without affecting layout, so the
+     hover affordance doesn't reflow the surrounding entries. */
+  outline: 0 solid transparent;
+  transition: outline-width 0.15s, outline-color 0.15s;
+}
+.body.home .entry-thumb:hover img,
+.body.home .entry-thumb:focus-visible img {
+  outline: 2px solid var(--spot);
+  outline-offset: 2px;
+}
+.body.home .entry-thumb .thumb-credit {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  margin-top: 0.3rem;
+  letter-spacing: 0.04em;
+}
+
+/* When no thumbnail, the third column just stays empty — keeps
+   the body column the same width across all entries for rhythm. */
+
+.body.home .end-rule {
+  text-align: center;
+  color: var(--spot);
+  font-size: 0.85rem;
+  letter-spacing: 1em;
+  padding-left: 1em;
+  margin: 2.2rem 0 0.6rem;
+}
+
+/* On narrow screens, stack thumb above body. Cap the thumb width so
+   it doesn't dominate; floating the body alongside it isn't worth
+   the cramped column. */
+@media (max-width: 980px) {
   .body.home .entry {
-    display: grid;
-    grid-template-columns: 12em 1fr;
-    gap: 0 1.2rem;
-    padding: 1.1rem 0;
-    border-bottom: 1px solid var(--rule-soft);
-    align-items: start;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "thumb"
+      "body";
   }
-  .body.home .entry:last-of-type { border-bottom: none; }
-
-  .body.home .entry-body { min-width: 0; grid-column: 2; }
-  .body.home .entry-thumb { grid-column: 1; }
-  .body.home .entry-body h3 {
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: 1.2rem;
-    line-height: 1.25;
-    color: var(--ink);
-    margin: 0 0 0.4rem;
-    font-variation-settings: "opsz" 28;
-  }
-  .body.home .entry-body p {
-    font-family: var(--serif);
-    font-size: 1rem;
-    line-height: 1.55;
-    color: var(--ink);
-    margin: 0;
-    max-width: 36rem;
-  }
-  .body.home .entry-body a {
-    color: var(--ink);
-    border-bottom: 1px solid var(--spot);
-    transition: background 0.15s;
-  }
-  .body.home .entry-body a:hover { background: var(--spot-wash); }
-
   .body.home .entry-thumb {
-    display: block;
-    align-self: start;
+    margin-bottom: 0.8rem;
+    max-width: 18rem;
   }
-  .body.home .entry-thumb img {
-    width: 100%;
-    display: block;
-    background: white;
-    border: 1px solid var(--rule-soft);
-  }
-  .body.home .entry-thumb .thumb-credit {
-    display: block;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--ink-faint);
-    margin-top: 0.3rem;
-    letter-spacing: 0.04em;
-  }
-
-  /* When no thumbnail, the third column just stays empty — keeps
-     the body column the same width across all entries for rhythm. */
-
-  .body.home .end-rule {
-    text-align: center;
-    color: var(--spot);
-    font-size: 0.85rem;
-    letter-spacing: 1em;
-    padding-left: 1em;
-    margin: 2.2rem 0 0.6rem;
-  }
-
-  @media (max-width: 980px) {
-    .body.home .entry {
-      grid-template-columns: 1fr;
-    }
-    .body.home .entry-body,
-    .body.home .entry-thumb {
-      grid-column: 1 / -1;
-    }
-    .body.home .entry-thumb {
-      margin-bottom: 0.8rem;
-      max-width: 18rem;
-    }
-  }
+}
 </style>
-

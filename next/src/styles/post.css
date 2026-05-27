@@ -283,12 +283,16 @@ h1 {
 
 .body a {
   color: var(--ink);
-  border-bottom: 1px solid var(--spot);
-  transition: border-bottom-width 0.1s, padding-bottom 0.1s;
+  /* text-decoration draws inside the text's box, so thickening on hover
+     doesn't shift surrounding layout (unlike border-bottom-width). */
+  text-decoration: underline;
+  text-decoration-color: var(--spot);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-thickness 0.1s;
 }
 .body a:hover {
-  border-bottom-width: 2px;
-  padding-bottom: 0;
+  text-decoration-thickness: 2px;
 }
 
 .body sup.ref {

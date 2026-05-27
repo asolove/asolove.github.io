@@ -13,12 +13,13 @@ interface Props {
 const { post, headings, prev, next } = Astro.props;
 const { title, description, date, categories, companion, related_to, dropcap } = post.data;
 
-// Breadcrumb: Essays / [most-specific category] / [post title]
+// Breadcrumb: Blog / [most-specific category]. The post title is the
+// <h1> that follows immediately below — repeating it in the crumb is
+// noise.
 const lastCategory = categories[categories.length - 1];
 const breadcrumb = [
   { label: 'Blog', href: '/blog.html' },
   ...(lastCategory ? [{ label: categoryLabel(lastCategory) }] : []),
-  { label: title },
 ];
 
 const formatDate = (d: Date) =>

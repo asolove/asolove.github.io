@@ -16,11 +16,8 @@
   --spot: #b3441b;
   --spot-soft: #d97a4f;
   --spot-wash: #f4d9cc;
-  /* Experiment: sans-first stack. `--serif` is intentionally pointed at
-     the sans family so headings, body, standfirst etc. switch in one place
-     without rewriting every rule. Restore Source Serif 4 below to revert. */
-  --serif: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI Variable', 'Segoe UI', Helvetica, Arial, sans-serif;
-  --sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI Variable', 'Segoe UI', Helvetica, Arial, sans-serif;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans: 'Hanken Grotesk', system-ui, sans-serif;
   --mono: 'Fragment Mono', ui-monospace, 'JetBrains Mono', monospace;
 }
 

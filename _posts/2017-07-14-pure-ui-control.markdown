@@ -71,11 +71,7 @@ Usually not.
 
 So we don’t have a technology or laziness problem, we have a thinking problem. We need representations that can help us think about an interface’s behavior.
 
-<figure class="margin">
-  <img src="/img/pure-ui-control/pure-ui-control-b7baa454.png" alt="Desktop UI calculator with number and operation buttons and a display for values.">
-</figure>
-
-Let’s consider a simple calculator application. It has only one display state, but a surprising depth of behavior. Everyone knows in general what it should do, but unless you’ve sat down to think about it, you likely don’t know *how* it should do it. It’s trickier than it looks.
+<img class="narrow" src="/img/pure-ui-control/pure-ui-control-b7baa454.png" alt="Desktop UI calculator with number and operation buttons and a display for values."> Let’s consider a simple calculator application. It has only one display state, but a surprising depth of behavior. Everyone knows in general what it should do, but unless you’ve sat down to think about it, you likely don’t know *how* it should do it. It’s trickier than it looks.
 
 You probably don’t believe me. You think you could turn this out in five minutes. I encourage you to go try. (Please leave a comment here with a link to the code and how long it took.)
 

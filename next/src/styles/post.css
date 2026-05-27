@@ -176,7 +176,6 @@ h1 {
 .siderail li { padding: 0.2rem 0; }
 /* TOC indent by heading depth (only kicks in on post pages). */
 .siderail li.toc-d3 { padding-left: 0.9rem; font-size: 0.95em; }
-.siderail li.toc-d4 { padding-left: 1.8rem; font-size: 0.9em; color: var(--ink-faint); }
 .siderail li:has(.n) {
   display: grid;
   grid-template-columns: 3.2em 1fr;

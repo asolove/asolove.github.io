@@ -37,9 +37,10 @@ const showReadingTime = minutes >= 2;
 const isLongForm = (post.body?.split(/\s+/).length ?? 0) > 800;
 const useDropcap = isLongForm && dropcap !== false;
 
-// Filter the auto-generated TOC: show h2 through h4. Each item carries
-// its depth so the sidebar can indent visually.
-const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
+// Filter the auto-generated TOC: only h2 and h3. h4s get noisy on
+// posts with deep section structure. Each item carries its depth so
+// the sidebar can indent visually.
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
 ---
 <Base

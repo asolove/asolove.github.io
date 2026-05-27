@@ -5,19 +5,38 @@
  */
 
 :root {
-  --paper: #faf7f0;
-  --paper-deep: #f2eee2;
-  --ink: #1c1c1c;
-  --ink-soft: #5a5a5a;
-  --ink-faint: #9a9690;
-  --rule: #1c1c1c;
-  --rule-soft: #c8c2b2;
-  --spot: #b8231a;
-  --spot-soft: #e2867e;
-  --spot-wash: #f7e4e1;
-  --serif: 'Source Serif 4', Georgia, serif;
-  --sans: 'Hanken Grotesk', system-ui, sans-serif;
+  /* Light-mode palette — borrowed from the making-of draft */
+  --paper: #fbfaf7;
+  --paper-deep: #f1ede4;
+  --ink: #1a1a1a;
+  --ink-soft: #555555;
+  --ink-faint: #8a8580;
+  --rule: #1a1a1a;
+  --rule-soft: #e5e2da;
+  --spot: #b3441b;
+  --spot-soft: #d97a4f;
+  --spot-wash: #f4d9cc;
+  /* Experiment: sans-first stack. `--serif` is intentionally pointed at
+     the sans family so headings, body, standfirst etc. switch in one place
+     without rewriting every rule. Restore Source Serif 4 below to revert. */
+  --serif: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI Variable', 'Segoe UI', Helvetica, Arial, sans-serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI Variable', 'Segoe UI', Helvetica, Arial, sans-serif;
   --mono: 'Fragment Mono', ui-monospace, 'JetBrains Mono', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #15140f;
+    --paper-deep: #201d18;
+    --ink: #ece8df;
+    --ink-soft: #a09c91;
+    --ink-faint: #6b685f;
+    --rule: #ece8df;
+    --rule-soft: #2a2823;
+    --spot: #e07a4f;
+    --spot-soft: #b3441b;
+    --spot-wash: #3a261c;
+  }
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

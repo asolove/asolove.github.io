@@ -388,6 +388,39 @@ h1 {
   max-width: 36rem;
 }
 
+/* Figure head: "Figure N." label sits above the image, anchor-linked
+   so readers can copy a stable URL to that specific figure. The link
+   affordance (#) sits faint and saturates on hover. */
+.body > figure .figure-head {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.5rem;
+}
+.body > figure .figure-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+}
+.body > figure .figure-link .link-mark {
+  color: var(--spot);
+  opacity: 0.35;
+  transition: opacity 0.15s;
+  font-size: 0.9em;
+}
+.body > figure .figure-link:hover .link-mark,
+.body > figure .figure-link:focus .link-mark {
+  opacity: 1;
+}
+/* Slight scroll-margin so clicked-to figures aren't flush with the top edge. */
+.body > figure[id] {
+  scroll-margin-top: 1rem;
+}
+
 /* Body-width figure — aligns with paragraph column */
 .body > figure.body {
   grid-column: 2 / span 7;

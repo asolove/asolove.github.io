@@ -1,9 +1,10 @@
 /**
  * remark-figure-numbers
  *
- * Adds a `.figure-head` chrome with a "Figure N." label to raw HTML
+ * Adds a `.figure-head` chrome with a "Figure N." anchor link to raw HTML
  * `<figure>` blocks authored directly in markdown (the legacy Jekyll
- * convention for img/iframe-with-caption blocks).
+ * convention for img/iframe-with-caption blocks). Each figure gets an
+ * `id="fig-N"` so the label can be deep-linked from elsewhere.
  *
  *   In:
  *     <figure>
@@ -12,8 +13,13 @@
  *     </figure>
  *
  *   Out:
- *     <figure>
- *       <div class="figure-head"><span class="label">Figure 1.</span></div>
+ *     <figure id="fig-1">
+ *       <div class="figure-head">
+ *         <a class="figure-link" href="#fig-1">
+ *           <span class="label">Figure 1.</span>
+ *           <span class="link-mark" aria-hidden="true">#</span>
+ *         </a>
+ *       </div>
  *       <img src="…" alt="…">
  *       <figcaption>…</figcaption>
  *     </figure>
@@ -49,9 +55,13 @@ export default function remarkFigureNumbers() {
       // practice each raw <figure> block in markdown is a single html
       // node, but handle the multi-figure case defensively with a
       // global-flagged replace.
-      node.value = value.replace(/<figure\b[^>]*>/gi, (match) => {
+      node.value = value.replace(/<figure\b([^>]*)>/gi, (match, attrs) => {
         n += 1;
-        return `${match}\n  <div class="figure-head"><span class="label">Figure ${n}.</span></div>`;
+        const id = `fig-${n}`;
+        // Inject id="…" into the existing attributes, preserving any
+        // class= or other attributes the author wrote.
+        const newAttrs = / id=["']/i.test(attrs) ? attrs : ` id="${id}"${attrs}`;
+        return `<figure${newAttrs}>\n  <div class="figure-head"><a class="figure-link" href="#${id}"><span class="label">Figure ${n}.</span><span class="link-mark" aria-hidden="true">#</span></a></div>`;
       });
     });
   };

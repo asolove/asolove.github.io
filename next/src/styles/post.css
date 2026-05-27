@@ -388,14 +388,6 @@ h1 {
   max-width: 36rem;
 }
 
-/* Bleed figure — spans the full grid and escapes the .page horizontal
-   padding so the figure touches the page edges. Use for highlight
-   videos / images that deserve magazine-style breakout treatment. */
-.body > figure.bleed {
-  grid-column: 1 / -1;
-  margin: 2rem -2rem 2.5rem;
-}
-
 /* Body-width figure — aligns with paragraph column */
 .body > figure.body {
   grid-column: 2 / span 7;

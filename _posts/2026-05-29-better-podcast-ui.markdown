@@ -6,9 +6,7 @@ date: 2026-05-29 09:00:00
 categories: js ui
 ---
 
-## Context
-
-For the past few years, my partner has run a delightful niche podcast and I've helped a bit with the audio quality. Our workflow was painful: one shared iCloud file, emails of notes coded to timestamps, carefully checking that our changes didn't conflict.
+For the past few years, my partner has run a niche podcast and I've helped a bit with the audio quality. Our workflow was painful: one shared iCloud file, emails of notes coded to timestamps, carefully checking that our changes didn't conflict.
 
 > Editing audio was like traveling back in time twenty years: no track changes, no comments, and no multiplayer editing.
 
@@ -35,13 +33,19 @@ Once you can find and edit bits of audio, a second problem emerges: how do you m
 
 In a traditional DAW, every clip has an absolute start time. If you move or edit the length of one, everything after drifts out of alignment:
 
-<div data-interactive="absolute-layout"></div>
+<figure>
+  <div data-interactive="absolute-layout"></div>
+  <figcaption>Absolute layout — trimming any clip leaves a silent gap or overlaps the next clip.</figcaption>
+</figure>
 
 The solution to this is a magnetic layout, where clips are ordered, not positioned. Each clip's place in time is computed from the lengths of the items before it. So when you trim, delete, or insert, everything after just re-flows automatically.
 
 When you genuinely want silence, you add an explicit gap clip; the gap is just another item in the list with a duration.
 
-<div data-interactive="magnetic-layout"></div>
+<figure>
+  <div data-interactive="magnetic-layout"></div>
+  <figcaption>Magnetic layout — clips and gaps reflow when you trim.</figcaption>
+</figure>
 
 This is the model used by many video editing tools as well as audio tools that focus on spoken word, like [Hindenburg](https://hindenburg.com/). So this itself isn't new. **But it provides the first step and suggests that further playing with the idea of an automated layout model might be useful.**
 
@@ -51,7 +55,10 @@ The vast majority of edits are to just remove a tiny bit of filler material. In 
 
 By making a skipped portion of a clip an explicit entity in our model, we enable one whole chunk of the recording to stay in a single clip and be easier to deal with as a unit.
 
-<div data-interactive="skip-regions"></div>
+<figure>
+  <div data-interactive="skip-regions"></div>
+  <figcaption>Skip regions — fold a portion of a clip without splitting it in two.</figcaption>
+</figure>
 
 The skip region acts like code folding in a text editor. It leaves a visible indication and can be unfolded to interact with the skipped audio or change the region's start and end.
 
@@ -63,7 +70,10 @@ Perhaps the trickiest case is transition music. We usually want it to play gentl
 
 Most audio editors allow laying out the second track either in absolute time or by connecting the start of a clip in one track to a specific place in another. This allows the second track to float along with the rest of the magnetic layout.
 
-<div data-interactive="single-connector"></div>
+<figure>
+  <div data-interactive="single-connector"></div>
+  <figcaption>Single connector — music clip tied to the end of a specific speech clip.</figcaption>
+</figure>
 
 But this model still doesn't really match what an editor wants to do:
 
@@ -76,7 +86,10 @@ The solution is constraint-based layout:
 - Where the music fades respective to the spoken track
 - Which section of the music is playing (based on the start of the clip)
 
-<div data-interactive="pins-and-constraints"></div>
+<figure>
+  <div data-interactive="pins-and-constraints"></div>
+  <figcaption>Pins and constraints — two-tie constraint layout with fade points and automation.</figcaption>
+</figure>
 
 Combining all of these elements — magnetic timeline, skip regions, and constraints between tracks — reduces the busywork aspect of audio editing and lets me focus directly on the emotional experience I'm trying to achieve.
 

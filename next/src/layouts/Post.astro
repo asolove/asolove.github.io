@@ -37,8 +37,9 @@ const showReadingTime = minutes >= 2;
 const isLongForm = (post.body?.split(/\s+/).length ?? 0) > 800;
 const useDropcap = isLongForm && dropcap !== false;
 
-// Filter the auto-generated TOC: only show h2 and h3.
-const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+// Filter the auto-generated TOC: show h2 through h4. Each item carries
+// its depth so the sidebar can indent visually.
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
 ---
 <Base
@@ -61,7 +62,7 @@ const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
             <h3>Contents</h3>
             <ul>
               {toc.map((h) => (
-                <li><a href={`#${h.slug}`}>{h.text}</a></li>
+                <li class={`toc-d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>
               ))}
             </ul>
           </>

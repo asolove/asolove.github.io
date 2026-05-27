@@ -39,7 +39,11 @@ import { visit } from 'unist-util-visit';
 // opening tag and detect <img or <iframe somewhere in the same html node.
 const FIGURE_OPEN = /<figure\b[^>]*>/i;
 const HEAD_ALREADY_PRESENT = /<div\s+class=["'][^"']*\bfigure-head\b/i;
-const HAS_VISUAL = /<(img|iframe)\b/i;
+// Recognise <img>, <iframe>, AND <div data-interactive="…"> as visuals
+// worth numbering. The interactive div is treated like any other figure
+// payload so authored `<figure><div data-interactive>…</figure>` blocks
+// pick up the same Figure N anchor as image figures.
+const HAS_VISUAL = /<(img|iframe)\b|<div\s[^>]*\bdata-interactive\b/i;
 
 export default function remarkFigureNumbers() {
   return (tree) => {

@@ -40,11 +40,11 @@ const HEIGHT = TRACK_Y + TRACK_H + 6;
 const TITLE_BAR_H = 11;
 
 const COLORS = {
-  bg: '#1b1d22',
-  trackLane: 'rgba(255, 255, 255, 0.025)',
-  trackBorder: 'rgba(255, 255, 255, 0.05)',
-  ruler: '#3d4046',
-  rulerText: '#7a7e85',
+  bg: '#f2eee2',
+  trackLane: 'rgba(0, 0, 0, 0.025)',
+  trackBorder: 'rgba(0, 0, 0, 0.05)',
+  ruler: '#bdb6a4',
+  rulerText: '#7a7270',
   speech: { fill: '#3d8260', fillTop: '#2a5b43', stroke: '#15301f', text: '#e6f3ec' },
   cutFill:   'rgba(228, 96, 80, 0.45)',
   cutStroke: 'rgba(248, 130, 110, 0.9)',

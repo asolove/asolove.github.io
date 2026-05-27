@@ -6,7 +6,7 @@ date: 2017-04-02 12:00:00
 categories: js ui
 ---
 
-Yesterday I published a post arguing that [more programmers should learn about Concurrent ML](/js/ui/2017/04/02/synchronizable-abstractions.html). Especially for UI development, CML offers better abstractions and some ready-made solutions for problems that are currently hard or ugly to solve.
+Yesterday I published a post arguing that [more programmers should learn about Concurrent ML](/js/ui/2017/04/01/synchronizable-abstractions.html). Especially for UI development, CML offers better abstractions and some ready-made solutions for problems that are currently hard or ugly to solve.
 
 But experts in this material may have noticed something odd about my post: I tried very hard to avoid saying “Concurrent ML” except when actually discussing the history of the ideas. Instead, I used names like “synchronizable abstraction” and “protocol” in an effort to make the ideas clearer to those who had never heard of CML.
 

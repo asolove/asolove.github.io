@@ -58,7 +58,7 @@ Keep that strategy in mind as we consider the problem that many UI teams current
 
 For as long as I’ve built interfaces, regardless of the technology or testing plan, we’ve found unexpected behavior in production. Nothing obvious, certainly nothing that anyone would have written a user story about.
 
-Instead, the bugs came up in unexpected cases that made you wonder “why would anyone do *that*?” But if it’s possible to do something, someone eventually will. What almost all of these bugs had in common was a dependence on *ordering *and *cases*, especially *unexpected *orders of cases.
+Instead, the bugs came up in unexpected cases that made you wonder “why would anyone do *that*?” But if it’s possible to do something, someone eventually will. What almost all of these bugs had in common was a dependence on *ordering* and *cases*, especially *unexpected* orders of cases.
 
 You’ve probably experienced bugs like these in your own projects:
 
@@ -99,7 +99,7 @@ Clearly this is not a technical problem, but a thinking one. In particular, the 
 
 ## Data state & control state
 
-I think the idea we’re missing is an application’s *control states*. Previously we enumerated all of an interface’s *display states* as all the meaningfully different ways it should display. A *control state *is all the possible states of the interface that have different sets of allowed interactions. Sometimes the two layers of states align, as in a loading state that displays a spinner and ignores all user input. In other cases, an interface’s display state can remain the same even while it’s control state changes.
+I think the idea we’re missing is an application’s *control states*. Previously we enumerated all of an interface’s *display states* as all the meaningfully different ways it should display. A *control state* is all the possible states of the interface that have different sets of allowed interactions. Sometimes the two layers of states align, as in a loading state that displays a spinner and ignores all user input. In other cases, an interface’s display state can remain the same even while it’s control state changes.
 
 Consider the calculator. When its display reads `20`, it may actually be in one of two control states. In the “Entering operand” control state, typing another digit appends it to the end of the current number. In the “Result” control state (where a previously-calculated answer is shown), typing a digit causes it to be the start of a new operand, and transitions the control state to “Entering operand,” changing how the next action will be interpreted.
 
@@ -116,7 +116,7 @@ Control states also can be naturally represented in our code. No longer should w
 
 If your language supports some kind of pattern matching, this can turn into quite lovely code. Below is part of an implementation of the calculator’s control states in [Reason](http://facebook.github.io/reason/). Each line communicates how a specific control state reacts to a specific action by returning a new control state.
 
-(*An aside to Reason aficionados: *Notice an extra benefit of this structure, that each control state requires a specific, typed set of context data. This ensures that each state can only rely on data it is guaranteed to have, and that on leaving one state, any no-longer-active data is discarded and re-initialized when the state is re-entered. You may enjoy reading [the full code](https://github.com/asolove/restate/blob/c93fb84ea6bf39fb9722cd7593ac7c636d35c9e1/motivation/naive/calculator_state.re#L43).)
+(*An aside to Reason aficionados:* Notice an extra benefit of this structure, that each control state requires a specific, typed set of context data. This ensures that each state can only rely on data it is guaranteed to have, and that on leaving one state, any no-longer-active data is discarded and re-initialized when the state is re-entered. You may enjoy reading [the full code](https://github.com/asolove/restate/blob/c93fb84ea6bf39fb9722cd7593ac7c636d35c9e1/motivation/naive/calculator_state.re#L43).)
 
 <figure>
   <img src="/img/pure-ui-control/pure-ui-control-d7d67a83.jpg" alt="Reason code for the Calculator transitions. See accessible text version at the link just before this image.">
@@ -138,11 +138,11 @@ To solve this problem, teams can adopt the notion of *control state* as a descri
 
 ### Any questions?
 
-*The calculator is a simple example: does this approach scale to larger interfaces? *With simple state machines, things quickly grow too complicated. But a more powerful formalism, statecharts, can model more complex systems by allowing them to be decomposed into hierarchies (just like components, hmm…) and to represent several charts that can proceed concurrently with one another. Statecharts are a common method for modeling complex embedded software that has many more inputs, and less room for error, than our interfaces.
+*The calculator is a simple example: does this approach scale to larger interfaces?* With simple state machines, things quickly grow too complicated. But a more powerful formalism, statecharts, can model more complex systems by allowing them to be decomposed into hierarchies (just like components, hmm…) and to represent several charts that can proceed concurrently with one another. Statecharts are a common method for modeling complex embedded software that has many more inputs, and less room for error, than our interfaces.
 
-*What are the semantics of the diagram? How are control states best encoded in my language/framework? *I don’t know! I think there are lots of possible ways to use the idea of control states, just as there are many concrete ways that teams use display states to organize their work.
+*What are the semantics of the diagram? How are control states best encoded in my language/framework?* I don’t know! I think there are lots of possible ways to use the idea of control states, just as there are many concrete ways that teams use display states to organize their work.
 
-*That’s it? You wrote 2000 words to tell us about state machines? *Well, sort of. First, because many web developers don’t have a CS background, so just saying “state machines” doesn’t help them. Second, because I wanted to talk about the idea on a non-technical level. The benefit of statecharts comes from using them as a representation to aid cross-discipline thinking and communication. And hey, maybe hearing about it from a different angle will help developers, too.
+*That’s it? You wrote 2000 words to tell us about state machines?* Well, sort of. First, because many web developers don’t have a CS background, so just saying “state machines” doesn’t help them. Second, because I wanted to talk about the idea on a non-technical level. The benefit of statecharts comes from using them as a representation to aid cross-discipline thinking and communication. And hey, maybe hearing about it from a different angle will help developers, too.
 
 ### Notes
 

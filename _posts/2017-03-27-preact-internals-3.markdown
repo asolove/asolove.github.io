@@ -22,7 +22,7 @@ And we had also made a long list of details that this picture left out, like:
 
 These details split nicely between things about the DOM (the first three) and things about components (the last two). We’ll tackle the DOM-related ones in this post, and the component ones next time.
 
-This will be a **much more detailed **and** code-heavy** post than the ones so far. It’s also **much longer**.
+This will be a **much more detailed and code-heavy** post than the ones so far. It’s also **much longer**.
 
 Fortunately for those of us who use Preact, but unfortunately for those of us who want to read it, Jason is a masterful code golfer. A lot of this code is hard to understand because he has made it as short and fast as possible, often by reusing variables or mutating them in unexpected places. As we read through, I’ll do my best to point out and explain these cases.
 

@@ -1,0 +1,138 @@
+/*
+ * Interactive-specific styles for the "Better podcast editing UI" post.
+ * Trimmed from the original making-of/styles.css — layout chrome (page,
+ * rail, TOC, sticky-head, .post, .full-bleed, .tldr, etc.) is dropped
+ * because Post.astro + post.css provide those. Variables remapped to
+ * the site's --paper / --ink / --rule-soft / --spot palette.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Interactive container                                               */
+/* ------------------------------------------------------------------ */
+
+[data-interactive] {
+  --pad: 1.25rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: 10px;
+  padding: var(--pad);
+  margin: 2rem 0;
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+}
+[data-interactive] .ix-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 0.75rem;
+}
+[data-interactive] .ix-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+[data-interactive] button {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--rule-soft);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 5px;
+  cursor: pointer;
+}
+[data-interactive] button:hover {
+  border-color: var(--spot);
+  color: var(--spot);
+}
+[data-interactive] button.is-active {
+  background: var(--spot);
+  color: white;
+  border-color: var(--spot);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tri-state play / playing / replay button                            */
+/* ------------------------------------------------------------------ */
+
+.ix-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 6.5rem;
+  justify-content: center;
+  transition:
+    opacity 220ms ease,
+    color 200ms ease,
+    border-color 200ms ease;
+}
+.ix-play[disabled] { cursor: default; }
+.ix-play[data-state="playing"] {
+  opacity: 0.55;
+  color: var(--ink-soft);
+  border-color: var(--rule-soft);
+}
+.ix-play[data-state="playing"]:hover {
+  color: var(--ink-soft);
+  border-color: var(--rule-soft);
+}
+
+.ix-play-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+.ix-play-icon .icon {
+  position: absolute;
+  inset: 0;
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.85);
+  transition:
+    opacity 200ms ease,
+    transform 240ms cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+.ix-play[data-state="idle"]    .icon-play,
+.ix-play[data-state="playing"] .icon-spin,
+.ix-play[data-state="done"]    .icon-replay {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Spinner only rotates while visible; once playing state ends the SVG fades
+   out and the rotation is no longer observable, so no need to smooth-stop. */
+.ix-play[data-state="playing"] .icon-spin .spin {
+  animation: ix-spin 0.95s linear infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+@keyframes ix-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ix-play-label {
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms ease;
+  min-width: 3.4em;
+  text-align: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-spin .spin { animation: none; }
+  .ix-play-icon .icon { transition-duration: 0.001ms; }
+}
+
+[data-interactive] .ix-caption {
+  margin-top: 0.75rem;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  min-height: 2.5em;
+}

@@ -140,17 +140,28 @@ else if (name[0]=='o' && name[1]=='n') {
 ```
 
 ```
-  // adding a callback to a new event   if (value) {    if (!l[name]) node.addEventListener(name, eventProxy,                                         !!NON_BUBBLING_EVENTS[name]);  }
+// adding a callback to a new event
+if (value) {
+  if (!l[name]) node.addEventListener(name, eventProxy, !!NON_BUBBLING_EVENTS[name]);
+}
 ```
 
 ```
-  // removing a callback from an event no longer listened to  else if (l[name]) {    node.removeEventListener(name, eventProxy,                                     !!NON_BUBBLING_EVENTS[name]);  }  l[name] = value;}
+// removing a callback from an event no longer listened to
+else if (l[name]) {
+  node.removeEventListener(name, eventProxy, !!NON_BUBBLING_EVENTS[name]);
+}
+l[name] = value;
+}
 ```
 
 If we haven’t hit on the property name yet, then it might be a plain old DOM property, which we set directly, using the `setProperty` helper that we saw earlier. If the value is `undefined`, `null`, or `false`, then we just remove the attribute.
 
 ```
-else if (name!=='list' && name!=='type' && !isSvg && name in node) {  setProperty(node, name, value==null ? '' : value);  if (value==null || value===false) node.removeAttribute(name);}
+else if (name!=='list' && name!=='type' && !isSvg && name in node) {
+  setProperty(node, name, value==null ? '' : value);
+  if (value==null || value===false) node.removeAttribute(name);
+}
 ```
 
 There’s one final case: SVG attributes. For these, we need to use the special namespace-aware attribute methods:
@@ -189,7 +200,16 @@ Now that we understand what `setAccessor` does to set individual DOM attributes,
 First, [certain attributes don’t even get sent to ](https://github.com/developit/preact/blob/8567c8bc13bc7fc60eeff4cad3bc9217822b4577/src/vdom/diff.js#L317)[`setAccessor`](https://github.com/developit/preact/blob/8567c8bc13bc7fc60eeff4cad3bc9217822b4577/src/vdom/diff.js#L317) because we don’t want to even try to set them on the DOM. `children` and `innerHTML` get filtered out, since we never want to try to render them. Then there’s one additional test the attribute has to pass:
 
 ```
-// either it's a new attribute, or ...!(name in old) ||   // its value is not equal to ...  attrs[name]!==    // if it's a DOM form value    (name==='value' || name==='checked' ?       // then the value on the DOM node      dom[name] :      // otherwise, the previous version of the prop      old[name]))
+// either it's a new attribute, or ...
+!(name in old) ||
+  // its value is not equal to ...
+  attrs[name] !==
+    // if it's a DOM form value
+    (name === 'value' || name === 'checked' ?
+      // then the value on the DOM node
+      dom[name] :
+      // otherwise, the previous version of the prop
+      old[name])
 ```
 
 That boolean expression had me scratching my head for a while. But what it’s trying to say is:
@@ -258,7 +278,17 @@ if (len) {
 ```
 
 ```
-    // if it had a key, added it to index by key    if (key!=null) {      keyedLen++;      keyed[key] = child;    }        // otherwise, add it to the list of non-keyed old children    else if (hydrating || absorb || props || child instanceof Text) {            children[childrenLen++] = child;    }  }}
+    // if it had a key, added it to index by key
+    if (key!=null) {
+      keyedLen++;
+      keyed[key] = child;
+    }
+    // otherwise, add it to the list of non-keyed old children
+    else if (hydrating || absorb || props || child instanceof Text) {
+      children[childrenLen++] = child;
+    }
+  }
+}
 ```
 
 Now that we’ve indexed all the DOM nodes, we loop through all the child vnodes and try to find each of them a match. If the vnode has a key, we look for a match in the `keyed` index; otherwise, we look for a matching tag in `children`.
@@ -280,7 +310,19 @@ for (let i=0; i<vlen; i++) {
 ```
 
 ```
-  // attempt to find a node of the same type from children  else if (!child && min<childrenLen) {    for (j=min; j<childrenLen; j++) {      c = children[j];      if (c && isSameNodeType(c, vchild)) {        child = c;        children[j] = undefined;        if (j===childrenLen-1) childrenLen--;        if (j===min) min++;        break;      }    }  }
+// attempt to find a node of the same type from children
+else if (!child && min<childrenLen) {
+  for (j=min; j<childrenLen; j++) {
+    c = children[j];
+    if (c && isSameNodeType(c, vchild)) {
+      child = c;
+      children[j] = undefined;
+      if (j===childrenLen-1) childrenLen--;
+      if (j===min) min++;
+      break;
+    }
+  }
+}
 ```
 
 (When this code block ends, we’re still inside the `for` loop over vnodes. The next block is still inside that loop.)
@@ -296,7 +338,20 @@ child = idiff(child, vchild, context, mountAll);
 If we hadn’t found a matching child DOM node, `idiff` created a new one, and either way the DOM node that it updated is returned back to us. The status of that node in the DOM is currently uncertain. It may be that it already is a child of the parent node and in the right place among the siblings. It may be that we reused a node, but it should now be at a new spot among the siblings. Or `idiff` may have made a brand-new node, and it needs to be placed inside the parent in the right place. Sorting out these cases and putting the node where it needs to go are handled next:
 
 ```
-if (child && child!==dom) {  // if the current child is past old DOM length, we can just append  if (i>=len) {    dom.appendChild(child);  }  // if the current child differs from what used to be at this index  else if (child!==originalChildren[i]) {    if (child===originalChildren[i+1]) {      // I don't think this line is necessary?      removeNode(originalChildren[i]);     }    dom.insertBefore(child, originalChildren[i] || null);  }}
+if (child && child!==dom) {
+  // if the current child is past old DOM length, we can just append
+  if (i>=len) {
+    dom.appendChild(child);
+  }
+  // if the current child differs from what used to be at this index
+  else if (child!==originalChildren[i]) {
+    if (child===originalChildren[i+1]) {
+      // I don't think this line is necessary?
+      removeNode(originalChildren[i]);
+    }
+    dom.insertBefore(child, originalChildren[i] || null);
+  }
+}
 ```
 
 And that’s the end of the work we need to do for each of the child vnodes. We exit out of that loop and just need to clean up any lingering DOM nodes that aren’t needed anymore. Remember that when we picked DOM node to use in the new content, we removed them from the `keyed` or `children` collections. So anything still left in them needs to be removed from the DOM. For now, we can just assume that `recollectNodeTree` makes sure the element is detached from the DOM and destroyed.
@@ -370,7 +425,10 @@ export function recollectNodeTree(node, unmountOnly) {
 ```
 
 ```
-    // recycle node unless asked to only handle unmounting    if (!unmountOnly) {      collectNode(node);    }
+    // recycle node unless asked to only handle unmounting
+    if (!unmountOnly) {
+      collectNode(node);
+    }
 ```
 
 ```javascript

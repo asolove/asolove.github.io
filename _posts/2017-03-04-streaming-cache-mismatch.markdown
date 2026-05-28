@@ -4,6 +4,7 @@ title:  "Mismatched assets with streaming service workers"
 description: "An open question: when a service worker caches the header but streams the body, how do you keep CSS and markup from drifting?"
 date:   2017-03-04 21:43:39
 categories: js service-worker stream
+tags: perf
 ---
 
 Recently I’ve been researching how to use service workers to speed up traditional, multi-page websites rather than SPAs. [Some](https://twitter.com/slightlylate/status/831225152515944449) [Googlers](https://jakearchibald.com/2016/streams-ftw/) have been promoting the use of streaming responses. A header chunk is cached client-side and returned immediately for every navigation, so the page can start constructing the CSSOM and do an initial render while it’s still waiting on page-specific content from the server. I’ll get into the why and how of that in a later post after I figure a few more things out.

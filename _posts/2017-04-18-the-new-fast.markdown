@@ -5,6 +5,7 @@ description: "Or: what Souders’ books didn’t tell you because it only happen
 dropcap: false
 date: 2017-04-18 09:00:00
 categories: js perf
+tags: perf
 ---
 
 *(This is a blog version of a presentation I gave at work a few weeks ago. Because I talked about a couple internal-only things, I can’t put up the video, but I hope it is worthwhile to share the slides and some notes.)*

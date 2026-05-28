@@ -4,6 +4,7 @@ title: "Preact internals #3: some fiddly little bits"
 description: "How the virtual dom actually gets rendered to the DOM"
 date: 2017-03-27 09:00:00
 categories: js ui
+tags: ui
 ---
 
 So far in this series, we’ve [gotten a feel for the Preact repo](/js/ui/2017/03/11/preact-internals-1.html) and looked at [the component model](/js/ui/2017/03/14/preact-internals-2.html) from a high level. When we left off last time, we had just finished our picture of the muturally-recursive process of diffing virtual DOM trees and rendering components:

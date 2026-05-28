@@ -4,6 +4,7 @@ title: "Concurrent ML has a branding problem"
 description: "And some suggestions from a complete outsider"
 date: 2017-04-02 12:00:00
 categories: js ui
+tags: functional
 ---
 
 Yesterday I published a post arguing that [more programmers should learn about Concurrent ML](/js/ui/2017/04/01/synchronizable-abstractions.html). Especially for UI development, CML offers better abstractions and some ready-made solutions for problems that are currently hard or ugly to solve.

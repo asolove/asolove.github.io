@@ -1,9 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
-import Base from '../layouts/Base.astro';
-import { postPath, sortByDate, tagLabel } from '../lib/post-helpers';
+import Base from '../../layouts/Base.astro';
+import { postPath, sortByDate, tagLabel } from '../../lib/post-helpers';
 
-const posts = sortByDate(await getCollection('posts'));
+export async function getStaticPaths() {
+  const all = await getCollection('posts');
+  // Unique tags across all posts.
+  const tags = new Set<string>();
+  for (const p of all) for (const t of p.data.tags ?? []) tags.add(t);
+  return [...tags].map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: sortByDate(all.filter((p) => (p.data.tags ?? []).includes(tag))),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const label = tagLabel(tag);
 
 const dayMonthFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short' });
 const formatDayMonth = (d: Date) => dayMonthFmt.format(d);
@@ -16,25 +31,19 @@ for (const post of posts) {
   if (last && last.year === year) last.posts.push(post);
   else byYear.push({ year, posts: [post] });
 }
-
-// Tags with counts, sorted by label.
-const counts = new Map<string, number>();
-for (const post of posts) {
-  for (const t of post.data.tags ?? []) counts.set(t, (counts.get(t) ?? 0) + 1);
-}
-const tagsForSidebar = [...counts.entries()]
-  .map(([slug, count]) => ({ slug, label: tagLabel(slug), count }))
-  .sort((a, b) => a.label.localeCompare(b.label));
 ---
 <Base
-  title="Blog"
-  description="All posts on adamsolove.com, in reverse chronological order."
+  title={`${label} — Archive`}
+  description={`Posts categorized as ${label}.`}
   current="blog"
+  breadcrumb={[{ label: 'Blog', href: '/blog.html' }, { label }]}
 >
   <div class="page">
     <div class="titleblock">
-      <h1>Blog</h1>
-      <p class="standfirst">Every post on the site, newest first.</p>
+      <h1>{label}</h1>
+      <p class="standfirst">
+        {posts.length} post{posts.length === 1 ? '' : 's'} categorized as <em>{label}</em>.
+      </p>
     </div>
 
     <aside class="siderail">
@@ -48,16 +57,6 @@ const tagsForSidebar = [...counts.entries()]
         <ul>
           {byYear.map((g) => (
             <li><a href={`#${g.year}`}>{g.year}</a></li>
-          ))}
-        </ul>
-
-        <h3>By tag</h3>
-        <ul>
-          {tagsForSidebar.map((t) => (
-            <li>
-              <a href={`/tags/${t.slug}`}>{t.label}</a>
-              <span class="cat-count"> ({t.count})</span>
-            </li>
           ))}
         </ul>
       </div>
@@ -104,15 +103,14 @@ const tagsForSidebar = [...counts.entries()]
 </script>
 
 <style>
-  /* Listings sit flush-left in the content area (col 1) and stop at col
-     8, leaving col 9 as breathing room before the contents siderail at
-     cols 10-12. */
+  /* Mirrors blog.astro's archive styles. Listings flush-left in the
+     content area (col 1) stopping at col 8, with col 9 as gutter
+     before the contents siderail at cols 10-12. */
   .body.archive > .year-group {
     grid-column: 1 / span 8;
     max-width: none;
     margin-bottom: 2rem;
   }
-
   .body.archive .year-head {
     font-family: var(--serif);
     font-weight: 600;
@@ -125,11 +123,7 @@ const tagsForSidebar = [...counts.entries()]
   }
   .body.archive .year-group:first-child .year-head { margin-top: 0; }
 
-  .body.archive .year-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+  .body.archive .year-list { list-style: none; margin: 0; padding: 0; }
 
   .body.archive .entry {
     display: grid;
@@ -149,9 +143,7 @@ const tagsForSidebar = [...counts.entries()]
     text-transform: uppercase;
     padding-top: 0.15rem;
   }
-
   .body.archive .entry-body { min-width: 0; }
-
   .body.archive .entry-title {
     font-family: var(--serif);
     font-weight: 600;
@@ -162,7 +154,6 @@ const tagsForSidebar = [...counts.entries()]
     font-variation-settings: "opsz" 24;
   }
   .body.archive .entry-title:hover { background: var(--spot-wash); }
-
   .body.archive .entry-desc {
     font-family: var(--serif);
     font-style: italic;
@@ -172,12 +163,6 @@ const tagsForSidebar = [...counts.entries()]
     margin: 0.25rem 0 0;
     max-width: 38rem;
     font-variation-settings: "opsz" 22;
-  }
-
-  /* Category-count chip in the sidebar list. */
-  .siderail .cat-count {
-    color: var(--ink-faint);
-    font-feature-settings: "tnum" 1;
   }
 
   @media (max-width: 640px) {

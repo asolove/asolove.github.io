@@ -4,6 +4,7 @@ title:  "Deferred method combinator"
 description: "Wrapping async dependencies with a higher-order function, so callers can keep treating a method as fire-and-forget."
 date:   2012-09-19 17:43:39
 categories: js functional
+tags: functional
 ---
 
 <p>Reg Braithwaite's excellent <a href="https://github.com/raganwald/homoiconic/blob/master/2012/08/method-decorators-and-combinators-in-coffeescript.md">post on method combinators</a> showed how to untangle cross-cutting concerns like security, logging, and event triggering from the definitions of instance methods. The post inspired me to share another fun method combinator: asynchronous method invocation.</p>

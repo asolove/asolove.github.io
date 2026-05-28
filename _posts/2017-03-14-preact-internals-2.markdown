@@ -4,6 +4,7 @@ title: "Preact internals #2: the component model"
 description: "What makes React’s component model — composable, stateful, declarative — actually work, and how Preact implements both class-based and functional components."
 date: 2017-03-14 09:00:00
 categories: js ui
+tags: ui
 ---
 
 In [the first post](/js/ui/2017/03/11/preact-internals-1.html) in this series, we started to build a mental model of the Preact codebase, explored some fringe code for utilities and global options, and saw how JSX becomes virtual dom trees. In this second post, we’ll look at the (P)react component model: what it is, how functional and class-based components work, and how the implementation is structured.

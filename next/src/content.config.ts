@@ -20,10 +20,19 @@ const posts = defineCollection({
       const normalized = v.replace(' ', 'T') + (hasTz ? '' : 'Z');
       return new Date(normalized);
     }),
-    // Jekyll posts store categories as a space-separated string.
+    // Jekyll posts store categories as a space-separated string. These
+    // drive URL slugs (`/cat1/cat2/year/month/day/slug.html`) and are
+    // frozen for backward compatibility — do NOT use for navigation.
     categories: z
       .union([z.string(), z.array(z.string())])
       .transform((v) => (Array.isArray(v) ? v : v.split(/\s+/).filter(Boolean))),
+    // Navigation taxonomy — decoupled from URL slugs. Use this for the
+    // breadcrumb, blog/archive groupings, and the `/tags/<tag>` route.
+    // Multiple tags per post are allowed; space-separated like categories.
+    tags: z
+      .union([z.string(), z.array(z.string())])
+      .transform((v) => (Array.isArray(v) ? v : v.split(/\s+/).filter(Boolean)))
+      .optional(),
     // Optional new fields for the redesign.
     companion: z
       .array(z.object({ label: z.string(), url: z.string() }))

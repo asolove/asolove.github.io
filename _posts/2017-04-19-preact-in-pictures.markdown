@@ -4,6 +4,7 @@ title: "Preact in pictures"
 description: "I gave a talk at tonight’s ReactJS Denver meetup about Preact."
 date: 2017-04-19 09:00:00
 categories: js ui
+tags: ui
 ---
 
 I gave a talk at tonight’s [ReactJS Denver](https://www.meetup.com/ReactJS-Denver/) meetup about [Preact](https://preactjs.com).

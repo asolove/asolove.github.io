@@ -1,10 +1,14 @@
 ---
 import '../styles/post.css';
 
+type BreadcrumbItem =
+  | { label: string; href?: string }
+  | { tags: Array<{ label: string; href: string }> };
+
 interface Props {
   title: string;
   description?: string;
-  breadcrumb?: Array<{ label: string; href?: string }>;
+  breadcrumb?: Array<BreadcrumbItem>;
   date?: Date;
   current?: 'blog';
 }
@@ -41,9 +45,22 @@ const formatDate = (d: Date) =>
       {breadcrumb.map((c, i) => (
         <>
           {i > 0 && <span class="sep">/</span>}
-          {i === breadcrumb.length - 1
+          {'tags' in c
+            ? <span class="tag-list">
+                <span class="brace">{'{'}</span>
+                {c.tags.map((t, ti) => (
+                  <>
+                    {ti > 0 && <span class="comma">, </span>}
+                    <a href={t.href}>{t.label}</a>
+                  </>
+                ))}
+                <span class="brace">{'}'}</span>
+              </span>
+            : c.href
+            ? <a href={c.href}>{c.label}</a>
+            : i === breadcrumb.length - 1
             ? <em>{c.label}</em>
-            : c.href ? <a href={c.href}>{c.label}</a> : <span>{c.label}</span>}
+            : <span>{c.label}</span>}
         </>
       ))}
     </div>

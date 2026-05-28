@@ -4,6 +4,7 @@ title:  "Om experience report"
 description: "First impressions of David Nolen’s Om — a thin ClojureScript wrapper over React — after building a small map-styling app over Christmas."
 date:   2014-01-06 08:00:00
 categories: js clojure
+tags: ui clojurescript functional
 ---
 
 A few weeks ago David Nolen [announced Om](http://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs/): a thin ClojureScript wrapper over [Facebook's React](http://facebook.github.io/react/), which provides a functional API for building interactive browser apps. I spent a few hours scattered over my Christmas vacation building [a sample app](https://github.com/asolove/carto-crayon) in Om and have really enjoyed it.

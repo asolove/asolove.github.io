@@ -4,6 +4,7 @@ title:  "You should speak at JSConf"
 description: "How I went from no topic to a JSConf community-track talk in four weeks — and why you should try it too."
 date:   2013-06-08 08:00:00
 categories: js
+tags: craft
 ---
 
 <p class="abstract">Many people have written blog posts gushing about how wonderful JSConf 2013 

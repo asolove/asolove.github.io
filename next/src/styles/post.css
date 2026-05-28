@@ -11,7 +11,10 @@
   --ink: #1a1a1a;
   --ink-soft: #555555;
   --ink-faint: #8a8580;
-  --rule: #1a1a1a;
+  /* `--rule` is the main divider — meta borders, section heads,
+     listing year-heads. Matched to `--ink-soft` so the line feels like
+     the same value as muted chrome text rather than bright body ink. */
+  --rule: #555555;
   --rule-soft: #e5e2da;
   --spot: #b3441b;
   --spot-soft: #d97a4f;
@@ -29,7 +32,7 @@
     --ink: #ece8df;
     --ink-soft: #a09c91;
     --ink-faint: #6b685f;
-    --rule: #ece8df;
+    --rule: #a09c91;
     --rule-soft: #2a2823;
     --spot: #e07a4f;
     --spot-soft: #b3441b;
@@ -85,6 +88,10 @@ a { color: inherit; text-decoration: none; }
 }
 .crumb .path span.sep { color: var(--ink-faint); margin: 0 0.4em; }
 .crumb .path em { font-style: normal; color: var(--ink); }
+/* Multi-tag breadcrumb entry rendered as `{tag1, tag2, ...}` for a
+   code-syntax feel. Braces in spot color; commas faint. */
+.crumb .tag-list .brace { color: var(--spot); }
+.crumb .tag-list .comma { color: var(--ink-faint); }
 
 /* ─────────────────────────────────────────────────────────
    Page grid

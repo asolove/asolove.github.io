@@ -1,6 +1,6 @@
 ---
 import Base from './Base.astro';
-import { categoryLabel, postPath, readingTime } from '../lib/post-helpers';
+import { tagLabel, postPath, readingTime } from '../lib/post-helpers';
 import type { CollectionEntry, MarkdownHeading } from 'astro:content';
 
 interface Props {
@@ -11,15 +11,20 @@ interface Props {
 }
 
 const { post, headings, prev, next } = Astro.props;
-const { title, description, date, categories, companion, related_to, dropcap } = post.data;
+const { title, description, date, tags, companion, related_to, dropcap } = post.data;
 
-// Breadcrumb: Blog / [most-specific category]. The post title is the
-// <h1> that follows immediately below — repeating it in the crumb is
-// noise.
-const lastCategory = categories[categories.length - 1];
+// Breadcrumb: Blog / <tag> when there's just one; Blog / {tag1, tag2}
+// when there are several. The set-syntax variant is rendered by
+// Base.astro when the entry has a `tags` field.
+const tagCrumb =
+  tags && tags.length === 1
+    ? { label: tagLabel(tags[0]), href: `/tags/${tags[0]}` }
+    : tags && tags.length > 1
+    ? { tags: tags.map((t) => ({ label: tagLabel(t), href: `/tags/${t}` })) }
+    : null;
 const breadcrumb = [
   { label: 'Blog', href: '/blog.html' },
-  ...(lastCategory ? [{ label: categoryLabel(lastCategory) }] : []),
+  ...(tagCrumb ? [tagCrumb] : []),
 ];
 
 const formatDate = (d: Date) =>

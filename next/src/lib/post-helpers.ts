@@ -45,25 +45,24 @@ export function postPath(post: Post): string {
   return `/${cats}/${year}/${month}/${day}/${slug}.html`;
 }
 
-/** Pretty labels for category slugs. Add as new ones appear. */
-const categoryLabels: Record<string, string> = {
-  js: 'JavaScript',
+/** Pretty labels for tag slugs. Drives the breadcrumb, archive sidebar,
+ *  and category-listing-page titles. Add as new ones appear. */
+const tagLabels: Record<string, string> = {
   ui: 'UI engineering',
-  clojure: 'Clojure',
+  functional: 'Functional programming',
+  types: 'Types',
   perf: 'Performance',
-  flow: 'Flow',
-  type: 'Types',
-  functional: 'Functional',
-  view: 'Views',
-  'service-worker': 'Service Workers',
-  stream: 'Streams',
-  learning: 'Learning',
-  people: 'People',
+  clojurescript: 'ClojureScript',
+  craft: 'Working & learning',
+  humor: 'Humor',
 };
 
-export function categoryLabel(slug: string): string {
-  return categoryLabels[slug] ?? slug.charAt(0).toUpperCase() + slug.slice(1);
+export function tagLabel(slug: string): string {
+  return tagLabels[slug] ?? slug.charAt(0).toUpperCase() + slug.slice(1);
 }
+
+/** Backward-compat alias: pre-existing imports still resolve. */
+export const categoryLabel = tagLabel;
 
 /** Approximate reading time from word count (220 wpm). */
 export function readingTime(body: string): number {

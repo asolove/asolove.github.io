@@ -4,6 +4,7 @@ title: "<iframe>able finance"
 description: "Designing and building embedded UIs"
 date: 2023-08-24 11:28:00
 categories: js
+tags: ui
 ---
 
 <img class="right" src="/img/iframeable-finance.jpg"> At [Fintech Devcon 2023](https://fintechdevcon.io/), I gave a talk on designing and building embedded UIs, based on my experiences contributing to Stripe Elements and then to Rainforest's embedded components.

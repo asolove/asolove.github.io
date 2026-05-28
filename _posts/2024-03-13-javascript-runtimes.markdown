@@ -4,6 +4,7 @@ title: Only 20 JavaScript runtimes left
 description: Claim yours now before we run out!
 date: 2024-03-13 11:28:00
 categories: js
+tags: humor
 ---
 
 tl;dr: a new report from our department of experimental linguistics suggests: **there are only 20 JavaScript runtimes left.**

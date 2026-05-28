@@ -4,6 +4,7 @@ title: "Preact internals #1: the easy parts"
 description: "An introduction and gentle first steps in a series where we’ll read the Preact codebase and try to completely understand it."
 date: 2017-03-11 09:00:00
 categories: js ui
+tags: ui
 ---
 
 ### About the series

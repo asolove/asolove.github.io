@@ -4,6 +4,7 @@ title: "Epic handshake: reorg half a seat to the left"
 description: "How to avoid handoffs by defining the right roles"
 date: 2024-05-24 14:31:00
 categories: people
+tags: craft
 ---
 
 <img class="right" alt="Epic handshake meme: two strong arms clasping hands together" src="/img/epic-handshake.png"> **Handoffs suck. They're the worst part of building products.** But many organizations seem designed to maximize the number of handoffs on a project.

@@ -4,6 +4,7 @@ title:  "Exhaustiveness checking in Flow"
 description: "Flow’s exhaustiveness checking has a gap — but a cast to `empty` gets you the behavior the type system can’t quite express."
 date:   2016-04-15 21:43:39
 categories: js flow type
+tags: types
 ---
 
 [Last time](/js/flow/type/2016/04/13/modeling-with-adts.html) I wrote about using Algebraic Data Types and Flow's type checker to model business problems in JavaScript.

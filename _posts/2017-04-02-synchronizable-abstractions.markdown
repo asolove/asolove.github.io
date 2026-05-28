@@ -4,6 +4,7 @@ title: "Synchronizable abstractions for understandable concurrency"
 description: "Or: what is Concurrent ML all about?"
 date: 2017-04-02 02:32:19
 categories: js ui
+tags: functional ui
 ---
 
 In this post I'd like to introduce you to a powerful idea for thinking about concurrent programs. Synchronizable abstractions were developed more than twenty years ago by John Reppy in his work creating the language [Concurrent ML](http://cml.cs.uchicago.edu). Despite that age, and their use in several large-scale systems, synchronizable abstractions remain little known.

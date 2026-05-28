@@ -4,6 +4,7 @@ title: "Being inspired by Sketchpad"
 description: "What Ivan Sutherland’s 1963 thesis still has to teach us — method dispatch, prototypical inheritance, and constraint-driven UI."
 date: 2013-05-17 22:01:39
 categories: js ui
+tags: ui
 ---
 
 <p class="abstract">Ivan Sutherland's Sketchpad was the first graphical user interface. Learning about Sketchpad over the past few months has inpired me to go deeper into the history of user interface programming and to expect more from the interfaces that I build.</p>

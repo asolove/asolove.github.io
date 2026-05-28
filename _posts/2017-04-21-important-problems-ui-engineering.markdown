@@ -4,6 +4,7 @@ title: "What are the important problems in UI engineering?"
 description: "Let’s escape the day-to-day to survey what’s coming next"
 date: 2017-04-21 09:00:00
 categories: js ui
+tags: ui
 ---
 
 Very early in my programming career, I read a transcript of the talk [“You and Your Research”](http://www.cs.virginia.edu/~robins/YouAndYourResearch.html), by Richard Hamming, a mathematician whose name appears in the title of at least six Wikipedia pages for important things he invented.

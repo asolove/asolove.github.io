@@ -1,9 +1,10 @@
 ---
 layout: post
-title: "Building a podcast editor for two"
+title: "A better podcast editor with multi-player via Automerge"
 description: "A better UI for editing podcasts, using Automerge for multiplayer features, and the joy of building narrowcast software that only two people need to love."
 date: 2026-05-29 09:00:00
 categories: js ui
+tags: ui
 ---
 
 For the past few years, my partner has run a niche podcast and I've helped a bit with the audio quality. Our workflow was painful: one shared iCloud file, emails of notes coded to timestamps, carefully checking that our changes didn't conflict.
@@ -16,6 +17,7 @@ So I decided to build the podcast editor we wanted: Ducking. It has a UI purpose
 
 <figure>
   <img src="/making-of/assets/screenshot.png" alt="Screenshot of Ducking — waveform timeline, transcript pane, history panel, two cursors on different clips" />
+  <figcaption>Screenshot of Ducking in action, with the media manager, comments, and track effects panels all open.</figcaption>
 </figure>
 
 ## A better UI for editing spoken word audio

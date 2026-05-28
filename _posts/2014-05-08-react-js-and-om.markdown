@@ -14,8 +14,6 @@ documentation to learn more about the library.</p>
 and also provides a model abstraction for using ClojureScript's immutable, persistent data structures to hold 
 your app's data.</p>
 
-<hr>
-
 I really enjoyed giving this talk and am thankful to Seth Schroeder of [CapClug](http://www.meetup.com/Cap-Clug/) for inviting me to speak
 and to Gray Herter for inviting the [NovaRug](http://www.meetup.com/novarug/) group to come and for recording the talk and getting
 it online so quickly.

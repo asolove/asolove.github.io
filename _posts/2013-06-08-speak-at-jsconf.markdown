@@ -10,8 +10,6 @@ categories: js
 was and why you should try to go next year. They're all true.
 Here's a bigger challenge: try to speak at next year's JSConf.</p>
 
-<hr>
-
 You can do it. Here's how I did.
 
 ### How do you get a slot? 

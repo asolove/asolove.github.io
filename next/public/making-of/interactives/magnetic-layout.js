@@ -65,14 +65,14 @@ const HEIGHT = TRACK2_Y + TRACK_H + 6;
 const TITLE_BAR_H = 11;
 
 const COLORS = {
-  bg: '#f2eee2',
-  trackLane: 'rgba(0, 0, 0, 0.025)',
-  trackBorder: 'rgba(0, 0, 0, 0.05)',
-  ruler: '#bdb6a4',
-  rulerText: '#7a7270',
+  bg: '#1b1d22',
+  trackLane: 'rgba(255, 255, 255, 0.025)',
+  trackBorder: 'rgba(255, 255, 255, 0.05)',
+  ruler: '#3d4046',
+  rulerText: '#7a7e85',
   speech: { fill: '#3d8260', fillTop: '#2a5b43', stroke: '#15301f', text: '#e6f3ec' },
   music:  { fill: '#3d747f', fillTop: '#2a5158', stroke: '#152e33', text: '#e4f0f3' },
-  edgeHandle: 'rgba(0, 0, 0, 0.85)',
+  edgeHandle: 'rgba(255, 255, 255, 0.85)',
 };
 
 // --- cursor animation schedule --------------------------------------------
@@ -530,10 +530,10 @@ function drawGap(ctx, startSec, durationSec, y, h, handleHot) {
   roundRect(ctx, x, y, w, h, 3);
   ctx.clip();
 
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.09)';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.09)';
   ctx.fillRect(x, y, w, h);
 
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.16)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   for (let sx = x - h; sx < x + w + h; sx += 6) {
@@ -545,14 +545,14 @@ function drawGap(ctx, startSec, durationSec, y, h, handleHot) {
 
   ctx.save();
   roundRect(ctx, x + 0.5, y + 0.5, w - 1, h - 1, 2.5);
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
   ctx.lineWidth = 1;
   ctx.setLineDash([3, 3]);
   ctx.stroke();
   ctx.restore();
 
   ctx.save();
-  ctx.strokeStyle = handleHot ? '#000000' : 'rgba(0, 0, 0, 0.45)';
+  ctx.strokeStyle = handleHot ? '#ffffff' : 'rgba(255, 255, 255, 0.45)';
   ctx.lineWidth = handleHot ? 2 : 1.4;
   ctx.beginPath();
   ctx.moveTo(x + w - 0.5, y + 4);
@@ -577,7 +577,7 @@ function drawCursor(ctx, x, y, pressed, opacity) {
   if (pressed) {
     ctx.save();
     ctx.globalAlpha = opacity * 0.65;
-    ctx.strokeStyle = '#000000';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.6;
     ctx.beginPath();
     ctx.arc(x, y, 9, 0, Math.PI * 2);

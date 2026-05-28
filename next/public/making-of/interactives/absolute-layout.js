@@ -46,14 +46,14 @@ const HEIGHT = TRACK2_Y + TRACK_H + 6;
 const TITLE_BAR_H = 11;
 
 const COLORS = {
-  bg: '#f2eee2',
-  trackLane: 'rgba(0, 0, 0, 0.025)',
-  trackBorder: 'rgba(0, 0, 0, 0.05)',
-  ruler: '#bdb6a4',
-  rulerText: '#7a7270',
+  bg: '#1b1d22',
+  trackLane: 'rgba(255, 255, 255, 0.025)',
+  trackBorder: 'rgba(255, 255, 255, 0.05)',
+  ruler: '#3d4046',
+  rulerText: '#7a7e85',
   speech: { fill: '#3d8260', fillTop: '#2a5b43', stroke: '#15301f', text: '#e6f3ec' },
   music:  { fill: '#3d747f', fillTop: '#2a5158', stroke: '#152e33', text: '#e4f0f3' },
-  edgeHandle: 'rgba(0, 0, 0, 0.85)',
+  edgeHandle: 'rgba(255, 255, 255, 0.85)',
 };
 
 // --- cursor animation schedule --------------------------------------------
@@ -561,7 +561,7 @@ function drawEdgeHandle(ctx, x, y, h) {
 
 function drawSelectionOutline(ctx, x, y, w, h) {
   ctx.save();
-  ctx.strokeStyle = '#000000';
+  ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 1.6;
   ctx.beginPath();
   const r = 4;
@@ -588,9 +588,9 @@ function drawMarquee(ctx, x1, y1, x2, y2) {
   const h = Math.abs(y2 - y1);
   if (w < 1 && h < 1) return;
   ctx.save();
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.10)';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.10)';
   ctx.fillRect(x, y, w, h);
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 3]);
   ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
@@ -603,7 +603,7 @@ function drawCursor(ctx, x, y, pressed, opacity) {
     // Pulse ring beneath the cursor as a "click" indicator.
     ctx.save();
     ctx.globalAlpha = opacity * 0.65;
-    ctx.strokeStyle = '#000000';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.6;
     ctx.beginPath();
     ctx.arc(x, y, 9, 0, Math.PI * 2);

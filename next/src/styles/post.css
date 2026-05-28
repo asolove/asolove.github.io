@@ -97,7 +97,7 @@ a { color: inherit; text-decoration: none; }
   gap: 0 1.5rem;
 }
 
-.titleblock { grid-column: 1 / span 8; margin-bottom: 0.5rem; }
+.titleblock { grid-column: 1 / span 9; margin-bottom: 0.5rem; }
 /* When the page has no siderail (no TOC + no companion), let the
    titleblock, meta, and body relax into the full width. */
 .page.no-sidebar .titleblock,
@@ -131,7 +131,13 @@ h1 {
 }
 
 .meta {
-  grid-column: 1 / span 8;
+  /* Match the width of a default <figure> so the borders sit flush with
+     other "full text block" content. */
+  grid-column: 1 / span 9;
+  /* Don't stretch to fill the cell when the siderail (sharing this grid
+     row) is taller — keeps the bottom border directly under the metadata
+     text instead of pulled down to align with the siderail bottom. */
+  align-self: start;
   display: flex;
   flex-wrap: wrap;
   gap: 0 1.4rem;
@@ -200,26 +206,18 @@ h1 {
   gap: 0 1.5rem;
 }
 
-.body > * { grid-column: 2 / -1; }
-.body > p,
-.body > ul,
-.body > ol {
-  grid-column: 2 / span 7;
-}
-.body > p { margin-bottom: 1em; max-width: 38rem; }
-.body > h2,
-.body > h3,
-.body > blockquote,
-.body > pre,
-.body > .figure {
-  grid-column: 2 / -1;
-}
+/* Default text column: everything flows into cols 2-8. Specific block
+   elements (figure, pre, sidenotes) opt out into wider/marginalia
+   ranges below. No per-element max-widths needed — the grid cell
+   itself defines the readable measure. */
+.body > * { grid-column: 2 / span 7; }
+.body > p { margin-bottom: 1em; }
+.body > pre { grid-column: 2 / -1; }  /* code bleeds wider to hold the inset bg */
 .body > figure {
   grid-column: 1 / span 9;
   margin: 1rem 0 2.5rem;
 }
 .body > hr {
-  grid-column: 2 / -1;
   border: none;
   border-top: 1px solid var(--rule-soft);
   margin: 2rem 0;
@@ -270,14 +268,16 @@ h1 {
 
 /* Drop-cap on the first paragraph of long-form posts. The body subgrid
    places p at cols 2-8, so the float stays within the column. */
+/* `initial-letter: 3` is the typographically correct way to do this:
+   the browser sizes the cap so its cap-top aligns with line 1's cap-top
+   and its baseline aligns with line 3's baseline. Supported in Chrome,
+   Safari; Firefox falls back to an inline-size first letter. */
 .body.has-dropcap > p:first-of-type::first-letter {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 4.4em;
-  line-height: 0.85;
-  float: left;
-  padding-right: 0.08em;
-  padding-top: 0.06em;
+  -webkit-initial-letter: 3;
+  initial-letter: 3;
+  margin-right: 0.22em;
   color: var(--spot);
   font-variation-settings: "opsz" 144;
 }
@@ -396,7 +396,6 @@ h1 {
 .body > figure iframe {
   width: 100%;
   display: block;
-  background: white;
   border: 1px solid var(--rule-soft);
 }
 .body > figure iframe { aspect-ratio: 16/9; }

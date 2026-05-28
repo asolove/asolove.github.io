@@ -9,7 +9,7 @@ interface Props {
   current?: 'blog';
 }
 
-const { title, description, breadcrumb = [], date, current = 'blog' } = Astro.props;
+const { title, description, breadcrumb = [], date, current } = Astro.props;
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });

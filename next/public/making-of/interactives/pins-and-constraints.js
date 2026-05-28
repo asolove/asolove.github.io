@@ -103,11 +103,11 @@ const INITIAL_AUTOMATION = Object.freeze({
 });
 
 const COLORS = {
-  bg: '#f2eee2',
-  trackLane: 'rgba(0, 0, 0, 0.025)',
-  trackBorder: 'rgba(0, 0, 0, 0.05)',
-  ruler: '#bdb6a4',
-  rulerText: '#7a7270',
+  bg: '#1b1d22',
+  trackLane: 'rgba(255, 255, 255, 0.025)',
+  trackBorder: 'rgba(255, 255, 255, 0.05)',
+  ruler: '#3d4046',
+  rulerText: '#7a7e85',
   speech: { fill: '#3d8260', fillTop: '#2a5b43', stroke: '#15301f', text: '#e6f3ec' },
   music:  { fill: '#3d747f', fillTop: '#2a5158', stroke: '#152e33', text: '#e4f0f3' },
   pinLeft:  '#e8c763',

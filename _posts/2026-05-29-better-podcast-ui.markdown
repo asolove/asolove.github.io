@@ -1,14 +1,14 @@
 ---
 layout: post
-title: "A better UI for podcast editing, plus multiplayer on Automerge"
-description: "I propose a better UI model for editing podcasts, talk about building multiplayer experiences with Automerge, and bask in the fun of using Claude to build narrowcast software that only two people need to love."
+title: "Building a podcast editor for two"
+description: "A better UI for editing podcasts, using Automerge for multiplayer features, and the joy of building narrowcast software that only two people need to love."
 date: 2026-05-29 09:00:00
 categories: js ui
 ---
 
 For the past few years, my partner has run a niche podcast and I've helped a bit with the audio quality. Our workflow was painful: one shared iCloud file, emails of notes coded to timestamps, carefully checking that our changes didn't conflict.
 
-> Editing audio was like traveling back in time twenty years: no track changes, no comments, and no multiplayer editing.
+**Editing audio was like traveling back in time twenty years: no track changes, no comments, and no multiplayer editing.**
 
 The friction wasn't just in the file-oriented workflow. The normal interaction model of <abbr title="Digital Audio Workstation">DAW</abbr>s is not particularly well-suited for the task of editing spoken word audio.
 

@@ -10,8 +10,6 @@ categories: js
 Constraint programming provides one useful tool: removing the distinction between input
 and output.</p>
 
-<hr>
-
 My talk from JSConf 2013 on constraint programming in the browser is now online:
 
 <iframe width="480" height="360" src="//www.youtube-nocookie.com/embed/72sWgwaAoyk?rel=0" frameborder="0" allowfullscreen="allowfullscreen" style="margin-bottom:30px">&nbsp;</iframe>

@@ -33,3 +33,20 @@ This site is being migrated from Jekyll (repo root) to Astro (in `next/`). Work 
 - The Astro rebuild lives in `next/`. It is not yet wired to a deploy. Iterate freely.
 - Migrated post content lives in `next/src/content/posts/`. The originals in `_posts/` are the source of truth until cutover — if you fix a typo, fix it in both, or note in `TASKS.md` that the two have diverged.
 - The review harness (`review/index.html`, built by `review/build.mjs`) is how we verify page-by-page parity. To use it: build both sites (`bundle exec jekyll build` for old, `pnpm --dir next build` for new), run `node review/build.mjs`, then serve the repo root and visit `/review/`. Needs two HTTP servers on 8001 (for `_site/`) and 8002 (for `next/dist/`) — see the iframe `src=` attributes in `review/build.mjs`.
+
+## Local commands
+
+Run from the repo root:
+
+- **Dev server (HMR, what you'll use 95% of the time)**: `pnpm --dir next dev` — serves on `http://localhost:4321`. Plugin changes (`.mjs` files referenced from `astro.config.mjs`) don't hot-reload; restart the server for those.
+- **Production build**: `pnpm --dir next build` — outputs to `next/dist/`. Run before `preview-deploy` or to inspect the actual artifact.
+- **Preview the prod build locally**: `pnpm --dir next preview` — serves `next/dist/` on `http://localhost:4322`.
+- **What would deploying right now change?**: `pnpm --dir next preview-deploy` — builds, then for each emitted page fetches the same path from adamsolove.com and reports `Added / Changed / Unchanged` with a list. (Doesn't enumerate `Removed` since that would require crawling the live site; for that, build Jekyll locally with `jekyll build` and diff `_site/` vs `next/dist/` directly.)
+
+## Deploying to GitHub Pages
+
+Auto-deploys via `.github/workflows/deploy.yml` on every push to `main`. The workflow builds Astro and uploads `next/dist/` as the Pages artifact; GitHub Pages publishes it. Repo Settings → Pages must have **Source: GitHub Actions** set (one-time, in the browser).
+
+`next/public/.nojekyll` exists so GitHub Pages doesn't try to run Jekyll over the artifact (no-op since we're using Actions, but cheap insurance).
+
+The Jekyll site source (`_posts/`, `_layouts/`, `_config.yml`, `Gemfile`, `_site/`) still lives on `main` for now — symlinks from `next/src/content/posts/*.md` to `_posts/*.markdown` mean editing the source files in `_posts/` is still the path of least resistance. Eventually we'll archive Jekyll onto a `jekyll-archive` branch and replace the symlinks with the real files.

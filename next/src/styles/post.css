@@ -16,9 +16,10 @@
   --spot: #b3441b;
   --spot-soft: #d97a4f;
   --spot-wash: #f4d9cc;
-  --serif: 'Source Serif 4', Georgia, serif;
-  --sans: 'Hanken Grotesk', system-ui, sans-serif;
-  --mono: 'Fragment Mono', ui-monospace, 'JetBrains Mono', monospace;
+  /* All three families are system stacks — no third-party fonts. */
+  --serif: ui-serif, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,7 +59,7 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.82rem;
   border-bottom: 1px solid var(--rule);
 }
@@ -77,7 +78,7 @@ a { color: inherit; text-decoration: none; }
   padding: 0.7rem 2rem;
   display: flex;
   justify-content: space-between;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.72rem;
   color: var(--ink-soft);
   border-bottom: 1px solid var(--rule-soft);
@@ -141,7 +142,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 0 1.4rem;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.72rem;
   color: var(--ink-soft);
   padding: 0.8rem 0;
@@ -156,18 +157,33 @@ h1 {
    Side rail
    ───────────────────────────────────────────────────────── */
 .siderail {
+  /* Sidenote column: starts at row 3 (alongside the body, below the
+     titleblock + meta) and sticks to the viewport top as the user
+     scrolls past it so it's usable as side navigation. Opaque
+     background so overlapping figures don't muddy the text. */
   grid-column: 10 / span 3;
-  grid-row: 1 / span 2;
-  font-family: var(--mono);
+  grid-row: 3;
+  position: sticky;
+  top: 1rem;
+  z-index: 2;
+  font-family: var(--sans);
   font-size: 0.72rem;
   line-height: 1.5;
   color: var(--ink-soft);
+  background: var(--paper);
   border-left: 1px solid var(--rule-soft);
-  padding-left: 1rem;
+  padding: 0.4rem 0.8rem 0.6rem 1rem;
   align-self: start;
+  /* Cap height to viewport so long TOCs scroll inside the rail. */
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
 }
+
+/* Mobile-disclosure controls — invisible on wide screens. */
+.siderail-toggle { display: none; }
+.siderail-summary { display: none; }
 .siderail h3 {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.7rem;
   color: var(--spot);
   text-transform: uppercase;
@@ -200,6 +216,11 @@ h1 {
    ───────────────────────────────────────────────────────── */
 .body {
   grid-column: 1 / -1;
+  /* Share the row with the siderail (which sits in cols 10-12) so the
+     body content doesn't get pushed down to the next row by the
+     auto-placement algorithm. Body's text lives in cols 2-8; the
+     siderail occupies cols 10-12 of the same row, no collision. */
+  grid-row: 3;
   display: grid;
   grid-template-columns: subgrid;
   grid-auto-flow: row dense;
@@ -213,9 +234,20 @@ h1 {
 .body > * { grid-column: 2 / span 7; }
 .body > p { margin-bottom: 1em; }
 .body > pre { grid-column: 2 / -1; }  /* code bleeds wider to hold the inset bg */
+/* Figures span the body subgrid cols 1-9 and form an inner 2-row grid:
+     row 1: the visual (img / iframe / interactive)
+     row 2: figure-head label (col 1, in left margin) + figcaption (col 2+)
+   The anchor target (#fig-N on <figure>) stays at the top so deep-links
+   still scroll to above the image. */
 .body > figure {
   grid-column: 1 / span 9;
-  margin: 1rem 0 2.5rem;
+  display: grid;
+  grid-template-columns: subgrid;
+  /* Caption row aligns to baselines so "Fig. N." and the description
+     text sit on the same line. */
+  align-items: baseline;
+  gap: 0 1.5rem;
+  margin: 0.6rem 0 1.6rem;
 }
 .body > hr {
   border: none;
@@ -223,23 +255,28 @@ h1 {
   margin: 2rem 0;
 }
 
+/* Section headings in sans for family-contrast against the serif body.
+   Slightly tight tracking + bolder weights give sans display headings
+   the visual weight their serif counterparts had at smaller sizes.
+   Hierarchy: h2 (1.6rem / 700) > h3 (1.2rem / 600) > body (1rem / 400 serif). */
 .body h2 {
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 1.4rem;
-  line-height: 1.2;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
   color: var(--ink);
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-variation-settings: "opsz" 32;
+  margin-top: 2rem;
+  margin-bottom: 0.6rem;
 }
 .body h3 {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 600;
-  font-size: 1.15rem;
-  line-height: 1.25;
+  font-size: 1.2rem;
+  line-height: 1.22;
+  letter-spacing: -0.008em;
   color: var(--ink);
-  margin-top: 1.4rem;
+  margin-top: 1.6rem;
   margin-bottom: 0.4rem;
 }
 
@@ -257,7 +294,7 @@ h1 {
 .body li { margin-bottom: 0.4em; padding-left: 0.2em; }
 .body li::marker { color: var(--spot); }
 .body ul > li::marker { font-size: 1.25em; }
-.body ol > li::marker { font-family: var(--mono); font-size: 0.85em; }
+.body ol > li::marker { font-family: var(--sans); font-size: 0.85em; }
 
 /* Nested lists indent further so hierarchy is visible. */
 .body ul ul, .body ul ol,
@@ -273,7 +310,7 @@ h1 {
    and its baseline aligns with line 3's baseline. Supported in Chrome,
    Safari; Firefox falls back to an inline-size first letter. */
 .body.has-dropcap > p:first-of-type::first-letter {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 400;
   -webkit-initial-letter: 3;
   initial-letter: 3;
@@ -314,7 +351,7 @@ h1 {
 }
 
 .body sup.ref {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.68em;
   color: var(--spot);
   margin-left: 0.05em;
@@ -369,7 +406,7 @@ h1 {
    ───────────────────────────────────────────────────────── */
 .body > aside.sn {
   grid-column: 10 / span 3;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.72rem;
   line-height: 1.55;
   color: var(--ink-soft);
@@ -392,33 +429,48 @@ h1 {
      <figure class="margin"> ... cols 10-12, hangs in the sidenote/margin area
    On narrow screens (<980px), all collapse to full single-column width.
    ───────────────────────────────────────────────────────── */
-.body > figure img,
-.body > figure iframe {
+/* The visual fills row 1 across the figure's full 9-col span. */
+.body > figure > img,
+.body > figure > iframe,
+.body > figure > [data-interactive] {
+  grid-column: 1 / -1;
+  grid-row: 1;
   width: 100%;
   display: block;
+}
+.body > figure > img,
+.body > figure > iframe {
   border: 1px solid var(--rule-soft);
 }
-.body > figure iframe { aspect-ratio: 16/9; }
-.body > figure figcaption {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 0.92rem;
-  color: var(--ink);
-  margin-top: 0.6rem;
-  line-height: 1.4;
-  max-width: 36rem;
+.body > figure > iframe { aspect-ratio: 16/9; }
+
+/* Row 2: figcaption sits at body-text alignment (cols 2 to end). Sans
+   at a step smaller than body so it doesn't read as an inline aside. */
+.body > figure > figcaption {
+  grid-column: 2 / -1;
+  grid-row: 2;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.45;
+  margin-top: 0.25rem;
 }
 
-/* Figure head: "Figure N." label sits above the image, anchor-linked
-   so readers can copy a stable URL to that specific figure. The link
-   affordance (#) sits faint and saturates on hover. */
-.body > figure .figure-head {
-  font-family: var(--mono);
+/* Row 2, col 1: "Fig. N." sits in the left margin, aligned with the
+   figure's left edge. Anchor-linked so readers can copy a stable URL
+   to a specific figure. The "#" mark fades in on hover. */
+.body > figure > .figure-head {
+  grid-column: 1;
+  grid-row: 2;
+  font-family: var(--sans);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-soft);
-  margin-bottom: 0.5rem;
+  margin-top: 0.25rem;
+  line-height: 1.45;
+  /* Prevent wrapping so "Fig. 2." stays as one token. */
+  white-space: nowrap;
 }
 .body > figure .figure-link {
   color: inherit;
@@ -456,7 +508,7 @@ h1 {
   align-self: start;
 }
 .body > figure.margin figcaption {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-style: normal;
   font-size: 0.72rem;
   color: var(--ink-soft);
@@ -529,7 +581,7 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.78rem;
 }
 .docfoot .nav-prev, .docfoot .nav-next {
@@ -538,7 +590,7 @@ h1 {
   gap: 0.3rem;
 }
 .docfoot .nav-date {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.68rem;
   color: var(--ink-faint);
   margin-top: 0.2rem;
@@ -566,7 +618,7 @@ h1 {
   margin-top: 2.5rem;
   padding-top: 0.8rem;
   border-top: 1px solid var(--rule-soft);
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.68rem;
   color: var(--ink-faint);
   display: flex;
@@ -584,16 +636,85 @@ h1 {
    ───────────────────────────────────────────────────────── */
 @media (max-width: 980px) {
   .titleblock, .meta, .body > figure { grid-column: 1 / -1; }
+  /* Body needs grid-row: auto on narrow so meta can land in the
+     natural row above body (the explicit row 3 on wide pushes meta
+     to after body in auto-flow). */
+  .body { grid-row: auto; display: block; }
+  /* Figure layout falls back to block flow on narrow — no more 9-col
+     grid means we just stack visual / head / caption vertically. */
+  .body > figure {
+    display: block;
+  }
+  .body > figure > .figure-head {
+    margin: 0.5rem 0 0;
+    display: block;
+  }
+  .body > figure > figcaption {
+    margin-top: 0.2rem;
+  }
   .siderail {
     grid-column: 1 / -1;
     grid-row: auto;
+    /* Sticky collapsed bar at the top of the viewport; expanded list
+       scrolls inside up to viewport height. */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    max-height: 100vh;
+    overflow-y: auto;
     border-left: none;
     border-top: 1px solid var(--rule-soft);
-    padding-left: 0;
-    padding-top: 1rem;
-    margin: 2rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+    padding: 0;
+    margin: 0 0 2rem;
   }
-  .body { display: block; }
+  /* Disclosure UI: collapsed summary bar by default; the hidden
+     checkbox toggles the body open/closed. No JS. */
+  .siderail-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    cursor: pointer;
+    padding: 0.75rem 0;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .siderail-caret {
+    color: var(--spot);
+    font-size: 0.85em;
+    display: inline-block;
+    transition: transform 200ms ease;
+    line-height: 1;
+  }
+  .siderail-toggle:checked ~ .siderail-summary .siderail-caret {
+    transform: rotate(90deg);
+  }
+  .siderail-body { display: none; padding: 0 0 0.6rem; }
+  .siderail-toggle:checked ~ .siderail-body {
+    display: block;
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+  /* Dim everything outside the siderail when the contents dropdown is
+     open. Uses :has() to reach from the deeply-nested checkbox up to
+     the body so the scrim can sit fixed over the whole viewport. */
+  body:has(.siderail-toggle:checked)::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 5;
+    pointer-events: auto;
+  }
+  /* Hide the redundant "Contents" h3 inside the body — the summary bar already labels it. */
+  .siderail-body > h3:first-child { display: none; }
+
   .body > p { max-width: none; }
   .body > aside.sn {
     max-width: 32rem;

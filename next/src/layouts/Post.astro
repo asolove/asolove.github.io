@@ -59,6 +59,15 @@ const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
 
     {hasSidebar && (
       <aside class="siderail">
+        {/* Mobile disclosure: hidden on wide screens via CSS; on narrow,
+            the siderail collapses to just a "Contents ▾" bar that toggles
+            the list open. CSS-only via the hidden checkbox. */}
+        <input type="checkbox" id="siderail-toggle" class="siderail-toggle" hidden />
+        <label class="siderail-summary" for="siderail-toggle">
+          <span class="siderail-caret" aria-hidden="true">▶</span>
+          <span>Contents</span>
+        </label>
+        <div class="siderail-body">
         {toc.length > 0 && (
           <>
             <h3>Contents</h3>
@@ -80,6 +89,7 @@ const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
             </ul>
           </>
         )}
+        </div>
       </aside>
     )}
 
@@ -124,3 +134,21 @@ const hasSidebar = toc.length > 0 || (companion && companion.length > 0);
 
   </div>
 </Base>
+
+<script>
+  // Auto-close the mobile contents disclosure when:
+  //   - the user clicks a link inside the TOC (so the page can scroll
+  //     to the anchor without the open dropdown covering content)
+  //   - the user clicks anywhere outside the siderail
+  const toggle = document.getElementById('siderail-toggle') as HTMLInputElement | null;
+  if (toggle) {
+    document.querySelectorAll<HTMLAnchorElement>('.siderail-body a').forEach((a) => {
+      a.addEventListener('click', () => { toggle.checked = false; });
+    });
+    document.addEventListener('click', (e) => {
+      if (!toggle.checked) return;
+      const t = e.target as Element | null;
+      if (t && !t.closest('.siderail')) toggle.checked = false;
+    });
+  }
+</script>

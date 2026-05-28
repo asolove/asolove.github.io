@@ -15,7 +15,9 @@
   border: 1px solid var(--rule-soft);
   border-radius: 10px;
   padding: var(--pad);
-  margin: 2rem 0;
+  /* Outer spacing is owned by the wrapping <figure>; this just sets
+     the gap to the legend below. */
+  margin: 0 0 12px;
   background: var(--paper);
   font-family: var(--sans);
   font-size: 0.9rem;

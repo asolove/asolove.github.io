@@ -65,7 +65,7 @@ export default function remarkFigureNumbers() {
         // Inject id="…" into the existing attributes, preserving any
         // class= or other attributes the author wrote.
         const newAttrs = / id=["']/i.test(attrs) ? attrs : ` id="${id}"${attrs}`;
-        return `<figure${newAttrs}>\n  <div class="figure-head"><a class="figure-link" href="#${id}"><span class="label">Figure ${n}.</span><span class="link-mark" aria-hidden="true">#</span></a></div>`;
+        return `<figure${newAttrs}>\n  <div class="figure-head"><a class="figure-link" href="#${id}"><span class="label">Fig.&nbsp;${n}.</span><span class="link-mark" aria-hidden="true">#</span></a></div>`;
       });
     });
   };

@@ -4,8 +4,11 @@ import Base from "../layouts/Base.astro";
 <Base title="Adam Solove">
   <div class="page">
     <div class="titleblock">
-      <h1>Adam Solove</h1>
-      <p class="standfirst">Almost done thinking with very low effort.</p>
+      <p class="standfirst">
+        I&rsquo;m a programmer, speaker and activist who like to deeply
+        understand things so that I can explain them clearly to others.
+        <br><br>
+      </p>
       <p class="positioning"></p>
     </div>
 
@@ -23,24 +26,19 @@ import Base from "../layouts/Base.astro";
     </aside>
 
     <article class="body home">
-      <h2 id="thinking" class="section-head">Thinking</h2>
-      <p class="section-lede">
-        Public explanations &mdash; talks, essays, and series &mdash; on user
-        interfaces, the languages we build them in, and the histories that
-        shaped both.
-      </p>
+      <h2 id="thinking" class="section-head">Talks &amp; essays</h2>
 
       <section class="entry">
         <div class="entry-body">
-          <h3>What should we learn from the history of UI engineering?</h3>
+          <h3>The history of UI engineering</h3>
           <p>
-            <a href="https://www.youtube.com/watch?v=lIxbSDyHsXs"><strong
-              >Recreating Sketchpad, the first GUI</strong></a>
+            <a href="https://www.youtube.com/watch?v=lIxbSDyHsXs"
+            >Recreating Sketchpad, the first GUI</a>
             was a talk at <a href="https://bangbangcon.com/">!!con 2024</a>
             about what we can learn by studying and rebuilding early user
             interfaces. Earlier, <a
               href="/js/2013/10/15/constraint-programming-in-the-browser.html"
-            ><strong>Constraint programming in the browser</strong></a>
+            >Constraint programming in the browser</a>
             at JSConf 2013 covered related ground, alongside a short note on
             <a href="/js/ui/2013/05/17/inspired-by-sketchpad.html"
             >being inspired by Sketchpad</a>
@@ -62,12 +60,12 @@ import Base from "../layouts/Base.astro";
 
       <section class="entry">
         <div class="entry-body">
-          <h3>How do we build great embedded UIs?</h3>
+          <h3>Embeddable UIs</h3>
           <p>
-            <a href="/js/2023/08/24/iframeable-finance.html"><strong
-              >&lt;iframe&gt;able finance</strong></a>, presented at Fintech
-            Devcon 2023, shares advice and war stories for building embeddable
-            UIs and SDKs using iframes.
+            <a href="/js/2023/08/24/iframeable-finance.html"
+            >&lt;iframe&gt;able finance</a>, presented at Fintech Devcon 2023,
+            shares advice and war stories for building embeddable UIs and SDKs
+            using iframes.
           </p>
         </div>
         <a class="entry-thumb" href="/js/2023/08/24/iframeable-finance.html">
@@ -82,28 +80,25 @@ import Base from "../layouts/Base.astro";
 
       <section class="entry">
         <div class="entry-body">
-          <h3>How can we collaborate on complex UIs?</h3>
+          <h3>Collaborating to specify UIs</h3>
           <p>
-            <a href="/js/ui/2017/07/14/pure-ui-control.html"><strong>Pure UI
-                Control</strong></a>
+            <a href="/js/ui/2017/07/14/pure-ui-control.html">Pure UI Control</a>
             is an essay on how teams can communicate and organize their work
             when building complex UIs. A companion essay,
-            <a
-              href="/js/ui/2017/04/21/important-problems-ui-engineering.html"
-            ><strong>What are the important problems in UI
-                engineering?</strong></a>, sketches the open territory I think
-            the field still hasn&rsquo;t properly mapped.
+            <a href="/js/ui/2017/04/21/important-problems-ui-engineering.html"
+            >What are the important problems in UI engineering?</a>, sketches
+            the open territory I think the field still hasn&rsquo;t properly
+            mapped.
           </p>
         </div>
       </section>
 
       <section class="entry">
         <div class="entry-body">
-          <h3>How should we structure UI concurrency?</h3>
+          <h3>Structuring concurrency</h3>
           <p>
-            <a href="/js/ui/2017/04/01/synchronizable-abstractions.html"><strong
-              >Synchronizable abstractions for understandable
-                concurrency</strong></a>
+            <a href="/js/ui/2017/04/01/synchronizable-abstractions.html"
+            >Synchronizable abstractions for understandable concurrency</a>
             is an explanation of the Concurrent ML event system &mdash; the
             small, careful design that later inspired React Fiber.
           </p>
@@ -123,17 +118,17 @@ import Base from "../layouts/Base.astro";
 
       <section class="entry">
         <div class="entry-body">
-          <h3>How does React work?</h3>
+          <h3>React internals</h3>
           <p>
-            <a href="/js/ui/2017/04/19/preact-in-pictures.html"><strong>Preact
-                in Pictures</strong></a>
+            <a href="/js/ui/2017/04/19/preact-in-pictures.html"
+            >Preact in Pictures</a>
             is a 2017 talk explaining the core virtual <abbr
               title="Document object model"
             >DOM</abbr>
             diffing algorithm, following the code in Preact but with notes on
             how it compares to React. The companion
-            <a href="/js/ui/2017/03/11/preact-internals-1.html"><strong>Preact
-                Internals</strong></a>
+            <a href="/js/ui/2017/03/11/preact-internals-1.html"
+            >Preact Internals</a>
             series goes deeper. Earlier, in 2014, I gave an early talk on
             <a href="/js/clojure/2014/05/08/react-js-and-om.html">React + Om</a>
             and wrote an
@@ -154,10 +149,9 @@ import Base from "../layouts/Base.astro";
 
       <section class="entry">
         <div class="entry-body">
-          <h3>How do we make websites faster?</h3>
+          <h3>Web performance</h3>
           <p>
-            <a href="/js/perf/2017/04/18/the-new-fast.html"><strong>The new
-                fast</strong></a>
+            <a href="/js/perf/2017/04/18/the-new-fast.html">The new fast</a>
             is a talk I gave several times in 2016 sharing advanced web
             performance techniques that were fairly new at the time &mdash;
             HTTP/2, server push, advanced CDN usage, and streaming responses.
@@ -231,8 +225,8 @@ import Base from "../layouts/Base.astro";
         <div class="entry-body">
           <h3>Read Japanese Literature</h3>
           <p>
-            <a href="https://readjapaneseliterature.com"><strong>Read Japanese
-                Literature</strong></a>
+            <a href="https://readjapaneseliterature.com"
+            >Read Japanese Literature</a>
             is a podcast and blog run by my partner, Alison. I help with the
             website and sound design.
           </p>
@@ -251,8 +245,8 @@ import Base from "../layouts/Base.astro";
         <div class="entry-body">
           <h3>Pyret</h3>
           <p>
-            <a href="https://pyret.org/index.html"><strong>Pyret</strong></a> is
-            an in-browser programming language and environment used in the
+            <a href="https://pyret.org/index.html">Pyret</a> is an in-browser
+            programming language and environment used in the
             <a href="https://www.bootstrapworld.org/blog/index.shtml"
             >Bootstrap curriculum</a>. In 2020 and &rsquo;21, I
             <a href="https://pyret.org/release-notes/summer-2021.html"
@@ -266,8 +260,8 @@ import Base from "../layouts/Base.astro";
         <div class="entry-body">
           <h3>Federated Wiki</h3>
           <p>
-            <a href="https://www.youtube.com/watch?v=BdwLczSgvcc"><strong
-              >Federated Wiki</strong></a>
+            <a href="https://www.youtube.com/watch?v=BdwLczSgvcc"
+            >Federated Wiki</a>
             is a new, personal version of the wiki being developed by Ward
             Cunningham. In 2011, I collaborated with him to design and build the
             <a href="https://vimeo.com/32051583#">core UI paradigm</a>
@@ -313,15 +307,15 @@ import Base from "../layouts/Base.astro";
 }
 
 .body.home .section-head {
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--sans);
+  font-weight: 700;
   font-size: 1.6rem;
-  line-height: 1.2;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
   margin-top: 2.2rem;
   margin-bottom: 0.4rem;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--rule);
-  font-variation-settings: "opsz" 32;
   display: flex;
   align-items: baseline;
   gap: 0.7em;
@@ -377,13 +371,13 @@ import Base from "../layouts/Base.astro";
   grid-area: thumb;
 }
 .body.home .entry-body h3 {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 600;
   font-size: 1.2rem;
-  line-height: 1.25;
+  line-height: 1.22;
+  letter-spacing: -0.008em;
   color: var(--ink);
   margin: 0 0 0.4rem;
-  font-variation-settings: "opsz" 28;
 }
 .body.home .entry-body p {
   font-family: var(--serif);

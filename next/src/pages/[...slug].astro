@@ -1,10 +1,10 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import Post from '../layouts/Post.astro';
-import { parseFilename, urlDateParts, adjacentPosts } from '../lib/post-helpers';
+import { parseFilename, urlDateParts, adjacentPosts, getVisiblePosts } from '../lib/post-helpers';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  const posts = await getVisiblePosts();
   return posts.map((post) => {
     const { slug } = parseFilename(post.id);
     const { year, month, day } = urlDateParts(post.data.date);

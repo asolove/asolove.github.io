@@ -6,8 +6,7 @@
  */
 
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
-import { postPath, sortByDate } from '../lib/post-helpers';
+import { postPath, sortByDate, getVisiblePosts } from '../lib/post-helpers';
 
 const GUID_PREFIX = 'http://adamsolove.com//';
 const ITEM_LIMIT = 10;
@@ -22,7 +21,7 @@ function xmlEscape(s: string): string {
 }
 
 export async function GET(context: { site?: URL }) {
-  const all = await getCollection('posts');
+  const all = await getVisiblePosts();
   const clojure = all.filter((p) => p.data.categories.includes('clojure'));
   const sorted = sortByDate(clojure).slice(0, ITEM_LIMIT);
   const site = context.site?.toString().replace(/\/$/, '') ?? 'https://adamsolove.com';

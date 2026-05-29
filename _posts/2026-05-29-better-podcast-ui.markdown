@@ -1,10 +1,11 @@
 ---
 layout: post
-title: "A better podcast editor with multi-player via Automerge"
-description: "A better UI for editing podcasts, using Automerge for multiplayer features, and the joy of building narrowcast software that only two people need to love."
+title: "Designing a better podcast editor"
+description: "A better concept model and more efficient tools for editing spoken word audio."
 date: 2026-05-29 09:00:00
-categories: js ui
+categories: ui ducking
 tags: ui
+draft: true
 ---
 
 For the past few years, my partner has run a niche podcast and I've helped a bit with the audio quality. Our workflow was painful: one shared iCloud file, emails of notes coded to timestamps, carefully checking that our changes didn't conflict.

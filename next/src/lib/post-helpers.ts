@@ -3,9 +3,22 @@
  * post entries without duplicating logic across pages.
  */
 
+import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
 type Post = CollectionEntry<'posts'>;
+
+/**
+ * Single source of truth for "which posts are visible right now."
+ * Drafts (`draft: true` frontmatter) are shown in dev, filtered out of
+ * prod builds. Every page or feed that lists posts should use this
+ * helper, not `getCollection('posts')` directly.
+ */
+export async function getVisiblePosts(): Promise<Post[]> {
+  return await getCollection('posts', ({ data }) =>
+    import.meta.env.PROD ? !data.draft : true,
+  );
+}
 
 /** Parse YYYY-MM-DD-slug.md filename to get just the slug-tail. */
 export function parseFilename(id: string) {

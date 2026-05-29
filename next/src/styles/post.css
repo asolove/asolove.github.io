@@ -43,7 +43,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 ::selection { background: var(--spot-wash); color: var(--ink); }
 html {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 17px;
   line-height: 1.55;
   color: var(--ink);
@@ -118,7 +118,7 @@ a { color: inherit; text-decoration: none; }
 .page.no-sidebar .body > blockquote,
 .page.no-sidebar .body > .listing { grid-column: 2 / span 8; }
 h1 {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 400;
   font-size: clamp(2.2rem, 4.5vw, 3.4rem);
   line-height: 1.05;
@@ -127,7 +127,7 @@ h1 {
   font-variation-settings: "opsz" 60;
 }
 .standfirst {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-weight: 400;
   font-size: 1.25rem;
@@ -368,7 +368,7 @@ h1 {
 }
 
 .body blockquote {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-weight: 400;
   font-size: 1.35rem;
@@ -611,7 +611,7 @@ h1 {
 }
 .docfoot .title-link {
   color: var(--ink);
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: 1.05rem;
   line-height: 1.3;
@@ -663,7 +663,9 @@ h1 {
     grid-column: 1 / -1;
     grid-row: auto;
     /* Sticky collapsed bar at the top of the viewport; expanded list
-       scrolls inside up to viewport height. */
+       scrolls inside up to viewport height. The negative horizontal
+       margin extends the background through the page's 2rem padding so
+       the bar / dropdown reads as a full-bleed UI layer. */
     position: sticky;
     top: 0;
     z-index: 10;
@@ -673,7 +675,7 @@ h1 {
     border-top: 1px solid var(--rule-soft);
     border-bottom: 1px solid var(--rule-soft);
     padding: 0;
-    margin: 0 0 2rem;
+    margin: 0 -2rem 2rem;
   }
   /* Disclosure UI: collapsed summary bar by default; the hidden
      checkbox toggles the body open/closed. No JS. */
@@ -682,7 +684,9 @@ h1 {
     align-items: center;
     gap: 0.55em;
     cursor: pointer;
-    padding: 0.75rem 0;
+    /* Horizontal padding compensates for the siderail's negative margin
+       so text stays at the same x as the surrounding content. */
+    padding: 0.75rem 2rem;
     color: var(--ink);
     font-family: var(--sans);
     font-size: 0.82rem;
@@ -702,11 +706,15 @@ h1 {
   .siderail-toggle:checked ~ .siderail-summary .siderail-caret {
     transform: rotate(90deg);
   }
-  .siderail-body { display: none; padding: 0 0 0.6rem; }
+  .siderail-body { display: none; padding: 0; }
   .siderail-toggle:checked ~ .siderail-body {
     display: block;
     max-height: 75vh;
     overflow-y: auto;
+    /* Match the summary bar's horizontal compensation so list items
+       sit at the same x as content elsewhere on the page; vertical
+       padding gives the open panel breathing room. */
+    padding: 0.6rem 2rem 1.1rem;
   }
   /* Dim everything outside the siderail when the contents dropdown is
      open. Uses :has() to reach from the deeply-nested checkbox up to

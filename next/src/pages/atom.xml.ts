@@ -21,8 +21,7 @@
  */
 
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
-import { postPath, sortByDate } from '../lib/post-helpers';
+import { postPath, sortByDate, getVisiblePosts } from '../lib/post-helpers';
 
 // Matches the Jekyll guid prefix exactly: site.url ("http://adamsolove.com/")
 // + "/" from the template + post.url (which starts with "/"). Three slashes.
@@ -39,7 +38,7 @@ function xmlEscape(s: string): string {
 }
 
 export async function GET(context: { site?: URL }) {
-  const posts = await getCollection('posts');
+  const posts = await getVisiblePosts();
   const sorted = sortByDate(posts);
   const site = context.site?.toString().replace(/\/$/, '') ?? 'https://adamsolove.com';
 

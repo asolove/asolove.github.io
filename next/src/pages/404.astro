@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found" description="The page you tried to reach doesn't exist on adamsolove.com.">
+  <div class="page no-sidebar">
+    <div class="titleblock">
+      <h1>Page not found</h1>
+      <p class="standfirst">
+        The link you followed doesn't match anything on the site. It may have
+        moved, or never existed.
+      </p>
+    </div>
+
+    <article class="body">
+      <p>
+        A few places you might be looking for:
+      </p>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog.html">The full blog archive</a></li>
+        <li><a href="mailto:asolove@gmail.com">Email me</a> if you think a link is genuinely broken — I'd like to fix it.</li>
+      </ul>
+    </article>
+  </div>
+</Base>
+
+<script>
+  // Tell Fathom which broken URL was requested so the dashboard can show
+  // a list of "404s by path" — i.e., where to set up redirects or fix
+  // outbound links. Wait for Fathom to load (defer + DOMContentLoaded
+  // race), then fire the event. No-op if Fathom is blocked.
+  function send() {
+    const path = location.pathname + location.search;
+    // Truncate to keep event names short; Fathom caps event names at
+    // around 64 chars.
+    const name = ('404: ' + path).slice(0, 60);
+    if (window.fathom && typeof window.fathom.trackEvent === 'function') {
+      window.fathom.trackEvent(name);
+    }
+  }
+  if (window.fathom) send();
+  else window.addEventListener('load', send);
+</script>

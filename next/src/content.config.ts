@@ -41,6 +41,9 @@ const posts = defineCollection({
     // Opt out of the auto-dropcap on long-form posts when the first paragraph
     // is a parenthetical aside, a blockquote, or otherwise a bad target.
     dropcap: z.boolean().optional(),
+    // `draft: true` posts render in dev but are filtered out of prod builds
+    // (no permalink, no archive entry, no tag listings, no feeds).
+    draft: z.boolean().optional(),
   }),
 });
 

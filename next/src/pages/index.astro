@@ -13,16 +13,24 @@ import Base from "../layouts/Base.astro";
     </div>
 
     <aside class="siderail">
-      <h3>Elsewhere</h3>
-      <ul>
-        <li>
-          <a href="https://www.linkedin.com/in/asolove/">&#9656; LinkedIn</a>
-        </li>
-        <li><a href="/atom.xml">&#9656; RSS feed</a></li>
-        <li>
-          <a href="mailto:asolove@gmail.com">&#9656; Email</a>
-        </li>
-      </ul>
+      <input
+        type="checkbox"
+        id="siderail-toggle"
+        class="siderail-toggle"
+        hidden
+      />
+      <label class="siderail-summary" for="siderail-toggle">
+        <span class="siderail-caret" aria-hidden="true">▶</span>
+        <span>Contents</span>
+      </label>
+      <div class="siderail-body">
+        <h3>Contents</h3>
+        <ul>
+          <li><a href="#thinking">Talks &amp; essays</a></li>
+          <li><a href="#career">Career</a></li>
+          <li><a href="#projects">Projects</a></li>
+        </ul>
+      </div>
     </aside>
 
     <article class="body home">
@@ -167,7 +175,7 @@ import Base from "../layouts/Base.astro";
         </a>
       </section>
 
-      <h2 id="work" class="section-head">Work</h2>
+      <h2 id="career" class="section-head">Career</h2>
       <p class="section-lede">
         Day-job software, mostly in narrow specialist domains where the cost of
         a misunderstanding is high.
@@ -284,10 +292,31 @@ import Base from "../layouts/Base.astro";
   </div>
 </Base>
 
+<script>
+// Auto-close the mobile contents disclosure on link clicks / outside clicks.
+const toggle = document.getElementById(
+  "siderail-toggle",
+) as HTMLInputElement | null;
+if (toggle) {
+  document
+    .querySelectorAll<HTMLAnchorElement>(".siderail-body a")
+    .forEach((a) => {
+      a.addEventListener("click", () => {
+        toggle.checked = false;
+      });
+    });
+  document.addEventListener("click", (e) => {
+    if (!toggle.checked) return;
+    const t = e.target as Element | null;
+    if (t && !t.closest(".siderail")) toggle.checked = false;
+  });
+}
+</script>
+
 <style>
 /* Positioning paragraph under the standfirst */
 .titleblock .positioning {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 1.05rem;
   line-height: 1.5;
   color: var(--ink);
@@ -302,7 +331,9 @@ import Base from "../layouts/Base.astro";
 .body.home > .section-lede,
 .body.home > .entry,
 .body.home > .end-rule {
-  grid-column: 1 / -1;
+  /* Cols 1-9 leaves cols 10-12 clear for the contents siderail so the
+     two never overlap visually. */
+  grid-column: 1 / span 9;
   max-width: none;
 }
 
@@ -333,7 +364,7 @@ import Base from "../layouts/Base.astro";
 }
 
 .body.home .section-lede {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-style: italic;
   font-size: 1.05rem;
   line-height: 1.45;
@@ -380,7 +411,7 @@ import Base from "../layouts/Base.astro";
   margin: 0 0 0.4rem;
 }
 .body.home .entry-body p {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 1rem;
   line-height: 1.55;
   color: var(--ink);

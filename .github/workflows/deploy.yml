@@ -11,6 +11,15 @@ permissions:
   pages: write
   id-token: write
 
+# Opt in to Node.js 24 for all JS actions in this workflow. Node 20 is
+# deprecated on GH-hosted runners (forced removal Sep 16 2026, with
+# Node 24 becoming the default June 2 2026). Setting this now keeps the
+# workflow forward-compatible regardless of which action versions get
+# bumped. Once every action has shipped a Node 24-native release we can
+# remove this line.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 # Allow one deploy at a time; in-flight deploys are not cancelled so the
 # active deploy completes before a new one queues.
 concurrency:

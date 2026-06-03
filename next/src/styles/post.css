@@ -68,7 +68,7 @@ a { color: inherit; text-decoration: none; }
 }
 .topbar .brand { display: flex; align-items: baseline; gap: 0.5em; }
 .topbar .brand .br { color: var(--spot); }
-.topbar .brand .name { color: var(--ink); letter-spacing: 0.04em; }
+.topbar .brand .name { color: var(--ink); }
 .topbar nav { display: flex; gap: 1.4rem; }
 .topbar nav a { color: var(--ink-soft); position: relative; }
 .topbar nav a.current { color: var(--ink); }

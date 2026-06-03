@@ -67,4 +67,13 @@ export default defineConfig({
     format: 'file',
   },
   trailingSlash: 'never',
+  vite: {
+    server: {
+      // Allow ngrok tunnels to reach the dev server. Vite blocks unknown
+      // Host headers by default; the leading-dot pattern matches any
+      // subdomain so we don't need to update this every time ngrok
+      // hands out a new URL.
+      allowedHosts: ['.ngrok-free.app', '.ngrok.app', '.ngrok.io'],
+    },
+  },
 });

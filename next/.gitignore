@@ -17,3 +17,6 @@ yarn-error.log*
 
 # macOS
 .DS_Store
+
+# Claude Code scratch dir for HTTP probes / temp files
+.claude-tmp/

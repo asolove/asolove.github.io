@@ -583,19 +583,24 @@ h1 {
 .docfoot {
   grid-column: 1 / -1;
   margin-top: 4rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--rule);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   font-family: var(--sans);
   font-size: 0.78rem;
 }
+/* The rule above prev/next is split into two segments, one per link,
+   so hovering either column visibly "lifts" that side. */
 .docfoot .nav-prev, .docfoot .nav-next {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  transition: border-top-color 160ms ease;
 }
+.docfoot a.nav-prev:hover,
+.docfoot a.nav-next:hover { border-top-color: var(--spot); }
 .docfoot .nav-date {
   font-family: var(--sans);
   font-size: 0.68rem;
@@ -616,9 +621,7 @@ h1 {
   font-size: 1.05rem;
   line-height: 1.3;
   max-width: 22rem;
-  border-bottom: 1px solid var(--rule-soft);
 }
-.docfoot .title-link:hover { border-bottom-color: var(--spot); }
 
 .colophon {
   grid-column: 1 / -1;

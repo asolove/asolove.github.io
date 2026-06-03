@@ -27,8 +27,11 @@ const formatDate = (d: Date) =>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="alternate" type="application/rss+xml" title="All posts" href="/atom.xml" />
 <link rel="icon" href="/img/favicon.png" />
-<!-- Privacy-respecting analytics (Fathom). Carried over from the Jekyll site. -->
-<script src="https://cdn.usefathom.com/script.js" data-site="GBQNSZEZ" defer></script>
+<!-- Privacy-respecting analytics (Fathom). Production only — skipping
+     dev avoids polluting stats with local previews of draft posts. -->
+{import.meta.env.PROD && (
+  <script src="https://cdn.usefathom.com/script.js" data-site="GBQNSZEZ" defer></script>
+)}
 </head>
 <body>
 <div class="topbar">

@@ -115,18 +115,98 @@ const COLORS = {
   auto:     '#f5d77a',
 };
 
+// === Scripted animation =====================================================
+//
+// Play walks through three small edits that exercise the three different
+// kinds of control in this figure:
+//   1. Drag aLeftTie a tiny bit (the segment-1 attachment of the left
+//      tie pair). The pin's project-time follows the cursor, so the
+//      music slides right with it.
+//   2. Raise the music automation point at project-time ~17s — the
+//      second breakpoint of the music's envelope (source offset 2).
+//      After step 1 the music has slid right by 1s, so this point now
+//      sits at project 18s; the cursor lands there.
+//   3. Drag mRightTie (the music-side of the right tie) leftward by
+//      one second. The pin's project-time moves; B slides left.
+//
+// Each step uses the canonical approach → anticipation → press → drag →
+// release → hold convention from the other animated figures.
+
+const ALT_FROM = INITIAL_PINS.aLeftTie;   // 16
+const ALT_TO   = 17;
+const AUTO_FROM = INITIAL_AUTOMATION.m[1].value;  // 0.3
+const AUTO_TO   = 0.45;
+const MRT_FROM = INITIAL_PINS.mRightTie;  // 13
+const MRT_TO   = 12;
+
+const CURSOR_Y_ABOVE = TRACK1_Y - 14;                    // 18
+const CURSOR_Y_TOP_PIN = TRACK1_Y + TRACK_H + PIN_ARROW_H / 2;  // 72  (top pins)
+const CURSOR_Y_BOT_PIN = TRACK2_Y - PIN_ARROW_H / 2;     // 94  (bottom pins)
+const AUTO_BODY_TOP = TRACK2_Y + TITLE_BAR_H + AUTO_BODY_PAD; // 111
+const AUTO_BODY_BOT = TRACK2_Y + TRACK_H - AUTO_BODY_PAD;     // 132
+const AUTO_BODY_H = AUTO_BODY_BOT - AUTO_BODY_TOP;            // 21
+const CURSOR_Y_AUTO_FROM = AUTO_BODY_BOT - AUTO_FROM * AUTO_BODY_H;  // 125.7
+const CURSOR_Y_AUTO_TO   = AUTO_BODY_BOT - AUTO_TO   * AUTO_BODY_H;  // 128.85
+
+const SCHEDULE = [
+  // Phase 1: drag aLeftTie 16 → 17 (small rightward nudge)
+  { t:    0, cx: 16, cy: CURSOR_Y_ABOVE,   p: false, o: 0, alt: ALT_FROM, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'linear'    },
+  { t:  120, cx: 16, cy: CURSOR_Y_ABOVE,   p: false, o: 1, alt: ALT_FROM, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'easeOut'   },
+  { t:  720, cx: 16, cy: CURSOR_Y_TOP_PIN, p: false, o: 1, alt: ALT_FROM, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'easeInOut' },
+  { t:  870, cx: 16, cy: CURSOR_Y_TOP_PIN, p: false, o: 1, alt: ALT_FROM, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'linear'    },
+  { t:  970, cx: 16, cy: CURSOR_Y_TOP_PIN, p: true,  o: 1, alt: ALT_FROM, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'linear'    },
+  { t: 1570, cx: 17, cy: CURSOR_Y_TOP_PIN, p: true,  o: 1, alt: ALT_TO,   av2: AUTO_FROM, mrt: MRT_FROM, ease: 'easeInOut' },
+  { t: 1700, cx: 17, cy: CURSOR_Y_TOP_PIN, p: false, o: 1, alt: ALT_TO,   av2: AUTO_FROM, mrt: MRT_FROM, ease: 'linear'    },
+  { t: 2000, cx: 17, cy: CURSOR_Y_TOP_PIN, p: false, o: 1, alt: ALT_TO,   av2: AUTO_FROM, mrt: MRT_FROM, ease: 'linear'    },
+  // Phase 2: raise the music automation point at ~17s (now 18s after phase 1)
+  { t: 2500, cx: 18, cy: CURSOR_Y_AUTO_FROM, p: false, o: 1, alt: ALT_TO, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'easeInOut' },
+  { t: 2650, cx: 18, cy: CURSOR_Y_AUTO_FROM, p: false, o: 1, alt: ALT_TO, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'linear'    },
+  { t: 2750, cx: 18, cy: CURSOR_Y_AUTO_FROM, p: true,  o: 1, alt: ALT_TO, av2: AUTO_FROM, mrt: MRT_FROM, ease: 'linear'    },
+  { t: 3350, cx: 18, cy: CURSOR_Y_AUTO_TO,   p: true,  o: 1, alt: ALT_TO, av2: AUTO_TO,   mrt: MRT_FROM, ease: 'easeInOut' },
+  { t: 3480, cx: 18, cy: CURSOR_Y_AUTO_TO,   p: false, o: 1, alt: ALT_TO, av2: AUTO_TO,   mrt: MRT_FROM, ease: 'linear'    },
+  { t: 3780, cx: 18, cy: CURSOR_Y_AUTO_TO,   p: false, o: 1, alt: ALT_TO, av2: AUTO_TO,   mrt: MRT_FROM, ease: 'linear'    },
+  // Phase 3: drag mRightTie 13 → 12 (music-side of right tie, leftward by 1s)
+  { t: 4280, cx: 29, cy: CURSOR_Y_BOT_PIN, p: false, o: 1, alt: ALT_TO, av2: AUTO_TO, mrt: MRT_FROM, ease: 'easeInOut' },
+  { t: 4430, cx: 29, cy: CURSOR_Y_BOT_PIN, p: false, o: 1, alt: ALT_TO, av2: AUTO_TO, mrt: MRT_FROM, ease: 'linear'    },
+  { t: 4530, cx: 29, cy: CURSOR_Y_BOT_PIN, p: true,  o: 1, alt: ALT_TO, av2: AUTO_TO, mrt: MRT_FROM, ease: 'linear'    },
+  { t: 5130, cx: 28, cy: CURSOR_Y_BOT_PIN, p: true,  o: 1, alt: ALT_TO, av2: AUTO_TO, mrt: MRT_TO,   ease: 'easeInOut' },
+  { t: 5260, cx: 28, cy: CURSOR_Y_BOT_PIN, p: false, o: 1, alt: ALT_TO, av2: AUTO_TO, mrt: MRT_TO,   ease: 'linear'    },
+  { t: 5560, cx: 28, cy: CURSOR_Y_BOT_PIN, p: false, o: 1, alt: ALT_TO, av2: AUTO_TO, mrt: MRT_TO,   ease: 'linear'    },
+  // Exit
+  { t: 6060, cx: 28, cy: CURSOR_Y_ABOVE, p: false, o: 0, alt: ALT_TO, av2: AUTO_TO, mrt: MRT_TO, ease: 'easeIn' },
+];
+
 // --- entry point -----------------------------------------------------------
 
 export default function mount(root) {
   root.innerHTML = `
     <div data-role="canvas-host"></div>
     <div class="ix-controls">
+      <button class="ix-play" data-action="play" data-state="idle" aria-label="Play">
+        <span class="ix-play-icon" aria-hidden="true">
+          <svg class="icon icon-play" viewBox="0 0 16 16">
+            <polygon points="4,2 13,8 4,14" fill="currentColor"/>
+          </svg>
+          <svg class="icon icon-spin" viewBox="0 0 16 16">
+            <g class="spin">
+              <circle cx="8" cy="8" r="5.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-dasharray="25 33.3"/>
+            </g>
+          </svg>
+          <svg class="icon icon-replay" viewBox="0 0 16 16">
+            <path d="M 13.5 8 A 5.5 5.5 0 1 1 12 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <polyline points="11,2 12,4 10,3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="ix-play-label" data-role="play-label">Play</span>
+      </button>
       <button data-action="reset">Reset</button>
     </div>
   `;
 
   const host = root.querySelector('[data-role="canvas-host"]');
+  const playBtn = root.querySelector('[data-action="play"]');
   const resetBtn = root.querySelector('[data-action="reset"]');
+  const playLabel = root.querySelector('[data-role="play-label"]');
 
   let pins = { ...INITIAL_PINS };
   let automation = cloneAutomation(INITIAL_AUTOMATION);
@@ -135,6 +215,25 @@ export default function mount(root) {
   let hoveredItem = null;
   /** @type {object | null} */
   let activeDrag = null;
+  /** @type {'idle'|'playing'|'done'} */
+  let animState = 'idle';
+  let animFrame = null;
+  const animCursor = { x: 0, y: 0, pressed: false, opacity: 0, visible: false };
+
+  function setAnimState(s) {
+    animState = s;
+    playBtn.dataset.state = s;
+    playBtn.disabled = s === 'playing';
+    playLabel.textContent = s === 'playing' ? 'Playing' : s === 'done' ? 'Replay' : 'Play';
+    playBtn.setAttribute('aria-label', playLabel.textContent);
+  }
+
+  function cancelAnim() {
+    if (animFrame !== null) {
+      cancelAnimationFrame(animFrame);
+      animFrame = null;
+    }
+  }
 
   const canvas = document.createElement('canvas');
   canvas.style.cssText = 'display: block; border-radius: 5px; touch-action: none;';
@@ -332,6 +431,10 @@ export default function mount(root) {
     const hit = hitTest(x, y);
     if (!hit) return;
     e.preventDefault();
+    // User input takes over from the demo animation.
+    cancelAnim();
+    animCursor.visible = false;
+    if (animState === 'playing') setAnimState('idle');
     startDrag(hit, x, y);
   });
 
@@ -349,6 +452,9 @@ export default function mount(root) {
     const hit = hitTest(x, y);
     if (!hit) return;
     e.preventDefault();
+    cancelAnim();
+    animCursor.visible = false;
+    if (animState === 'playing') setAnimState('idle');
     startDrag(hit, x, y);
   }, { passive: false });
 
@@ -363,10 +469,69 @@ export default function mount(root) {
   canvas.addEventListener('touchcancel', endDrag);
 
   resetBtn.addEventListener('click', () => {
+    cancelAnim();
     pins = { ...INITIAL_PINS };
     automation = cloneAutomation(INITIAL_AUTOMATION);
+    animCursor.visible = false;
+    animCursor.opacity = 0;
+    setAnimState('idle');
     render();
   });
+
+  // Scripted demo: a virtual cursor performs three small edits in
+  // sequence (see SCHEDULE for the full timing).
+  function play() {
+    cancelAnim();
+    pins = { ...INITIAL_PINS };
+    automation = cloneAutomation(INITIAL_AUTOMATION);
+    setAnimState('playing');
+
+    const startTime = performance.now();
+
+    function step(now) {
+      const elapsed = now - startTime;
+      let i = 0;
+      while (i < SCHEDULE.length - 1 && SCHEDULE[i + 1].t <= elapsed) i++;
+
+      if (i >= SCHEDULE.length - 1) {
+        const last = SCHEDULE[SCHEDULE.length - 1];
+        animCursor.x = last.cx;
+        animCursor.y = last.cy;
+        animCursor.pressed = false;
+        animCursor.opacity = last.o;
+        animCursor.visible = false;
+        pins.aLeftTie = last.alt;
+        automation.m[1].value = last.av2;
+        pins.mRightTie = last.mrt;
+        animFrame = null;
+        setAnimState('done');
+        render();
+        return;
+      }
+
+      const a = SCHEDULE[i];
+      const b = SCHEDULE[i + 1];
+      const span = b.t - a.t;
+      const tNorm = span > 0 ? Math.min(1, Math.max(0, (elapsed - a.t) / span)) : 1;
+      const eased = applyEase(tNorm, b.ease);
+
+      animCursor.x = lerp(a.cx, b.cx, eased);
+      animCursor.y = lerp(a.cy, b.cy, eased);
+      animCursor.opacity = lerp(a.o, b.o, eased);
+      animCursor.visible = animCursor.opacity > 0.01;
+      animCursor.pressed = b.p;
+      pins.aLeftTie = lerp(a.alt, b.alt, eased);
+      automation.m[1].value = lerp(a.av2, b.av2, eased);
+      pins.mRightTie = lerp(a.mrt, b.mrt, eased);
+
+      render();
+      animFrame = requestAnimationFrame(step);
+    }
+
+    animFrame = requestAnimationFrame(step);
+  }
+
+  playBtn.addEventListener('click', play);
 
   const ro = new ResizeObserver(() => {
     cssWidth = host.clientWidth || 600;
@@ -412,6 +577,11 @@ export default function mount(root) {
       const isHover = hoveredItem?.kind === 'pin' && hoveredItem.pinId === def.id;
       const isActive = activeDrag?.kind === 'pin' && activeDrag.pinId === def.id;
       drawPinHandle(ctx, x, def.edge, COLORS[def.color], isHover || isActive);
+    }
+
+    // Animated demo cursor (drawn on top of everything else).
+    if (animCursor.visible && animCursor.opacity > 0) {
+      drawCursor(ctx, PADDING_X + animCursor.x * PX_PER_SECOND, animCursor.y, animCursor.pressed, animCursor.opacity);
     }
   }
 
@@ -640,4 +810,51 @@ function cloneAutomation(src) {
     b: src.b.map((p) => ({ ...p })),
     m: src.m.map((p) => ({ ...p })),
   };
+}
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function applyEase(t, kind) {
+  switch (kind) {
+    case 'easeIn':    return t * t;
+    case 'easeOut':   return 1 - (1 - t) * (1 - t);
+    case 'easeInOut': return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    case 'linear':
+    default:          return t;
+  }
+}
+
+// macOS-style arrow cursor — same primitive as the other interactives.
+// Tip is at (x, y); body extends down-right. A soft white ring sits
+// behind the tip when `pressed`.
+function drawCursor(ctx, x, y, pressed, opacity) {
+  if (pressed) {
+    ctx.save();
+    ctx.globalAlpha = opacity * 0.65;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.arc(x, y, 9, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  ctx.translate(x, y);
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, 14);
+  ctx.lineTo(3.6, 11);
+  ctx.lineTo(5.5, 14.5);
+  ctx.lineTo(7.2, 13.5);
+  ctx.lineTo(5, 10);
+  ctx.lineTo(9.2, 10);
+  ctx.closePath();
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  ctx.restore();
 }

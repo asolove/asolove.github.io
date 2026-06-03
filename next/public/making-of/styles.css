@@ -37,6 +37,10 @@
   align-items: center;
   flex-wrap: wrap;
 }
+[data-interactive] .ix-hint {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
 [data-interactive] button {
   font: inherit;
   font-size: 0.85rem;

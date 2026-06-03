@@ -29,6 +29,20 @@ const SPEECH_ITEMS = [
 const MUSIC = { id: 'm1', label: 'music', duration: 8 };
 const INITIAL_ANCHOR = Object.freeze({ clipId: 's2', offset: 3 });
 
+// Volume automation for the music clip — same envelope shape as
+// pins-and-constraints, just compressed to fit the 8s clip:
+// silent → fade-in over 2-3s → full → hold → ramp down over
+// the last 2s → silent. Mirrors the breakpoint behaviour: each point
+// can be dragged within its neighbours and within [0, duration] × [0, 1].
+const INITIAL_MUSIC_AUTOMATION = Object.freeze([
+  { offset: 0,                    value: 0   },
+  { offset: 2,                    value: 0.3 },
+  { offset: 3,                    value: 1.0 },
+  { offset: MUSIC.duration - 3,   value: 1.0 },
+  { offset: MUSIC.duration - 2,   value: 0.3 },
+  { offset: MUSIC.duration,       value: 0   },
+]);
+
 const INITIAL_CLIP_STATE = Object.freeze({
   s1: { duration: 6, sourceOffset: 0 },
   s2: { duration: 5, sourceOffset: 0 },
@@ -44,6 +58,9 @@ const GAP_HANDLE_HIT_X = 6;
 const CONNECTOR_HIT_PX = 10;
 const MIN_CLIP_DUR = 0.3;
 const GAP_MIN_DUR = 0.3;
+const AUTO_BODY_PAD = 2;
+const AUTO_POINT_R  = 3;
+const AUTO_HIT      = 7;
 
 // --- visual config ---------------------------------------------------------
 
@@ -65,17 +82,36 @@ const CURSOR_Y_REST  = TRACK1_Y + TRACK_H * 0.55;
 const CURSOR_Y_ABOVE = TRACK1_Y - 14;
 const TRIM_FROM = 6;
 const TRIM_TO   = 4;
+// After the trim, s1=4 + s2=5 + g1=3 puts the gap's right edge at
+// canvas-time 12. Dragging it to 13 grows g1 from 3 → 4 seconds.
+const GAP_EDGE_FROM = 12;
+const GAP_EDGE_TO   = 13;
+const GAP_FROM      = 3;
+const GAP_TO        = 4;
 
+// Each keyframe carries the model state it's animating toward: `d` for
+// s1's duration, `g` for g1's duration. Both lerp between adjacent
+// keyframes so the cursor and the clip widths stay in sync.
 const SCHEDULE = [
-  { t:    0, cx: 9.5,      cy: CURSOR_Y_ABOVE, p: false, o: 0, d: TRIM_FROM, ease: 'linear' },
-  { t:  120, cx: 9.5,      cy: CURSOR_Y_ABOVE, p: false, o: 1, d: TRIM_FROM, ease: 'easeOut' },
-  { t:  720, cx: TRIM_FROM, cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_FROM, ease: 'easeInOut' },
-  { t:  870, cx: TRIM_FROM, cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_FROM, ease: 'linear' },
-  { t:  970, cx: TRIM_FROM, cy: CURSOR_Y_REST, p: true,  o: 1, d: TRIM_FROM, ease: 'linear' },
-  { t: 1770, cx: TRIM_TO,   cy: CURSOR_Y_REST, p: true,  o: 1, d: TRIM_TO,   ease: 'easeInOut' },
-  { t: 1900, cx: TRIM_TO,   cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_TO,   ease: 'linear' },
-  { t: 2400, cx: TRIM_TO,   cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_TO,   ease: 'linear' },
-  { t: 2900, cx: TRIM_TO,   cy: CURSOR_Y_ABOVE, p: false, o: 0, d: TRIM_TO,  ease: 'easeIn' },
+  // Phase 1: trim s1 from 6 → 4
+  { t:    0, cx: 9.5,         cy: CURSOR_Y_ABOVE, p: false, o: 0, d: TRIM_FROM, g: GAP_FROM, ease: 'linear'    },
+  { t:  120, cx: 9.5,         cy: CURSOR_Y_ABOVE, p: false, o: 1, d: TRIM_FROM, g: GAP_FROM, ease: 'easeOut'   },
+  { t:  720, cx: TRIM_FROM,   cy: CURSOR_Y_REST,  p: false, o: 1, d: TRIM_FROM, g: GAP_FROM, ease: 'easeInOut' },
+  { t:  870, cx: TRIM_FROM,   cy: CURSOR_Y_REST,  p: false, o: 1, d: TRIM_FROM, g: GAP_FROM, ease: 'linear'    },
+  { t:  970, cx: TRIM_FROM,   cy: CURSOR_Y_REST,  p: true,  o: 1, d: TRIM_FROM, g: GAP_FROM, ease: 'linear'    },
+  { t: 1770, cx: TRIM_TO,     cy: CURSOR_Y_REST,  p: true,  o: 1, d: TRIM_TO,   g: GAP_FROM, ease: 'easeInOut' },
+  { t: 1900, cx: TRIM_TO,     cy: CURSOR_Y_REST,  p: false, o: 1, d: TRIM_TO,   g: GAP_FROM, ease: 'linear'    },
+  // Brief hold so the trim result reads
+  { t: 2200, cx: TRIM_TO,     cy: CURSOR_Y_REST,  p: false, o: 1, d: TRIM_TO,   g: GAP_FROM, ease: 'linear'    },
+  // Phase 2: slide to the gap's right edge and drag it +1 second
+  { t: 2800, cx: GAP_EDGE_FROM, cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_TO,  g: GAP_FROM, ease: 'easeInOut' },
+  { t: 2950, cx: GAP_EDGE_FROM, cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_TO,  g: GAP_FROM, ease: 'linear'    },
+  { t: 3050, cx: GAP_EDGE_FROM, cy: CURSOR_Y_REST, p: true,  o: 1, d: TRIM_TO,  g: GAP_FROM, ease: 'linear'    },
+  { t: 3750, cx: GAP_EDGE_TO,   cy: CURSOR_Y_REST, p: true,  o: 1, d: TRIM_TO,  g: GAP_TO,   ease: 'easeInOut' },
+  { t: 3850, cx: GAP_EDGE_TO,   cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_TO,  g: GAP_TO,   ease: 'linear'    },
+  { t: 4250, cx: GAP_EDGE_TO,   cy: CURSOR_Y_REST, p: false, o: 1, d: TRIM_TO,  g: GAP_TO,   ease: 'linear'    },
+  // Exit
+  { t: 4650, cx: GAP_EDGE_TO,   cy: CURSOR_Y_ABOVE, p: false, o: 0, d: TRIM_TO, g: GAP_TO,   ease: 'easeIn'    },
 ];
 
 const COLORS = {
@@ -88,6 +124,7 @@ const COLORS = {
   music:  { fill: '#3d747f', fillTop: '#2a5158', stroke: '#152e33', text: '#e4f0f3' },
   edgeHandle: 'rgba(255, 255, 255, 0.85)',
   connector: '#e8c763',
+  auto:      '#f5d77a',
 };
 
 // --- entry point -----------------------------------------------------------
@@ -130,6 +167,7 @@ export default function mount(root) {
   let clipState = cloneClipState(INITIAL_CLIP_STATE);
   let gapDurations = { ...INITIAL_GAP_DURATIONS };
   let anchor = { ...INITIAL_ANCHOR };
+  let automation = cloneAutomation(INITIAL_MUSIC_AUTOMATION);
   let cursor = { visible: false, x: 0, y: 0, pressed: false, opacity: 0 };
   let animFrame = null;
   /** @type {'idle'|'playing'|'done'} */
@@ -150,6 +188,7 @@ export default function mount(root) {
     clipState = cloneClipState(INITIAL_CLIP_STATE);
     gapDurations = { ...INITIAL_GAP_DURATIONS };
     anchor = { ...INITIAL_ANCHOR };
+    automation = cloneAutomation(INITIAL_MUSIC_AUTOMATION);
     cursor.visible = false;
     cursor.opacity = 0;
     hover = null;
@@ -228,6 +267,20 @@ export default function mount(root) {
       }
     }
 
+    // Automation breakpoints sit inside the music clip's body, so check
+    // them before the generic music-body grab.
+    if (y >= TRACK2_Y && y <= TRACK2_Y + TRACK_H) {
+      const mx = PADDING_X + L.musicPos.start * PX_PER_SECOND;
+      for (let i = 0; i < automation.length; i++) {
+        const pt = automation[i];
+        const px = mx + pt.offset * PX_PER_SECOND;
+        const py = valueToY(pt.value, TRACK2_Y);
+        if (Math.abs(x - px) <= AUTO_HIT && Math.abs(y - py) <= AUTO_HIT) {
+          return { kind: 'auto', idx: i };
+        }
+      }
+    }
+
     // Music clip body
     if (y >= TRACK2_Y && y <= TRACK2_Y + TRACK_H) {
       const mx = PADDING_X + L.musicPos.start * PX_PER_SECOND;
@@ -238,10 +291,18 @@ export default function mount(root) {
     return null;
   }
 
+  function valueToY(value, clipY) {
+    const top = clipY + TITLE_BAR_H + AUTO_BODY_PAD;
+    const bot = clipY + TRACK_H - AUTO_BODY_PAD;
+    const v = Math.max(0, Math.min(1, value));
+    return bot - v * (bot - top);
+  }
+
   function hitKey(h) {
     if (!h) return '';
     if (h.kind === 'clip-edge') return `edge:${h.id}:${h.side}`;
     if (h.kind === 'gap-edge') return `gap:${h.id}`;
+    if (h.kind === 'auto') return `auto:${h.idx}`;
     return h.kind;
   }
 
@@ -254,6 +315,7 @@ export default function mount(root) {
     if (hitKey(newHit) !== hitKey(hover)) {
       hover = newHit;
       if (newHit?.kind === 'clip-edge' || newHit?.kind === 'gap-edge') canvas.style.cursor = 'ew-resize';
+      else if (newHit?.kind === 'auto') canvas.style.cursor = 'grab';
       else if (newHit) canvas.style.cursor = 'grab';
       else canvas.style.cursor = '';
       render();
@@ -284,6 +346,13 @@ export default function mount(root) {
     } else if (hit.kind === 'gap-edge') {
       drag = { kind: 'gap-edge', id: hit.id, startX: x, initialDur: gapDurations[hit.id] };
       canvas.style.cursor = 'ew-resize';
+    } else if (hit.kind === 'auto') {
+      const pt = automation[hit.idx];
+      drag = {
+        kind: 'auto', idx: hit.idx, startX: x, startY: y,
+        initialOffset: pt.offset, initialValue: pt.value,
+      };
+      canvas.style.cursor = 'grabbing';
     } else if (hit.kind === 'connector' || hit.kind === 'music-body') {
       const L = computeLayout();
       drag = { kind: 'connector', startX: x, initialAnchorTime: L.anchorTime };
@@ -309,6 +378,21 @@ export default function mount(root) {
       }
     } else if (drag.kind === 'gap-edge') {
       gapDurations[drag.id] = Math.max(GAP_MIN_DUR, drag.initialDur + dT);
+    } else if (drag.kind === 'auto') {
+      // Horizontal: clamp to neighbour offsets so the envelope stays monotonic.
+      let newOffset = drag.initialOffset + dT;
+      const minO = drag.idx > 0 ? automation[drag.idx - 1].offset + 0.05 : 0;
+      const maxO = drag.idx < automation.length - 1
+        ? automation[drag.idx + 1].offset - 0.05
+        : MUSIC.duration;
+      newOffset = Math.max(minO, Math.min(maxO, newOffset));
+      // Vertical: cursor up → higher value. Body height excludes title bar + pads.
+      const dy = e.clientY - canvas.getBoundingClientRect().top - drag.startY;
+      const bodyHeight = TRACK_H - TITLE_BAR_H - AUTO_BODY_PAD * 2;
+      let newValue = drag.initialValue - dy / bodyHeight;
+      newValue = Math.max(0, Math.min(1, newValue));
+      automation[drag.idx].offset = newOffset;
+      automation[drag.idx].value = newValue;
     } else if (drag.kind === 'connector') {
       const L = computeLayout();
       const newTime = Math.max(0, Math.min(L.totalDur, drag.initialAnchorTime + dT));
@@ -333,6 +417,7 @@ export default function mount(root) {
     clipState = cloneClipState(INITIAL_CLIP_STATE);
     gapDurations = { ...INITIAL_GAP_DURATIONS };
     anchor = { ...INITIAL_ANCHOR };
+    automation = cloneAutomation(INITIAL_MUSIC_AUTOMATION);
     setState('playing');
 
     const startTime = performance.now();
@@ -348,6 +433,7 @@ export default function mount(root) {
         cursor.pressed = false; cursor.opacity = last.o;
         cursor.visible = false;
         clipState.s1.duration = last.d;
+        gapDurations.g1 = last.g;
         animFrame = null;
         setState('done');
         render();
@@ -366,6 +452,7 @@ export default function mount(root) {
       cursor.visible = cursor.opacity > 0.01;
       cursor.pressed = b.p;
       clipState.s1.duration = lerp(a.d, b.d, eased);
+      gapDurations.g1 = lerp(a.g, b.g, eased);
 
       render();
       animFrame = requestAnimationFrame(step);
@@ -415,6 +502,9 @@ export default function mount(root) {
 
     // Music clip
     drawAudioClip(ctx, L.musicPos.start, L.musicPos.duration, TRACK2_Y, TRACK_H, MUSIC.label, COLORS.music, seedFromId(MUSIC.id));
+
+    // Volume automation envelope on the music clip.
+    drawAutomation(ctx, automation, L.musicPos.start, L.musicPos.duration, TRACK2_Y, hover, drag);
 
     // Connector: line from music top to track 1 bottom, arrow at top
     const anchorX = PADDING_X + L.anchorTime * PX_PER_SECOND;
@@ -698,6 +788,57 @@ function cloneClipState(src) {
   const out = {};
   for (const k of Object.keys(src)) out[k] = { ...src[k] };
   return out;
+}
+
+function cloneAutomation(src) {
+  return src.map((p) => ({ ...p }));
+}
+
+// Draws the volume envelope on the music clip: a polyline through the
+// breakpoints + dots at each, with hover/active highlights matching the
+// pattern in pins-and-constraints.
+function drawAutomation(ctx, points, clipStart, clipDur, clipY, hover, drag) {
+  if (points.length === 0) return;
+  const clipScreenX = PADDING_X + clipStart * PX_PER_SECOND;
+  const clipRightX  = clipScreenX + clipDur * PX_PER_SECOND;
+  const top = clipY + TITLE_BAR_H + AUTO_BODY_PAD;
+  const bot = clipY + TRACK_H - AUTO_BODY_PAD;
+  const valueY = (v) => bot - Math.max(0, Math.min(1, v)) * (bot - top);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(clipScreenX, top - 3, clipRightX - clipScreenX, bot - top + 6);
+  ctx.clip();
+
+  ctx.strokeStyle = COLORS.auto;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  points.forEach((pt, idx) => {
+    const x = clipScreenX + pt.offset * PX_PER_SECOND;
+    const y = valueY(pt.value);
+    if (idx === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  points.forEach((pt, idx) => {
+    const x = clipScreenX + pt.offset * PX_PER_SECOND;
+    const y = valueY(pt.value);
+    const isHover  = hover?.kind === 'auto' && hover.idx === idx;
+    const isActive = drag?.kind  === 'auto' && drag.idx  === idx;
+    const highlighted = isHover || isActive;
+    const r = AUTO_POINT_R + (highlighted ? 1 : 0);
+    ctx.fillStyle = COLORS.auto;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    if (highlighted) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.3;
+      ctx.stroke();
+    }
+  });
+  ctx.restore();
 }
 
 function lerp(a, b, t) { return a + (b - a) * t; }

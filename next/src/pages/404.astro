@@ -30,12 +30,14 @@ import Base from '../layouts/Base.astro';
   // outbound links. Wait for Fathom to load (defer + DOMContentLoaded
   // race), then fire the event. No-op if Fathom is blocked.
   function send() {
-    const path = location.pathname + location.search;
-    // Truncate to keep event names short; Fathom caps event names at
-    // around 64 chars.
-    const name = ('404: ' + path).slice(0, 60);
-    if (window.fathom && typeof window.fathom.trackEvent === 'function') {
-      window.fathom.trackEvent(name);
+    try {
+      if (window.fathom && typeof window.fathom.trackEvent === 'function') {
+        window.fathom.trackEvent('404', {
+          path: location.pathname + location.search,
+        });
+      }
+    } catch (_) {
+      // analytics failures must not affect anything
     }
   }
   if (window.fathom) send();

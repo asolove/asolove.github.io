@@ -1,14 +1,100 @@
 ---
 layout: post
 title: "Building a multiplayer podcast editor with Automerge"
-description: "."
-date: 2026-06-03 09:00:00
+description: "What it's like to build a collaborative UI on top of a sync and versioning engine."
+date: 2026-06-05 09:00:00
 categories: ui ducking
 tags: ui
 draft: true
 ---
 
+Ducking is an online, multiplayer podcast editor that I built just for my partner's podcast. [The previous blog post](/ui/ducking/2026/06/03/better-podcast-ui.html) discussed the UI design and audio layout model that makes it a much more pleasant way to put together an episode.  But those improvements were just about making a single person more effective.
 
+**What we really wanted was a more collaborative workflow.** It's ridiculous that audio editing is stuck in a twenty-year-old world of single-player desktop apps and emailing files back and forth. We wanted to work together on audio easily as in Google Docs or Figma.
+
+So what really makes Ducking unique is that it supports multiplayer audio editing. We can be working together, one person editing out small chunks, the other reorganizing or changing global EQ settings, and all the changes just sync together without fuss. Plus, we can comment on each other's work, understand and maybe roll back changes together, and never worry about losing our work.
+
+The software is split into two pieces:
+- managing the raw audio, which is immutable but also stored, transcoded, and cached in complicated ways to improve performance
+- the data describing each project, which is mutable, multi-player, and handled via Automerge.
+
+## Audio data
+
+The first challenge with audio on the web is performance. We want a new collaborator to open up the project in their browser and be able to play or edit as soon as possible. But they might need a lot of data.
+
+A one-hour podcast episode that exports as a 100mb compressed audio file might start life as four hours of high-quality studio recordings and twenty minutes of music, totaling several gigabytes of data. Most of that just never actually makes it to the final cut. Waiting for all that data is unacceptable for web performance.
+
+By fetching just what we need as we need it, the UI can render immediately and audio can be playing within a few seconds. To make that happen, the software needs to do a lot of prep work whenever audio is added to the project:
+
+- Backup the raw original so we can always revert back to that
+- Transcribe any speech in the audio with timecodes so we can show it in the transcript view
+- Slice it into short windows so if we only use 1m of a 40m recording, most clients only have to download that slice.
+- Transcode it into a compressed format so we can play a useful-but-lossy version right away, even as the higher-quality audio is downloading in the background.
+
+Then the UI client has a data layer that can read these bits out of the browser cache or prioritize which to fetch. The browser is now really great at this. Work on the same project several days in a row and several hundred mb of data will be cached and instantly readable locally. Don't visit for a week and it's all just wiped away and the data layer can transparently re-fetch it as needed.
+
+The entire upload-time transcoding and client data layer are good examples of "schleps": fiddly work that is easy to specify but hard to set up, which I might otherwise have skipped until it was annoying, but which I enjoyed handing off to an LLM. I'll talk more about using LLMs to enjoy tackling schleps in the next post.
+
+## Automerge document data
+
+[Automerge](https://automerge.org/) is the open-source multiplayer data engine that makes it all possible. It makes sure that changes get saved locally, broadcast to collaborators when the network is available, and merged together the same on everyone's device. It also acts as a version control system, able to describe past changes and roll them back to get to a previous state. 
+
+TODO: Automerge animation?
+
+Aside: This post is an experience report, not a tutorial, so I highly recommend looking at the [homepage animation](https://automerge.org/), the [docs overview](https://automerge.org/docs/hello/), and [the tutorial] to learn more about Automerge. From here on out, I'll assume you have a basic idea of what Automerge is for.
+
+
+### A missing operation: list re-order
+
+Automerge provides array operations for safely adding and removing items by index and correctly handles resolving conflicts for concurrent edits. But it doesn't natively support reorderable lists. You can try to model the problem as removing the item at one index and adding it back at another. But the CRDT resolution doesn't guarantee that if two people make overlapping edits, you'll always end up with exactly one copy of each item. Instead, the item might be duplicated, appearing in two different indices in the array.
+
+Martin Kleppman has published [a paper on adding atomic list reorder operations](https://martin.kleppmann.com/papers/list-move-papoc20.pdf) and another, together with Liangrun Da, on ["Extending JSON CRDTs with Move Operations"](https://arxiv.org/abs/2311.14007) but they have not yet been implemented in Automerge. So we're going to have to do it ourselves at the application layer.
+
+There is a paper on doing this, but it isn't implemented in Automerge yet. So we'll have to build it at the application layer. The fun way to do this is to expose our own reorder helper, which currently has its own logic, but can one day just call into the Automerge implementation once it exists. 
+
+Here's what we need to do: as a bunch of inserts and deletes resolve, we need to handle all the possible cases to maintain the invariant that each item appears at most once. And after it has been added to the list, it only disappears if it has been deliberately deleted, not just if it was just reordered.
+
+
+
+
+Automerge
+- Overview: work on document like it's local, but changes get sent and received from other editors. Automerge ensures everyone ends up with same state (diagram? refer to site?)
+- Data modeling is key: Automerge gets to "same" state, but not necessarily a good one.
+  - Model the data orthogonally so almost all changes are separate and just work together
+  - Example: volume automation tied to recording time, not clip time
+  - Lots of derived state from the core data model (diagram?)
+- Undo/Redo handling: local v remote, batching, interaction with history, alternatives (takes, branches)
+  - Diagram to show local/remote interleaving
+  - Diagram of batching
+- List move (from paper)
+  - Diagram of algorithm, maybe code
+- Text marks are great!
+  - Diagram of using text marks for transcript alignment with text edits
+
+
+## FAQ
+
+**Why is it a server and browser UI, not a local-first app?**
+
+I _love_ local-first apps like Obsidian that work entirely without a server. And I also love when they offer _both_ a seamless premium experience _and_ a credible exit path to prevent lock-in and enshittification.
+
+I started building this app with an option for a Tauri app with local file-system storage and optional-only server syncing. I built the UI in terms of a data interface that could be supplied by either a server or the local app, so that it could run either in the browswer against a server or as an app. That seemed like solid insurance that no VC would tempt me to use lock-in to make the app more profitable.
+
+And then I decided this wasn't a SaaS, it was a thing I wanted to use with my partner and maybe a handful of other friends. So the incentive to mistreat it went away, the costs to run it forever went down, and I just settled in to 
+
+Plus, once the ~3s browser startup time for joining a project got working, it was so cool that I didn't want anyone to have to waste their time downloading and installing a native app.
+
+**Does Automerge scale and is it secure? Should I use it in my startup?**
+
+I (joyfully!) don't know. That's not a _no_, it's just that I literally can't tell you.
+
+Fifteen years ago multiplayer real-time editing without conflicts was magic. Ten years ago, I was [writing about it as a major unsolved problem in UI engineering](http://localhost:4321/js/ui/2017/04/21/important-problems-ui-engineering.html). Even five years ago, there were known solutions, but they required a funded team and expertise in several different disciplines to be worthwhile to build.
+
+So for now, I'm just reveling that this thing works at small scales. I can download a dependency, plug it in, and have real-time collaboration with me and a handful of friends. There is something amazing about what used to be indsutry-grade magic now being freely and easily available to purpose-built tiny apps.
+
+
+
+# Old stuff from Claude to maybe use
 
 ## Building multiplayer software with Automerge
 

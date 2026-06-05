@@ -40,3 +40,42 @@ const observer = new IntersectionObserver(
 for (const el of document.querySelectorAll('[data-interactive]')) {
   observer.observe(el);
 }
+
+// Fire a Fathom event whenever a play button on any interactive is
+// clicked, tagged with the interactive's id-name. Paranoid:
+//   - One outer try/catch so anything thrown during path lookup is
+//     swallowed (analytics must never affect UX or the animation).
+//   - The actual fathom call runs in a macrotask (setTimeout 0) so it
+//     can't possibly run inside the click handler's stack.
+//   - Capability checks: `window.fathom` and `trackEvent` must exist
+//     and be the right shape before we call.
+//   - Inner try/catch around the fathom call itself.
+//   - No e.preventDefault / e.stopPropagation — we only observe.
+// Capture phase so we still fire if anything downstream stops the
+// event (none of the current handlers do, but this is harmless and
+// future-proof).
+document.addEventListener('click', (e) => {
+  try {
+    const target = e && e.target;
+    const playBtn = target && target.closest && target.closest('.ix-play');
+    if (!playBtn) return;
+    const container = playBtn.closest('[data-interactive]');
+    if (!container) return;
+    const name = container.dataset && container.dataset.interactive;
+    if (!name) return;
+    setTimeout(() => {
+      try {
+        if (window.fathom && typeof window.fathom.trackEvent === 'function') {
+          window.fathom.trackEvent('play', {
+            article: location.pathname,
+            interactive: name,
+          });
+        }
+      } catch (_) {
+        // analytics failures must not affect anything
+      }
+    }, 0);
+  } catch (_) {
+    // analytics failures must not affect anything
+  }
+}, { capture: true });

@@ -7,7 +7,7 @@ categories: ui ducking
 tags: ui
 ---
 
-For the past few years, my partner has recorded and edited a niche podcast while I've helped a bit with selecting music and EQ setting. Our workflow was painful: one shared iCloud file, emails of notes coded to timestamps, carefully checking that our changes didn't conflict.
+For the past few years, my partner has recorded and edited a niche podcast while I've helped a bit with selecting music and EQ settings. Our workflow was painful: one shared iCloud file, emails of notes coded to timestamps, carefully checking that our changes didn't conflict.
 
 **Editing audio was like traveling back in time twenty years: no track changes, no comments, and no multiplayer editing.**
 
@@ -20,7 +20,7 @@ So I decided to build the podcast editor we wanted: Ducking. It has a UI purpose
   <figcaption>Screenshot of Ducking in use, with the comments and effects panels open.</figcaption>
 </figure>
 
-How does Ducking major editing podcasts easier? It focuses on providing better tools for the two most-common recurring tasks:
+How does Ducking make editing podcasts easier? It focuses on providing better tools for the two most-common recurring tasks:
 
 - Audio layout: specifying how bits of audio should stick together as things around them change.
 - Navigation: finding the right bit of audio. This happens at a lot of levels of precision, from "roughly where does act 2 start?" down to "exactly which millisecond is the beginning of that background noise?"
@@ -46,7 +46,7 @@ In a traditional <abbr title="Digital Audio Workstation">DAW</abbr>, every clip 
 
 Absolute layout is the right model for writing songs, where material in one measure should stay there. But it's the wrong model for editing spoken word material, where the default is to reflow later material as earlier bits change.
 
-The right layout model is a magnetic timeline, where clips are ordered, not positioned. Each clip's place in time is computed from the lengths of the items before it. So when one clip is added, removed, or  edited, everything after just re-flows automatically.
+The right layout model is a magnetic timeline, where clips are ordered, not positioned. Each clip's place in time is computed from the lengths of the items before it. So when one clip is added, removed, or edited, everything after just re-flows automatically.
 
 Gap clips allow adding explicitly-timed silence when that is needed.
 
@@ -92,11 +92,11 @@ With the connector model, the editor can construct any particular transition, bu
 
 Analyzing the creative decisions that they are trying to make, editors really care about:
 
-- How the fade-in portion of the music corresponds to the outgoing speaking part: making sure it becomes noticable right as the section is reaching a dramatic or summarizing closing beat. 
+- How the fade-in portion of the music corresponds to the outgoing speaking part: making sure it becomes noticaeble right as the section is reaching a dramatic or summarizing closing beat. 
 - How the swell of the music lets the last section gently fade out and how the music corresponds to the emotional or intellectual changes between the two sections.
 - How the fade-out portion of the music ducks back down to fit beneath the next section's spoken content, lingers for a bit, and then fades out smoothly.
 
-So I built a set of layout tools that exactly correspond to those set of creative decisions. Using the pin-based layout system, the editor gets to pick which part of the music should play at the same time as which part of the preceding and following spoken word clips. Then they can independently control the volume or other effects on each track so that they layer properly.
+So I built a set of layout tools that exactly correspond to that set of creative decisions. Using the pin-based layout system, the editor gets to pick which part of the music should play at the same time as which part of the preceding and following spoken word clips. Then they can independently control the volume or other effects on each track so that they layer properly.
 
 <figure>
   <div data-interactive="pins-and-constraints"></div>
@@ -125,8 +125,8 @@ Below is a low-fidelity interactive mockup that shows the core ideas.
 With this high-level UI layout:
 
 - The scrollbar shows a simplified and zoomed-out overview view of the entire project, so the scroll tab's size and position shows us exactly where in the project we are and how far zoomed in we are. In this project, the purple music clips clearly establish the section breaks, allowing us to quickly see we're looking at the transition from the intro into the first main section.
-- The timeline view shows a traditional waveform with editing tools for each track and clip. But its rotated ninety degrees so that it scrolls vertically. This allows us to do detailed <abbr title="Digital Audio Workstation">DAW</abbr> edit operations to the waveform, while benefiting from the natural alignment of the timeline to the transcript.
-- The transcript view is neither an afterthought (like in most DAWs where it just hangs out and has no correspondence to the rest of the editing), nor is it the primary editing surface (like in Descript). It scrolls and zooms together with the timeline so that you can always clearly see the text of the audio being edited. Clicking on words moves the playhead there
+- The timeline view shows a traditional waveform with editing tools for each track and clip. But it's rotated ninety degrees so that it scrolls vertically. This allows us to do detailed <abbr title="Digital Audio Workstation">DAW</abbr> edit operations to the waveform, while benefiting from the natural alignment of the timeline to the transcript.
+- The transcript view is neither an afterthought (like in most DAWs where it just hangs out and has no correspondence to the rest of the editing), nor is it the primary editing surface (like in Descript). It scrolls and zooms together with the timeline so that you can always clearly see the text of the audio being edited. Clicking on words moves the playhead there.
 
 The UI layout establishes a clear correspondence between the overview, the waveforms, the transcript, and any currently-playing audio:
 
@@ -136,7 +136,7 @@ The UI layout establishes a clear correspondence between the overview, the wavef
 
 This same correspondence also ratchets up the power of other tools. When searching for text or looking at the history of edits to the project, those annotations can be overlayed onto all three views. 
 
-As an example, because the overview always shows the entire project, it's a great way to see the overall structure and then orient where search results or tracked changes have happend in the document.
+As an example, because the overview always shows the entire project, it's a great way to see the overall structure and then orient where search results or tracked changes have happened in the document.
 
 <figure>
   <div data-interactive="overview-states"></div>
@@ -156,7 +156,7 @@ Where this post focused on the UI, I plan to publish two future posts on other p
 
 ## About me
 
-I'm Adam Solove, a product engineer who loves to build great products in complicated domains. I'm just wrapping up a six month sabbatical that focused on my local community and some building deeply personal tech experiments like the one above. 
+I'm Adam Solove, a product engineer who loves to build great products in complicated domains. I'm just wrapping up a six month sabbatical that focused on my local community and building some deeply personal tech experiments like the one above. 
 
 I'm starting to look for projects or my next role. If you're building something interesting, please [get in touch](mailto:asolove+recruiting@gmail.com).
 

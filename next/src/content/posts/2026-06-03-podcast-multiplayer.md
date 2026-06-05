@@ -48,11 +48,12 @@ Aside: This post is an experience report, not a tutorial, so I highly recommend 
 
 Automerge provides array operations for safely adding and removing items by index and correctly handles resolving conflicts for concurrent edits. But it doesn't natively support reorderable lists. You can try to model the problem as removing the item at one index and adding it back at another. But the CRDT resolution doesn't guarantee that if two people make overlapping edits, you'll always end up with exactly one copy of each item. Instead, the item might be duplicated, appearing in two different indices in the array.
 
-Martin Kleppman has published [a paper on adding atomic list reorder operations](https://martin.kleppmann.com/papers/list-move-papoc20.pdf) and another, together with Liangrun Da, on ["Extending JSON CRDTs with Move Operations"](https://arxiv.org/abs/2311.14007) but they have not yet been implemented in Automerge. So we're going to have to do it ourselves at the application layer.
+There is a known solution! Martin Kleppman published [a paper on adding atomic list reorder operations](https://martin.kleppmann.com/papers/list-move-papoc20.pdf) and another, together with Liangrun Da, on ["Extending JSON CRDTs with Move Operations"](https://arxiv.org/abs/2311.14007) and there is even a [draft PR](https://github.com/automerge/automerge/pull/706) to add it to Automerge, but without any activity in the past two years.
 
-There is a paper on doing this, but it isn't implemented in Automerge yet. So we'll have to build it at the application layer. The fun way to do this is to expose our own reorder helper, which currently has its own logic, but can one day just call into the Automerge implementation once it exists. 
+So we'll have to build it at the application layer for now, while keeping it nicely contained so we can swap it out for an Automerge built-in version when it becomes available.
 
-Here's what we need to do: as a bunch of inserts and deletes resolve, we need to handle all the possible cases to maintain the invariant that each item appears at most once. And after it has been added to the list, it only disappears if it has been deliberately deleted, not just if it was just reordered.
+Here's what we need to do: our code will handle reorder commands as an insert and a delete. We'll let Automerge distribute and commute those operations to others. And then when we read them back, we'll review the document and handle the weird cases that can occur, to maintain the invariant above.
+
 
 
 

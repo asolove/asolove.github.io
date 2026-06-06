@@ -8,51 +8,93 @@ tags: ui
 draft: true
 ---
 
-Ducking is an online, multiplayer podcast editor that I built just for my partner's podcast. [The previous blog post](/ui/ducking/2026/06/03/better-podcast-ui.html) discussed the UI design and audio layout model that makes it a much more pleasant way to put together an episode.  But those improvements were just about making a single person more effective.
+Nine years ago, I asked: [What are the important problems in UI engineering?](/js/ui/2017/04/21/important-problems-ui-engineering.html#data-synchronization) and real-time multiplayer data synchronization was the most important but hardest one, requiring expertise, corporate spending, and some design tradeoffs to get right.
 
-**What we really wanted was a more collaborative workflow.** It's ridiculous that audio editing is stuck in a twenty-year-old world of single-player desktop apps and emailing files back and forth. We wanted to work together on audio easily as in Google Docs or Figma.
+**Today, you can just build multiplayer user interfaces for hobby projects, on top of tools that are one `npm install` away.** [Automerge](https://automerge.org/) is my favorite: an awesome piece of software for building data models that are local-first, multiplayer, and versioned.
 
-So what really makes Ducking unique is that it supports multiplayer audio editing. We can be working together, one person editing out small chunks, the other reorganizing or changing global EQ settings, and all the changes just sync together without fuss. Plus, we can comment on each other's work, understand and maybe roll back changes together, and never worry about losing our work.
+In this post I'll talk about building a fairly complex and novel UI on top of it: what just works, what extra bits of effort were required, and my advice for getting started.
 
-The software is split into two pieces:
-- managing the raw audio, which is immutable but also stored, transcoded, and cached in complicated ways to improve performance
-- the data describing each project, which is mutable, multi-player, and handled via Automerge.
+<figure>
+  <img src="/making-of/assets/screenshot.png" alt="Screenshot of Ducking — waveform timeline, transcript pane, history panel, two cursors on different clips" />
+  <figcaption>Screenshot of Ducking in use, with the comments and effects panels open.</figcaption>
+</figure>
+
+## Context
+
+I spent the last few months building Ducking, a browser-based, multiplayer audio editor specifically tailored just for my partner's podcast.
+
+[The previous blog post](/ui/ducking/2026/06/03/better-podcast-ui.html) described the unique UI design and audio layout model that makes it a much more pleasant way to put together an episode. But those improvements were just about making a single person more effective. 
+
+**What we really wanted was a more collaborative workflow.** It's ridiculous that audio editing is stuck in a twenty-year-old world of single-player desktop apps and emailing files back and forth. We wanted to work together as easily as in Google Docs or Figma: one of us editing some clips, while the other fixed the transcript or tweaked the EQ settings. Plus we wanted modern collaboration tools: comments, history, and tracked changes so we could try out different ideas and merge them together or roll them back.
 
 ## Audio data
 
-The first challenge with audio on the web is performance. We want a new collaborator to open up the project in their browser and be able to play or edit as soon as possible. But they might need a lot of data.
+Before we can start with multiplayer editing, we need to actually have access to the raw audio. Blobs don't belong in Automerge and need their own handling. Ducking treats the raw audio as the immutable source of truth while processing and cacheing it into useful derived forms. 
 
-A one-hour podcast episode that exports as a 100mb compressed audio file might start life as four hours of high-quality studio recordings and twenty minutes of music, totaling several gigabytes of data. Most of that just never actually makes it to the final cut. Waiting for all that data is unacceptable for web performance.
+We want to get access to this data quickly, so that a new collaborator can start listening to and editing a project within a few seconds after loading the page: faster than starting a desktop app, and much faster than downloading a file via email. But an hour-long podcast episode might rely on roughly a gigabyte of audio: four hours of high-quality studio recordings plus effects and background music.
 
-By fetching just what we need as we need it, the UI can render immediately and audio can be playing within a few seconds. To make that happen, the software needs to do a lot of prep work whenever audio is added to the project:
-
-- Backup the raw original so we can always revert back to that
+So Ducking has to do a lot of work on first upload to get the audio available for fast retrieval. The audio service needs to:
+- Backup the raw original so we can always revert back to it
 - Transcribe any speech in the audio with timecodes so we can show it in the transcript view
-- Slice it into short windows so if we only use 1m of a 40m recording, most clients only have to download that slice.
-- Transcode it into a compressed format so we can play a useful-but-lossy version right away, even as the higher-quality audio is downloading in the background.
+- Generate waveforms for the audio, so we can show it visually even before the full audio has loaded.
+- Slice it into short windows so that if an episode only uses 1m of a 40m recording, most clients only have to download one or two small slices.
+- Transcode the slices into a compressed format so we can play a useful-but-lossy version right away, even as the higher-quality audio is downloading in the background.
 
-Then the UI client has a data layer that can read these bits out of the browser cache or prioritize which to fetch. The browser is now really great at this. Work on the same project several days in a row and several hundred mb of data will be cached and instantly readable locally. Don't visit for a week and it's all just wiped away and the data layer can transparently re-fetch it as needed.
+The UI data layer needs to intelligently follow the user's intention and manage loading both faster versions of immediately-neeeded data and the full-quality versions of only the audio actually used in the project. Fortunately, the browser's IndexDB API is really useful for this kind multi-tiered cacheing and content-addressable storage we need, plus it automatically manages eviction, so the data stays around if you use it and disappears (but can be re-loaded by the client) if you don't. The browser runtime is really amazing these days.
 
-The entire upload-time transcoding and client data layer are good examples of "schleps": fiddly work that is easy to specify but hard to set up, which I might otherwise have skipped until it was annoying, but which I enjoyed handing off to an LLM. I'll talk more about using LLMs to enjoy tackling schleps in the next post.
+With all that storage, processing, and local cacheing out of the way, the rest of the UI can assume fast random access to everything and focus on providing a great UI and editing workflow.
 
-## Automerge document data
+## Automerge documents
 
-[Automerge](https://automerge.org/) is the open-source multiplayer data engine that makes it all possible. It makes sure that changes get saved locally, broadcast to collaborators when the network is available, and merged together the same on everyone's device. It also acts as a version control system, able to describe past changes and roll them back to get to a previous state. 
+Everything other than the raw audio is stored in Automerge documents, largely centered on an individual "project", like a podcast episode.
 
-TODO: Automerge animation?
+_**Aside:** This post is an experience report, not a tutorial, so I highly recommend looking at the [homepage animation](https://automerge.org/), the [docs overview](https://automerge.org/docs/hello/), and at least [the first page of the tutorial](https://automerge.org/docs/tutorial/) to learn more about Automerge. From here on out, I'll assume you have a basic idea of what Automerge is for._
 
-Aside: This post is an experience report, not a tutorial, so I highly recommend looking at the [homepage animation](https://automerge.org/), the [docs overview](https://automerge.org/docs/hello/), and [the tutorial] to learn more about Automerge. From here on out, I'll assume you have a basic idea of what Automerge is for.
+The core pattern of working with Automerge will be familiar to any React developer. You use a hook to fetch some data, render that plain data, and dispatch asynchronous actions to request changes to it, which eventually trigger the UI to re-render. The Automerge-provided actions transparently save the data locally, maintain history, broadcast to collaborators when network is available, receive updates from the network, and resolve conflicts if multiple changes happen in nondeterministic order.
 
+Each Automerge action provides certain invariants and the system as a whole guarantees multiple collaborators will always end up with the same data, though if actions happened concurrently it may not always be the "correct" version by a human user's standards.
+
+This makes it very important to carefully consider the data model, so that:
+- most semantic user actions to correspond to atomic operations provided by Automerge
+- multiple user actions with related intentions have natural automatic resolutions in terms of the invariants of the corresponding Automerge operations
+- stored canonical data is clearly separated from calculated derived data
+
+For many purposes, Automerge just does what you need: it can track changes to deeply-nested JSON objects, modifying properties, adding and removing array elements, etc. 
+
+But it doesn't do _everything_ and its invariants don't magically match your desired semantics without careful design.
+
+Let's look at two examples:
+- One where proper data modeling means Automerge can just solve things for us
+- One example where Automerge doesn't provide the guarantees we need, so we have to build application-layer logic to handle it.
+
+### Better data modeling for safety
+
+In Ducking's data model, a "clip" is a window that plays back part of an underlying, immutable audio source. The clip can be edited in three respects: it can change how it fits into the rest of the project (be reordered, added, deleted from the timeline), it can change the window of the underlying audio that is presented (changing its start and end time), and it can have effects that are applied to the underlying audio when the clip plays.
+
+<figure>
+  <div data-interactive="clip-anatomy"></div>
+  <figcaption>The three layers of a clip — project position, parameters, source recording — share a single time axis. Press Play to watch the output waveform fill in: source amplitude × automation gain, sample by sample.</figcaption>
+</figure>
+
+A fairly basic operation is to change the volume at various times in the clip, in order to match desired levels, or to do minor edits like taking out a background noise or adjust for the speaker moving relative to the microphone. 
+
+In the initial data model, the volume changes were stored on the clip, as a list of times and volume levels relative to the clip's start time. This works perfectly fine until you want to change the portion of the underlying audio that the clip plays. If you add an extra half-second at the front of the clip, the volume changes also move half a second up. But almost all the time, those volume changes are really tied to the underlying audio, not the time in the clip's playback itself. So the naive solution is, when adjusting the start of the clip, to add or substract time to all the volume changes. This works again, but only for single-player mode.
+
+If two concurrent edits to the start time happen, and each one is a bundle of changes to both the clip's start time property and all the properties in the volume settings, there is no causal connection for Automerge to make sure it merges them together correctly.
+
+The solution also isn't that hard: all of the parts of the clip data that deal with transforming the underlying audio should be saved in terms of the time of the raw clip. That way they don't need to be changed when the clip's start and duration change. And changes to the clip's window and the actual EQ settings are independent and mergable.
+
+This isn't a particularly tricky case, but it's one I ran into a few times where the naive data model didn't work well and just needed a bit of backing up and remodeling to get it right.
 
 ### A missing operation: list re-order
 
-Automerge provides array operations for safely adding and removing items by index and correctly handles resolving conflicts for concurrent edits. But it doesn't natively support reorderable lists. You can try to model the problem as removing the item at one index and adding it back at another. But the CRDT resolution doesn't guarantee that if two people make overlapping edits, you'll always end up with exactly one copy of each item. Instead, the item might be duplicated, appearing in two different indices in the array.
+A more complex example is maintaining the magnetic timeline, which is an ordered list of clips to be played. Automerge provides array operations for safely deleting and inserting items by index. But it doesn't provide a safe way to re-order existing items in the list.
 
-There is a known solution! Martin Kleppman published [a paper on adding atomic list reorder operations](https://martin.kleppmann.com/papers/list-move-papoc20.pdf) and another, together with Liangrun Da, on ["Extending JSON CRDTs with Move Operations"](https://arxiv.org/abs/2311.14007) and there is even a [draft PR](https://github.com/automerge/automerge/pull/706) to add it to Automerge, but without any activity in the past two years.
+There is a known solution: Martin Kleppman published [a paper on adding atomic list reorder operations](https://martin.kleppmann.com/papers/list-move-papoc20.pdf) and another, together with Liangrun Da, on ["Extending JSON CRDTs with Move Operations"](https://arxiv.org/abs/2311.14007). There is even a [draft PR](https://github.com/automerge/automerge/pull/706) to add it to Automerge, but without any activity in a while.
 
-So we'll have to build it at the application layer for now, while keeping it nicely contained so we can swap it out for an Automerge built-in version when it becomes available.
+So we're going to have to build a list reorder ourselves. The naive version is to just issue two commands: one to delete the object from its current index and a second to add it back at the destination index. But if we do it that way, the invariants provided by the two operations don't actually combine to the invariant we want: that under lots of concurrent reorders, the object should exist exactly once in the list. Instead, the multiple delete and add commands might combine to result it in existing at multiple places in the list. (They can't, however, result in the item existing nowhere in the array, because multiple deletes of the same item collapse into one tombstone so they can't stack.)
 
-Here's what we need to do: our code will handle reorder commands as an insert and a delete. We'll let Automerge distribute and commute those operations to others. And then when we read them back, we'll review the document and handle the weird cases that can occur, to maintain the invariant above.
+So at our application layer we'll need to build our own list reoder operation. It will use Automerge delete and insert operations for the write side, but attach a new semantic id to the object. Then at read-time, it will scan the list for duplicates of that id and need to select exactly one to survive. Arbitrarily, we'll pick the first one and remove the others: this isn't any more "right" than any other option, but it ensures multiple readers will achieve the same resolution.
 
 
 
@@ -173,3 +215,6 @@ The data model opens doors I haven't walked through yet:
 - **Better diffs.** Visual diffs that highlight structural changes (clip moved, clip retimed) over noise (gain nudged 0.3 dB). Possibly auto-flagging "exceptional" changes — the audio engineer adjusting EQ is routine; the audio engineer moving a clip is worth a second look.
 - **Comments anchored to regions**, using Peritext-style marks so they survive edits to surrounding content.
 - **A real file-sync layer** so collaborators don't need to manually share source recordings.
+
+<link rel="stylesheet" href="/making-of/styles.css">
+<script type="module" src="/making-of/lib/mount.js"></script>

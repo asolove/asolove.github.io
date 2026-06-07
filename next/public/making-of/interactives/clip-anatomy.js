@@ -618,7 +618,7 @@ function drawSourceWaveform(ctx, x, w, y, h, sourceStartSec, color) {
   ctx.strokeStyle = color;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  const stepPx = 2.2;
+  const stepPx = 1.6;
   for (let dx = 0; dx < w; dx += stepPx) {
     const sT = sourceStartSec + dx / PX_PER_SECOND;
     const amp = Math.abs(sourceAmp(sT)) * halfH;
@@ -674,39 +674,58 @@ function drawClipBox(ctx, x, y, w, h, label, c) {
 // === AUDIO DATA ======================================================
 
 // Hand-placed syllable envelope: each entry is a soft bump at source-time
-// `t` with `peak` amplitude and `width` (seconds, ~stddev). The peaks
-// have varied heights and irregular spacing, so the rendered waveform
-// reads as natural speech instead of a periodic blip. The two loud
-// peaks around t=4.4–4.7 sit exactly where the automation duck happens
-// (clip-time 2.5–2.85 = source-time 4.5–4.85), so the duck visibly
-// silences something loud rather than already-quiet audio.
+// `t` with `peak` amplitude and `width` (seconds, ~stddev). Packed
+// densely with overlapping peaks so the rendered waveform reads as
+// continuous "speech with room tone" rather than isolated blips — which
+// makes the duck around clip-time 2.5–2.85 (= source-time 4.5–4.85)
+// visibly punch through *continuous* loud audio instead of just
+// silencing a couple of spikes.
 const SYLLABLES = [
-  { t: -0.6, peak: 0.50, width: 0.18 },
-  { t:  0.1, peak: 0.78, width: 0.24 },
-  { t:  0.7, peak: 0.45, width: 0.16 },
-  { t:  1.3, peak: 0.82, width: 0.26 },
-  { t:  1.9, peak: 0.50, width: 0.18 },
-  { t:  2.5, peak: 0.72, width: 0.22 },
-  { t:  3.1, peak: 0.88, width: 0.28 },
-  { t:  3.7, peak: 0.55, width: 0.18 },
-  { t:  4.4, peak: 0.95, width: 0.22 },   // loud burst — gets ducked
-  { t:  4.75, peak: 0.92, width: 0.18 },  // loud burst — gets ducked
-  { t:  5.3, peak: 0.60, width: 0.20 },
-  { t:  5.85, peak: 0.75, width: 0.22 },
-  { t:  6.5, peak: 0.55, width: 0.18 },
-  { t:  7.2, peak: 0.85, width: 0.28 },
-  { t:  7.9, peak: 0.45, width: 0.18 },
-  { t:  8.6, peak: 0.78, width: 0.24 },
-  { t:  9.4, peak: 0.55, width: 0.20 },
-  { t: 10.2, peak: 0.85, width: 0.26 },
-  { t: 11.0, peak: 0.50, width: 0.18 },
-  { t: 11.8, peak: 0.72, width: 0.22 },
+  { t: -0.7,  peak: 0.62, width: 0.20 },
+  { t: -0.2,  peak: 0.78, width: 0.22 },
+  { t:  0.2,  peak: 0.88, width: 0.24 },
+  { t:  0.6,  peak: 0.58, width: 0.18 },
+  { t:  1.0,  peak: 0.92, width: 0.24 },
+  { t:  1.4,  peak: 0.70, width: 0.20 },
+  { t:  1.8,  peak: 0.85, width: 0.24 },
+  { t:  2.2,  peak: 0.60, width: 0.18 },
+  { t:  2.5,  peak: 0.88, width: 0.24 },
+  { t:  2.9,  peak: 0.96, width: 0.28 },
+  { t:  3.3,  peak: 0.75, width: 0.22 },
+  { t:  3.7,  peak: 0.90, width: 0.26 },
+  { t:  4.1,  peak: 0.85, width: 0.22 },   // start of duck-zone build
+  { t:  4.4,  peak: 1.00, width: 0.24 },   // peak loud — gets ducked
+  { t:  4.7,  peak: 1.00, width: 0.22 },   // peak loud — gets ducked
+  { t:  4.95, peak: 0.96, width: 0.20 },   // tail end of duck-zone
+  { t:  5.25, peak: 0.72, width: 0.20 },
+  { t:  5.6,  peak: 0.90, width: 0.24 },
+  { t:  5.95, peak: 0.78, width: 0.22 },
+  { t:  6.3,  peak: 0.62, width: 0.18 },
+  { t:  6.7,  peak: 0.94, width: 0.26 },
+  { t:  7.1,  peak: 0.72, width: 0.20 },
+  { t:  7.5,  peak: 0.88, width: 0.24 },
+  { t:  7.9,  peak: 0.62, width: 0.18 },
+  { t:  8.3,  peak: 0.80, width: 0.22 },
+  { t:  8.7,  peak: 0.92, width: 0.26 },
+  { t:  9.2,  peak: 0.72, width: 0.20 },
+  { t:  9.7,  peak: 0.85, width: 0.24 },
+  { t: 10.2,  peak: 0.75, width: 0.22 },
+  { t: 10.7,  peak: 0.96, width: 0.26 },
+  { t: 11.2,  peak: 0.62, width: 0.20 },
+  { t: 11.7,  peak: 0.85, width: 0.24 },
 ];
+
+// Baseline ambient amplitude. Real recordings have room tone / breath /
+// background noise — never true silence. Pinning the envelope above 0
+// makes the waveform continuously busy, so when the automation duck
+// fires the contrast is dramatic instead of just "a couple of spikes
+// disappeared."
+const AMBIENT = 0.22;
 
 // Sum the syllable bumps for an envelope, then modulate by a quasi-random
 // high-frequency core (mix of incommensurate sines so it doesn't repeat).
 function sourceAmp(t) {
-  let env = 0;
+  let env = AMBIENT;
   for (const s of SYLLABLES) {
     const dt = (t - s.t) / s.width;
     env += s.peak * Math.exp(-dt * dt * 2.0);

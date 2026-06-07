@@ -21,7 +21,7 @@ In this post I'll talk about building a fairly complex and novel UI on top of it
 
 ## Context
 
-I spent the last few months building Ducking, a browser-based, multiplayer audio editor specifically tailored just for my partner's podcast.
+I spent the last few months building Ducking, a browser-based, multiplayer audio editor tailored for my partner's podcast.
 
 [The previous blog post](/ui/ducking/2026/06/03/better-podcast-ui.html) described the unique UI design and audio layout model that makes it a much more pleasant way to put together an episode. But those improvements were just about making a single person more effective. 
 
@@ -40,7 +40,7 @@ So Ducking has to do a lot of work on first upload to get the audio available fo
 - Slice it into short windows so that if an episode only uses 1m of a 40m recording, most clients only have to download one or two small slices.
 - Transcode the slices into a compressed format so we can play a useful-but-lossy version right away, even as the higher-quality audio is downloading in the background.
 
-The UI data layer needs to intelligently follow the user's intention and manage loading both faster versions of immediately-neeeded data and the full-quality versions of only the audio actually used in the project. Fortunately, the browser's IndexDB API is really useful for this kind multi-tiered cacheing and content-addressable storage we need, plus it automatically manages eviction, so the data stays around if you use it and disappears (but can be re-loaded by the client) if you don't. The browser runtime is really amazing these days.
+The UI data layer needs to intelligently follow the user's intention and manage loading both faster versions of immediately-neeeded data and the full-quality versions of only the audio actually used in the project. Fortunately, the browser's IndexDB API is really useful for the multi-tiered cacheing and content-addressable storage we need, plus it automatically manages eviction, so the data stays around if you use it and disappears if you don't. It bears repeating that the browser runtime is really amazing these days.
 
 With all that storage, processing, and local cacheing out of the way, the rest of the UI can assume fast random access to everything and focus on providing a great UI and editing workflow.
 
@@ -52,68 +52,80 @@ _**Aside:** This post is an experience report, not a tutorial, so I highly recom
 
 The core pattern of working with Automerge will be familiar to any React developer. You use a hook to fetch some data, render that plain data, and dispatch asynchronous actions to request changes to it, which eventually trigger the UI to re-render. The Automerge-provided actions transparently save the data locally, maintain history, broadcast to collaborators when network is available, receive updates from the network, and resolve conflicts if multiple changes happen in nondeterministic order.
 
+<figure>
+  <div data-interactive="automerge-cycle"></div>
+  <figcaption>One action through the system. A local "trim" dispatches into the doc, which simultaneously persists, appends to history, and broadcasts. Then a peer's change arrives, merges, and the UI re-renders. Green = your changes, gold = theirs.</figcaption>
+</figure>
+
 Each Automerge action provides certain invariants and the system as a whole guarantees multiple collaborators will always end up with the same data, though if actions happened concurrently it may not always be the "correct" version by a human user's standards.
 
 This makes it very important to carefully consider the data model, so that:
-- most semantic user actions to correspond to atomic operations provided by Automerge
-- multiple user actions with related intentions have natural automatic resolutions in terms of the invariants of the corresponding Automerge operations
+- most semantic user actions correspond to atomic operations provided by Automerge
+- multiple user actions on related data have natural resolutions in terms of the invariants of the corresponding Automerge operations
 - stored canonical data is clearly separated from calculated derived data
 
-For many purposes, Automerge just does what you need: it can track changes to deeply-nested JSON objects, modifying properties, adding and removing array elements, etc. 
+For simple purposes, Automerge just does what you need: it can track changes to deeply-nested JSON data where you want to modify object properties or add and remove array items.
 
-But it doesn't do _everything_ and its invariants don't magically match your desired semantics without careful design.
+But it Automerge doesn't handle _everything_ and its invariants don't always match your desired semantics without careful design. Let's look at two examples:
+- A case where improving data modeling means Automerge can just solve our problem
+- Another case where Automerge doesn't provide the guarantees we need, so we have to build application-layer logic to handle it.
 
-Let's look at two examples:
-- One where proper data modeling means Automerge can just solve things for us
-- One example where Automerge doesn't provide the guarantees we need, so we have to build application-layer logic to handle it.
+### Data modeling for multiplayer
 
-### Better data modeling for safety
+In Ducking's data model, a "clip" is a window that plays back part of an underlying, immutable audio source. It knows which chunk of audio to start with, can apply effects to the audio when it plays, and then holds an appropriate amount of space in the project timeline.
 
-In Ducking's data model, a "clip" is a window that plays back part of an underlying, immutable audio source. The clip can be edited in three respects: it can change how it fits into the rest of the project (be reordered, added, deleted from the timeline), it can change the window of the underlying audio that is presented (changing its start and end time), and it can have effects that are applied to the underlying audio when the clip plays.
+One basic effect is for the clip to scale the volume of the underlying audio over time, either to cross-fade it with other audio or to remove a brief unwanted noise in the recording.
 
 <figure>
   <div data-interactive="clip-anatomy"></div>
   <figcaption>The three layers of a clip — project position, parameters, source recording — share a single time axis. Press Play to watch the output waveform fill in: source amplitude × automation gain, sample by sample.</figcaption>
 </figure>
 
-A fairly basic operation is to change the volume at various times in the clip, in order to match desired levels, or to do minor edits like taking out a background noise or adjust for the speaker moving relative to the microphone. 
+Initially, the clip stored a list of time-indexed volume levels, with the times being relative to the start of the clip. That strategy worked fine until the user changed the clip's window: if the clip's audio window is dragged to start half a second earlier in the recording, then all the volume changes also move half a second earlier. So I wrote some code to update the effect timestamps when the clip's start time changed. This worked fine in single-player mode, but broke in multiplayer.
 
-In the initial data model, the volume changes were stored on the clip, as a list of times and volume levels relative to the clip's start time. This works perfectly fine until you want to change the portion of the underlying audio that the clip plays. If you add an extra half-second at the front of the clip, the volume changes also move half a second up. But almost all the time, those volume changes are really tied to the underlying audio, not the time in the clip's playback itself. So the naive solution is, when adjusting the start of the clip, to add or substract time to all the volume changes. This works again, but only for single-player mode.
+If two concurrent edits to the start time happen, and each one is a bundle of changes to both the clip's start time property and all the timestamps in the volume automation, there is no causal connection for Automerge to make sure it merges them together reasonably. So it will do its thing and make sure all users get the _same_ end result, but it may be an unexpected jumble.
 
-If two concurrent edits to the start time happen, and each one is a bundle of changes to both the clip's start time property and all the properties in the volume settings, there is no causal connection for Automerge to make sure it merges them together correctly.
+This is a typical example of where Automerge will run into problems: one semantic user action is trying to update lots of pieces of persisted data in an atomic way. 
 
-The solution also isn't that hard: all of the parts of the clip data that deal with transforming the underlying audio should be saved in terms of the time of the raw clip. That way they don't need to be changed when the clip's start and duration change. And changes to the clip's window and the actual EQ settings are independent and mergable.
+The solution also isn't that hard: all of the parts of the clip data that deal with transforming the underlying audio should be saved in terms of the timeframe of the underlying audio clip. That way they don't need to be updated when the clip's start and duration change. As a result, changes to the clip's window and to its effects settings are independent and predictably mergeable.
 
-This isn't a particularly tricky case, but it's one I ran into a few times where the naive data model didn't work well and just needed a bit of backing up and remodeling to get it right.
+This isn't a particularly tricky case, but it's a pattern I ran into a few times before adjusting to the idea that I would be doing a lot of data migrations. In a single-player UI, it often makes sense to leave a previous data model in place when adding new features and just do some extra calculations at write time to make it work. With multi-player UIs, it is far more common to migrate the data model to keep all the persisted data orthogonal. Often that means updating the shape of persisted data and adding new read-time derived data calculations to satisfy the existing contracts.
+
+But the key is: you will need to migrate the shape of data models, no matter how careful you are at first. So if I were starting from scratch on an Automerge project, I'd bake in time to write a data migration early on, just to get used to the pattern and not be scared of the first big one.
 
 ### A missing operation: list re-order
 
-A more complex example is maintaining the magnetic timeline, which is an ordered list of clips to be played. Automerge provides array operations for safely deleting and inserting items by index. But it doesn't provide a safe way to re-order existing items in the list.
+Now we know that sometimes we'll have to massage our data model so that user actions naturally map to Automerge's operations. But what happens when Automerge just doesn't provide an operation we need?
 
-There is a known solution: Martin Kleppman published [a paper on adding atomic list reorder operations](https://martin.kleppmann.com/papers/list-move-papoc20.pdf) and another, together with Liangrun Da, on ["Extending JSON CRDTs with Move Operations"](https://arxiv.org/abs/2311.14007). There is even a [draft PR](https://github.com/automerge/automerge/pull/706) to add it to Automerge, but without any activity in a while.
+Sometimes we have to write application-layer code to provide stronger invariants that Automerge gives us.
 
-So we're going to have to build a list reorder ourselves. The naive version is to just issue two commands: one to delete the object from its current index and a second to add it back at the destination index. But if we do it that way, the invariants provided by the two operations don't actually combine to the invariant we want: that under lots of concurrent reorders, the object should exist exactly once in the list. Instead, the multiple delete and add commands might combine to result it in existing at multiple places in the list. (They can't, however, result in the item existing nowhere in the array, because multiple deletes of the same item collapse into one tombstone so they can't stack.)
+I ran into this case when implementing Ducking's magnetic timeline, which is an ordered list of clips to be played. While Automerge provides array operations for removing and inserting items by index, it doesn't provide an operation to atomically re-order existing items in the list.
 
-So at our application layer we'll need to build our own list reoder operation. It will use Automerge delete and insert operations for the write side, but attach a new semantic id to the object. Then at read-time, it will scan the list for duplicates of that id and need to select exactly one to survive. Arbitrarily, we'll pick the first one and remove the others: this isn't any more "right" than any other option, but it ensures multiple readers will achieve the same resolution.
+There is a known solution: Martin Kleppman published [a paper on adding atomic list reorder operations](https://martin.kleppmann.com/papers/list-move-papoc20.pdf) and another, together with Liangrun Da, on ["Extending JSON CRDTs with Move Operations"](https://arxiv.org/abs/2311.14007). There is even a [draft PR](https://github.com/automerge/automerge/pull/706) to add it to Automerge, but it hasn't been merged yet.
+
+The naive version of list reorder is to just delete the object from its current index and then add it back at the destination index. But the invariants provided by those two operations don't actually combine to the invariant I wanted: that under lots of concurrent reorders, the object should exist exactly once in the list. Instead, the multiple delete and add commands might combine to result in it existing at multiple places in the list. (They can't, however, result in the item existing nowhere in the array, because multiple deletes of the same item collapse into one tombstone.)
+
+To provide that invariant at the application layer, I built my own list reorder operation. First, the clip gets a semantic id when it is inserted into the timeline. Then when a reorder happens, it triggers the delete and insert operations, as above. But at read time, the application scans for duplicates of the semantic id and arbitrarily picks that the first one will survive and others will be ignored. This ensures the object is only in the timeline once and that multiple readers always reach the same conclusion about the end state.
+
+### History management and Undo/redo
 
 
+- Need to undo local not non-local (diagram to show local/remove interleaving?)
+- Batching edits and when to commit changes.
 
+### Text and marks
 
+One of Automerge's best features is rich text, the original use-case for multiplayer editing. I highly recommend reading the [Peritext paper](https://www.inkandswitch.com/peritext/), which has a bunch of animations to explain the challenges of both rich text and building multiplayer software in general.
 
-Automerge
-- Overview: work on document like it's local, but changes get sent and received from other editors. Automerge ensures everyone ends up with same state (diagram? refer to site?)
-- Data modeling is key: Automerge gets to "same" state, but not necessarily a good one.
-  - Model the data orthogonally so almost all changes are separate and just work together
-  - Example: volume automation tied to recording time, not clip time
-  - Lots of derived state from the core data model (diagram?)
-- Undo/Redo handling: local v remote, batching, interaction with history, alternatives (takes, branches)
-  - Diagram to show local/remote interleaving
-  - Diagram of batching
-- List move (from paper)
-  - Diagram of algorithm, maybe code
-- Text marks are great!
-  - Diagram of using text marks for transcript alignment with text edits
+My favorite part of Peritext is "marks", annotations that apply to ranges of text, even as the text itself is edited. Marks are most commonly used for text formatting like bold or italic. But you can also create your own types of marks specific to your application.
 
+I used a custom mark type to track the timestamps of words in the transcript, while still allowing editors to edit the text if the automatic transcription got it wrong. Ducking saves the transcript into Automerge as a richtext object where each word has a mark with its timing information. If there is a small typo and an editor needs to fix just that word, the mark stays in place and all the timing information is retained. If the transcript is wrong and a whole sentence needs to get fixed, some of the intermediate marks get collapsed, but the marks at the beginning and end of the sentence are retained and so we have at least rough timing information.
+
+I used another custom mark type to track regions in the transcript that were the subject of comments. Because a mark datum has to be a simple value (a number or string) and doesn't get multiplayer merged, the comment thread itself was stored elsewhere in the document and the mark just held a pointer id for it.
+
+It's amazing to have a reliable platform on top of which to build application-layer features that can just assume that everything will work fine with arbitrary richtext and distributed editing.
+
+Having Peritext and Automerge handle the richtext handling and distributed editing is amazing. Being able to build application-level behaviors on top of the mark primitive makes 
 
 ## FAQ
 
@@ -131,81 +143,16 @@ Plus, once the ~3s browser startup time for joining a project got working, it wa
 
 I (joyfully!) don't know. That's not a _no_, it's just that I literally can't tell you.
 
-Fifteen years ago multiplayer real-time editing without conflicts was magic. Ten years ago, I was [writing about it as a major unsolved problem in UI engineering](http://localhost:4321/js/ui/2017/04/21/important-problems-ui-engineering.html). Even five years ago, there were known solutions, but they required a funded team and expertise in several different disciplines to be worthwhile to build.
+When I started in the industry, multiplayer real-time editing without conflicts was magic. Tean years ago, there were known solutions for specific problems, but they required a funded team and expertise in several different disciplines to be worthwhile to build.
 
-So for now, I'm just reveling that this thing works at small scales. I can download a dependency, plug it in, and have real-time collaboration with me and a handful of friends. There is something amazing about what used to be indsutry-grade magic now being freely and easily available to purpose-built tiny apps.
+So for now, I'm just reveling that this stuff is available at small scales. I can download a dependency, build my UI in a mostly straightforward way, and have real-time collaboration with a handful of friends.
+
+There is something amazing about what used to be industrial-grade magic now being freely and easily available to purpose-built tiny apps.
+
+---
 
 
-
-# Old stuff from Claude to maybe use
-
-## Building multiplayer software with Automerge
-
-**A magnetic timeline is structurally identical to a text document.**
-
-Clips are an ordered list. A clip's playback position is the sum of all preceding clips' durations — exactly the way a character's position in a string is the sum of preceding character widths. There is no `startTime` field; position is derived. Delete a clip and the rest close up, the way deleting a character does. Insert a clip and the rest shift right.
-
-Once you see this, a lot of things stop being audio problems and start being text problems with different rendering:
-
-- **Multiplayer collaboration** is whatever a multiplayer text editor does. The same CRDT that runs Google Docs runs the timeline.
-- **History and revert** look like git for paragraphs of audio.
-- **The transcript view and the waveform view** are the same document at different zoom levels.
-- **Track changes** for audio becomes possible — and obvious — for the first time.
-
-I didn't invent the magnetic timeline (Final Cut Pro X did, in 2011, and Hindenburg uses it for podcasts). I didn't invent the underlying data structures either; I'll credit them properly below. The contribution is noticing that these two worlds line up, pointing them at spoken-word audio, and seeing what falls out.
-
-### Multiplayer
-
-Because clips are an ordered list inside an Automerge document, two browser tabs editing the same project converge with no special handling. One person tweaks the EQ on clip 12 while the other deletes clip 4 and trims clip 17. Both edits apply. Positions recompute. Nobody steps on anybody.
-
-(20–30 second video: two cursors on the same project, one trimming, one adjusting gain, both visible.)
-
-The interesting cases are the failure modes. The classical sequence-CRDT problem — two users concurrently moving the same clip causes a duplication — applies here exactly as Kleppmann described it. Automerge doesn't ship a native list-move operation yet, so I wrote a small reconciliation layer on top: after each merge, scan for duplicate clip IDs and orphaned property edits, then collapse them. It's the algorithm from "Moving Elements in List CRDTs" implemented at the application layer. When Automerge ships move, this code can be deleted.
-
-### Transcript as timeline
-
-The transcript pane and the waveform pane are not two views of two data structures. They are two renderings of one ordered list. Clicking a word in the transcript seeks the playhead. Scrolling the transcript scrolls the waveform. Searching for "actually" highlights matches in both, including in the minimap.
-
-(Screenshot: transcript pane with playhead, waveform synced, search highlights in both.)
-
-A transcript-style editor like Descript already does click-to-seek, but it's a transcript that drives an audio pipeline underneath. Here the relationship is symmetric: there is one document, and the two surfaces are equally first-class. You can edit on either side and the other follows.
-
-### History and revert
-
-Because the document is a CRDT with a full change history, "what changed in the last hour" is a query, not a feature you have to engineer separately. The history panel groups recent changes into sessions, labels them by who did what (trims, gain changes, EQ tweaks, automation moves), and lets you revert any session — or any named checkpoint — without losing later work. The revert itself is just another change in the history; you can undo a revert.
-
-(Screenshot: history panel with grouped sessions, two collaborators' edits color-coded, revert button.)
-
-This is the part that most resembles version control for prose. It's also the part that wasn't possible before the underlying data model was right.
-
-## Prior art (where the ideas come from)
-
-Almost everything load-bearing in the data model was figured out by other people. The honest accounting:
-
-- **Magnetic timelines** — Final Cut Pro X (2011); Hindenburg and others for podcasts. The interaction model is theirs.
-- **List CRDTs and the move-operation problem** — Martin Kleppmann, "[Moving Elements in List CRDTs](https://martin.kleppmann.com/papers/list-move-papoc20.pdf)" (PaPoC 2020), and Da & Kleppmann, "[Extending JSON CRDTs with Move Operations](https://arxiv.org/pdf/2311.14007)" (2024). My reorder reconciliation is their algorithm at the application layer.
-- **Fugue and non-interleaving** — Weidner & Kleppmann, "[The Art of the Fugue](https://arxiv.org/abs/2305.00583)" (2023). Not currently used (Automerge doesn't ship Fugue) but relevant to anyone considering the same architecture.
-- **Automerge** — the CRDT runtime, with Peritext-style marks, columnar storage, and the React hooks I built against.
 - **Patchwork** — Ink & Switch's [history-and-diffs-on-Automerge work](https://www.inkandswitch.com/patchwork/notebook/08/) is directly upstream of the history panel design.
-- **Peritext** — Ink & Switch's [rich-text CRDT with marks](https://www.inkandswitch.com/peritext/), which is the right model for any annotation layer (comments, regions, color-coding) on top of the timeline.
-
-What's new, as far as I can tell after looking: nobody had pointed these primitives at spoken-word audio editing and asked what the workflow looks like when you do.
-
-## What it felt like to build
-
-I built this mostly with Claude as a pair, on a Daylight Computer, on a porch, ssh'd into a Hetzner box. A few notes from six months of that.
-
-**A sixth sense for tokens.** Programmers who work this way develop a felt sense for how many agents are running, how close they are to the daily limit, how warm the cache is. It pulls you toward typing more prompts to avoid wasting capacity you've already paid for. McLuhan's "the medium is the message" lands hard here: the tool changes the rhythm of the work before it changes the work itself.
-
-**"LLMs turn every IC into an EM."** Partly true — you do more decisions, more delegation, more reviewing things you didn't write. But the bigger shift is attention. You spend the day context-switching across half-finished threads, providing input on decisions whose details you only half-understand. That's not seniority. It's a new kind of fatigue.
-
-**Set guardrails first.** Performance budget, accessibility audit, dependency review, and lint rules went in before the first feature. A senior human engineer might keep these in their head; Claude won't. The guardrails are not enough on their own — a11y in particular can't be proven by static analysis — but the things they do catch, they catch every time.
-
-**Watch for surprising failure modes.** I expected to audit dependencies periodically. I did not expect Claude to deliberately pin packages to versions with known CVEs (following stale training data, probably). I added a step for manually reviewing any pinned second-order dependencies. Glad to have learned this in private.
-
-**The vendor question is real.** Started on Claude 4. Got better with 4.5 and 4.6 — not just code quality, but its judgment about whether a prompt was over-, under-, or properly constrained. Also went from comfortably under the $20/mo plan to bumping the $100/mo plan in eight months. If I were running a business, I would not bet on the price/capability curve staying where it is. The hedge most people suggest — local open-source models for authoring, frontier models for planning and review — is worth exploring.
-
-**Sketching beats prototyping.** A surprising amount of the work was hand-drawn or text-described before any code. Sketching is what you do when you're trying to learn something; prototyping is what you do when you already know. Mixing them up wastes a lot of model tokens.
 
 ## What's next
 

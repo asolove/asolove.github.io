@@ -10,7 +10,7 @@ draft: false
 
 Nine years ago, I wrote [What are the important problems in UI engineering?](/js/ui/2017/04/21/important-problems-ui-engineering.html#data-synchronization) Real-time multiplayer data synchronization was the most important but hardest one, requiring expertise, corporate spending, and some design tradeoffs to get right.
 
-**Today, you can just build multiplayer user interfaces for hobby projects, on top of tools that are one `npm install` away.** My favorite is [Automerge](https://automerge.org/), an awesome piece of software for building data models that are local-first, multiplayer-safe, and versioned.
+**Today, you can just build multiplayer user interfaces for hobby projects, using tools that are one `npm install` away.** My favorite is [Automerge](https://automerge.org/), an awesome piece of software for building data models that are local-first, multiplayer-safe, and versioned.
 
 This post describes building a fairly novel UI on top of Automerge:
 - what just works
@@ -220,6 +220,14 @@ There is something amazing about what used to be industrial-grade magic now bein
 As for security, for now Ducking is protected through limited network access and then an authorization step when creating the websocket connection to the Automerge server. Users can't discover or edit projects that haven't specifically invited them. Attributing edits and comments to users happens in a way that is only partly secure and depends on my friends not being jerks. It would take some careful design work to add finer-grained permissions, such as comment but not edit, edit only part of a project, or discoverability.
 
 The folks at Ink & Switch are working on [Keyhive](https://www.inkandswitch.com/keyhive/notebook/), which provides a cryptographically-secure capability-based access control model. That will be super cool and make it easier to share Automerge apps publicly with untrusted users, but it isn't ready yet.
+
+### Is Automerge better than ... ?
+
+Other solutions in this space include [Yjs](https://github.com/yjs/yjs). I cannot help you evaluate which one is right for you. The timeless advice is: think hard about your problem, do some back-of-the-napkin math about what limits you might run into, try building prototypes using several alternatives, and be honest with yourself about whether maybe the problem you have isn't very hard and doesn't need the newest, fanciest solution.
+
+As for Ducking, a quick prototype and browsing the docs made it clear that Automerge was mature and performant enough for my use-case.
+
+More importantly, the Ink & Switch ecosystem calls to me aesthetically. I like that Automerge isn't just a sync and versioning engine, but instead one part of a larger vision to make software more secure, collaborative, malleable, fun, and personal. I want Keyhive and other of their projects to succeed. I hope that their work will enable the proliferation of small but magical software built just for a few people.
 
 ---
 

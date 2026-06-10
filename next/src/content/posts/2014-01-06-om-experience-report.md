@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Om experience report"
-description: "First impressions of David Nolen’s Om — a thin ClojureScript wrapper over React — after building a small map-styling app over Christmas."
+description: "First impressions of David Nolen’s Om — a thin ClojureScript wrapper over React — after building a small map-styling app over Christmas"
 date:   2014-01-06 08:00:00
 categories: js clojure
 tags: ui clojurescript functional

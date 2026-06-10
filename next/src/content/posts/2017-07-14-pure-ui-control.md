@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Pure UI control"
-description: "If Pure UI gave teams a shared language for display states, what’s the same idea for an interface’s behavior? A case for making control state explicit."
+description: "If Pure UI gave teams a shared language for display states, what’s the same idea for an interface’s behavior — a case for making control state explicit"
 date: 2017-07-14 09:00:00
 categories: js ui
 tags: ui

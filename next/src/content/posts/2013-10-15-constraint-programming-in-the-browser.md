@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Constraint programming in the browser"
-description: "My JSConf 2013 talk on Cassowary in the browser, plus a short reading list on constraint solvers for UI."
+description: "My JSConf 2013 talk on Cassowary in the browser, plus a short reading list on constraint solvers for UI"
 date:   2013-10-15 08:00:00
 categories: js
 tags: ui

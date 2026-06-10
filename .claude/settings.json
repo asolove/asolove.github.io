@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kill 58091 68966 58078 68959)",
+      "Bash(PATH=/opt/homebrew/bin:__TRACKED_VAR__ /opt/homebrew/bin/pnpm --dir /Users/asolove/src/asolove.github.io/next dev)",
+      "Bash(which node; ls /usr/local/bin/node /opt/homebrew/bin/node 2>/dev/null)",
+      "Read(//usr/local/bin/**)",
+      "Bash(PATH=/usr/local/bin:__TRACKED_VAR__ /usr/local/bin/node --input-type=module -e 'import\\('\\\\''/Users/asolove/src/asolove.github.io/next/public/making-of/interactives/transcript-marks.js'\\\\''\\).then\\(\\(\\) => console.log\\('\\\\''OK'\\\\''\\)\\).catch\\(e => console.error\\('\\\\''ERROR:'\\\\'', e.message\\)\\)')"
+    ]
+  }
+}

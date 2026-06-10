@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Learning about learning"
-description: "Notes on study skills, meta-cognition, and how organizations learn — distilled from a vacation spent reading about learning."
+description: "Notes on study skills, meta-cognition, and how organizations learn — distilled from a vacation spent reading about learning"
 date: 2018-01-23 09:00:00
 categories: learning
 tags: craft

@@ -58,7 +58,7 @@ export default defineConfig({
       remarkFigureNumbers,
     ],
     shikiConfig: {
-      theme: 'vitesse-light',
+      theme: 'catppuccin-mocha',
       wrap: false,
     },
   },

@@ -346,6 +346,15 @@ if (toggle) {
 </script>
 
 <style>
+/* The body's first H2 ("Talks & essays") is 1.6rem with a tall line
+   box; the siderail's H3 ("Contents") is 0.7rem with a shorter one.
+   At the row's top edge, the two border-bottom rules end up at
+   different y because the taller box pushes its rule down further.
+   Nudge the siderail H3 down so both rules sit on the same baseline. */
+.siderail h3:first-child {
+  margin-top: 0.55rem;
+}
+
 /* Positioning paragraph under the standfirst */
 .titleblock .positioning {
   font-family: var(--sans);

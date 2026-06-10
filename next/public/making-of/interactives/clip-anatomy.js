@@ -60,7 +60,7 @@ const AUTOMATION = [
 // === VISUAL CONSTANTS ================================================
 
 const W              = 720;
-const H              = 420;
+const H              = 320;
 const LEFT_PAD       = 30;
 const PX_PER_SECOND  = 60;
 
@@ -97,7 +97,10 @@ let LANE_GAP    = 104;    // vertical distance between adjacent lane tops
 // adjust spacing live. recomputeLayout() rebuilds them.
 let PROJECT_LANE_Y, CLIP_LANE_Y, SOURCE_LANE_Y;
 function recomputeLayout() {
-  PROJECT_LANE_Y = 60;
+  // First lane sits 30px below the top of the dark stage — enough room
+  // for the HTML lane label above it without leaving a large empty
+  // gap. Canvas H is sized to the source lane's tilted extent below.
+  PROJECT_LANE_Y = 30;
   CLIP_LANE_Y    = PROJECT_LANE_Y + LANE_GAP;
   SOURCE_LANE_Y  = PROJECT_LANE_Y + 2 * LANE_GAP;
 }

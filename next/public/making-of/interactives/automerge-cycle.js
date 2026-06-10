@@ -1,24 +1,24 @@
-// Automerge as a React-like data layer: the UI subscribes to the
-// document and dispatches actions; everything else (local persistence,
-// history, broadcast, receive, merge) happens transparently behind the
-// doc. The figure traces the lifecycle of one *local* action and then
-// one *remote* action, lighting up each side effect as it fires.
+// Automerge as a React-like data layer.
 //
 // Three columns:
-//   APP UI       — a tiny editor showing a row of clips (the rendered
-//                  view of the doc's data)
-//   AUTOMERGE    — the document itself, the hub everything flows through
-//   SIDE EFFECTS — three cards stacked: local storage, history, peers
-//                  (with a peers card that both sends and receives)
+//   COMPONENT — a tiny "React component" sketch: a useDoc() hook, a
+//               rendered value, and an "edit title" button.
+//   AUTOMERGE — the document, holding one value (the project title).
+//   SIDE EFFECTS — three icons: save, history, peers (network).
 //
-// Press Play to watch one full round-trip:
-//   1. User clicks a "trim" handle on a clip in the UI.
-//   2. Action dispatches to the doc.
-//   3. Doc applies the change, simultaneously: saves locally, appends
-//      to history, broadcasts to peers.
-//   4. UI re-renders with the trimmed clip.
-//   5. A peer's change arrives (delete a different clip).
-//   6. Doc merges it, fires its own side effects, UI re-renders.
+// The animation runs the SAME loop twice, with the same arrows in the
+// same positions — only the source of the change and the color differ.
+//
+//   LOCAL CYCLE (green):
+//     The button glows → dispatch flies to the doc → doc's value
+//     updates → save/history/broadcast fan out → subscribe flies back
+//     → component re-renders with the new title.
+//
+//   REMOTE CYCLE (gold):
+//     The network icon glows with a "← from a collaborator" label →
+//     incoming arrow flies INTO the doc → doc's value updates again →
+//     save/history fan out (no re-broadcast) → subscribe → component
+//     re-renders. You didn't dispatch anything; the data just changed.
 
 import { setupCanvas } from '../lib/timeline-render.js';
 
@@ -28,38 +28,53 @@ const W = 720;
 const H = 420;
 const TOP_LABEL_Y = 18;
 
-// UI card (left column)
-const UI_X = 30, UI_Y = 70, UI_W = 200, UI_H = 280;
+// Component card (left)
+const COMP_X = 30;
+const COMP_Y = 70;
+const COMP_W = 220;
+const COMP_H = 280;
+const COMP_PAD = 14;
 
-// Doc card (middle column)
-const DOC_X = 260, DOC_Y = 60, DOC_W = 210, DOC_H = 300;
+// Doc card (center)
+const DOC_X = 275;
+const DOC_Y = 70;
+const DOC_W = 195;
+const DOC_H = 280;
 
-// Right column cards
-const RIGHT_X = 510, RIGHT_W = 180;
-const STORAGE_Y = 60,  STORAGE_H = 78;
-const HISTORY_Y = 148, HISTORY_H = 90;
-const PEERS_Y   = 248, PEERS_H   = 120;
+// Side effects (right)
+const SIDE_X = 495;
+const SIDE_W = 200;
+const SIDE_H = 80;
+const SIDE_GAP = 12;
+const SAVE_Y = COMP_Y;
+const HIST_Y = SAVE_Y + SIDE_H + SIDE_GAP;
+const NET_Y  = HIST_Y + SIDE_H + SIDE_GAP;
 
-// === UI MODEL ========================================================
+// Content positions inside the component card
+const CODE_LINE_Y    = COMP_Y + 34;
+const VALUE_LABEL_Y  = COMP_Y + 64;
+const VALUE_BOX_Y    = COMP_Y + 74;
+const VALUE_BOX_H    = 78;
+const BUTTON_Y       = COMP_Y + 180;
+const BUTTON_H       = 38;
+const HELPER_Y       = COMP_Y + COMP_H - 16;
 
-// 4 clips in a row in the UI / doc. The interactive shows a local
-// "trim" of clip 3 (index 2) shrinking it, then a remote "delete" of
-// clip 2 (index 1) removing it.
+// Content positions inside the doc card
+const DOC_HEADER_Y     = DOC_Y + 30;
+const DOC_SUBTITLE_Y   = DOC_Y + 48;
+const DOC_FIELD_KEY_Y  = DOC_Y + 102;
+const DOC_FIELD_VAL_Y  = DOC_Y + 132;
+const DOC_COUNTER_Y    = DOC_Y + DOC_H - 16;
 
-const UI_PAD = 10;
-const CLIPS_ROW_Y = UI_Y + 90;
-const CLIPS_ROW_H = 56;
-const CLIPS_ROW_X = UI_X + UI_PAD;
-const CLIPS_ROW_W = UI_W - UI_PAD * 2;
-const CLIP_GAP    = 4;
+// === STATE: THE VALUE ================================================
+//
+// The animation mutates one piece of data — the title of the project.
+// "Untitled" at idle, "Episode 4" after the local edit, "Episode 4:
+// Coral Bleaching" after the remote collaborator's addition.
 
-// Same clip row, drawn smaller, inside the doc card.
-const DOC_CLIPS_ROW_Y = DOC_Y + 130;
-const DOC_CLIPS_ROW_H = 50;
-const DOC_CLIPS_ROW_X = DOC_X + 16;
-const DOC_CLIPS_ROW_W = DOC_W - 32;
-
-const CLIP_LABELS = ['c1', 'c2', 'c3', 'c4'];
+const TITLE_INITIAL = '"Untitled"';
+const TITLE_LOCAL   = '"Episode 4"';
+const TITLE_REMOTE  = '"Episode 4: Coral Bleaching"';
 
 // === COLORS ==========================================================
 
@@ -76,53 +91,55 @@ const COLORS = {
   arrow:        'rgba(255, 255, 255, 0.18)',
   arrowText:    'rgba(255, 255, 255, 0.45)',
 
-  // Local user changes use green; remote (peer) changes use gold so
-  // the viewer can distinguish "your" actions from "theirs".
   local:        '#5ec88a',
   localGlow:    'rgba(94, 200, 138, 0.85)',
-  localSoft:    'rgba(94, 200, 138, 0.18)',
-
+  localSoft:    'rgba(94, 200, 138, 0.20)',
   remote:       '#f5d77a',
   remoteGlow:   'rgba(245, 215, 122, 0.90)',
-  remoteSoft:   'rgba(245, 215, 122, 0.18)',
+  remoteSoft:   'rgba(245, 215, 122, 0.20)',
 
-  // Doc accent
   docStroke:    'rgba(255, 255, 255, 0.22)',
   docFill:      'rgba(255, 255, 255, 0.03)',
   docTitle:     '#e2e6ec',
 
-  // Clip rendering inside the UI / doc data row.
-  clipFill:     'rgba(94, 200, 138, 0.18)',
-  clipFillTop:  'rgba(94, 200, 138, 0.40)',
-  clipStroke:   'rgba(94, 200, 138, 0.70)',
-  clipText:     '#e6f3ec',
+  code:         '#9aa1a8',
+  codeBg:       'rgba(255, 255, 255, 0.025)',
 
-  // Icons
+  valueBoxBg:     'rgba(94, 200, 138, 0.06)',
+  valueBoxBorder: 'rgba(94, 200, 138, 0.22)',
+  valueText:      '#e6f3ec',
+  valueLabel:     '#7a7e85',
+
+  buttonBg:     'rgba(94, 200, 138, 0.10)',
+  buttonBorder: 'rgba(94, 200, 138, 0.45)',
+  buttonText:   '#e6f3ec',
+
   iconNeutral:  '#9aa1a8',
 };
 
 // === ANIMATION SCHEDULE (ms) =========================================
 
 const STAGES = {
-  // --- local action lifecycle ---
-  uiClick:      { start:  700, end: 1000 },   // trim-handle pulses
-  dispatch:     { start: 1000, end: 1450 },   // arrow UI → Doc
-  docApplyL:    { start: 1450, end: 1800 },   // doc data flashes
-  fxSaveL:      { start: 1800, end: 2250 },   // doc → storage arrow + storage card glow
-  fxHistoryL:   { start: 1800, end: 2250 },   // doc → history (new tick)
-  fxBroadcastL: { start: 1800, end: 2250 },   // doc → peers
-  subscribeL:   { start: 2200, end: 2700 },   // doc → ui arrow
-  uiTrim:       { start: 2400, end: 2900 },   // clip 3 shrinks
+  // --- local cycle ---
+  uiClick:      { start:  700, end: 1000 },   // button glows
+  dispatch:     { start: 1000, end: 1450 },   // pill flies component → doc
+  docApplyL:    { start: 1450, end: 1800 },   // doc value updates
+  fxSaveL:      { start: 1800, end: 2250 },   // green pill → save
+  fxHistoryL:   { start: 1800, end: 2250 },   // → history
+  fxBroadcastL: { start: 1800, end: 2250 },   // → network (broadcast)
+  subscribeL:   { start: 2200, end: 2700 },   // pill flies doc → component
+  uiUpdateL:    { start: 2400, end: 2850 },   // value text in component swaps
 
-  // --- pause, then remote change arrives ---
-  recvRemote:   { start: 3500, end: 3950 },   // arrow peers → Doc
-  docApplyR:    { start: 3950, end: 4300 },   // doc data flashes (different color)
-  fxSaveR:      { start: 4300, end: 4750 },
-  fxHistoryR:   { start: 4300, end: 4750 },
-  subscribeR:   { start: 4700, end: 5200 },
-  uiDelete:     { start: 4900, end: 5400 },   // clip 2 collapses
+  // --- pause, then remote cycle ---
+  netSignal:    { start: 3500, end: 3900 },   // network glows + collaborator label fades in
+  recvRemote:   { start: 3750, end: 4200 },   // gold pill flies network → doc
+  docApplyR:    { start: 4200, end: 4550 },   // doc value updates again
+  fxSaveR:      { start: 4550, end: 5000 },   // gold pill → save
+  fxHistoryR:   { start: 4550, end: 5000 },   // → history
+  subscribeR:   { start: 4950, end: 5450 },   // pill flies doc → component
+  uiUpdateR:    { start: 5150, end: 5600 },   // value text in component swaps
 };
-const TOTAL_MS = 5700;
+const TOTAL_MS = 5900;
 
 // === EASING / HELPERS ================================================
 
@@ -171,7 +188,7 @@ export default function mount(root) {
 
   let state     = 'idle';
   let animFrame = null;
-  let elapsed   = TOTAL_MS; // idle = final state
+  let elapsed   = 0;
 
   function setState(s) {
     state = s;
@@ -187,7 +204,7 @@ export default function mount(root) {
 
   function reset() {
     cancelAnim();
-    elapsed = TOTAL_MS;
+    elapsed = 0;
     setState('idle');
     render();
   }
@@ -216,9 +233,9 @@ export default function mount(root) {
   resetBtn.addEventListener('click', reset);
 
   // Stage progress 0..1.
-  // - Idle: 0 (pristine "before any action" state).
-  // - Done: 1 (final state after the round-trip).
-  // - Playing: linear progress between start and end ms.
+  // - Idle: 0 (pristine, before any action).
+  // - Done: 1 (final state after both cycles).
+  // - Playing: linear progress between start and end.
   function P(name) {
     const s = STAGES[name];
     if (state === 'idle') return 0;
@@ -228,39 +245,65 @@ export default function mount(root) {
     return (elapsed - s.start) / (s.end - s.start);
   }
 
-  // Convenience: 1.0 while we're in `(start - lead, end + tail)`, 0 else.
-  // Used for "the arrow is bright RIGHT NOW" highlights.
+  // "Bell" indicator: rises while a stage is active, dies off after.
+  // Used for arrow highlights and card glows that should fire briefly
+  // and fade back down rather than staying lit.
   function active(name, lead = 0, tail = 250) {
     if (state === 'idle' || state === 'done') return 0;
     const s = STAGES[name];
     if (elapsed < s.start - lead) return 0;
     if (elapsed > s.end + tail) return 0;
-    // Bell curve: fade in over `lead`, full during, fade out over `tail`.
     if (elapsed < s.start) return (elapsed - (s.start - lead)) / lead;
     if (elapsed > s.end)   return 1 - (elapsed - s.end) / tail;
     return 1;
   }
 
+  // ---- current rendered values ---------------------------------------
+  // The doc value swaps mid-docApply (when the change "lands"). The
+  // component value swaps mid-uiUpdate (when the re-render fires) —
+  // intentionally LATER, so the viewer sees the data-flow ordering.
+
+  function currentDocTitle() {
+    if (state === 'idle') return TITLE_INITIAL;
+    if (state === 'done') return TITLE_REMOTE;
+    if (elapsed >= STAGES.docApplyR.start + 80) return TITLE_REMOTE;
+    if (elapsed >= STAGES.docApplyL.start + 80) return TITLE_LOCAL;
+    return TITLE_INITIAL;
+  }
+
+  function currentComponentTitle() {
+    if (state === 'idle') return TITLE_INITIAL;
+    if (state === 'done') return TITLE_REMOTE;
+    if (elapsed >= STAGES.uiUpdateR.start + 120) return TITLE_REMOTE;
+    if (elapsed >= STAGES.uiUpdateL.start + 120) return TITLE_LOCAL;
+    return TITLE_INITIAL;
+  }
+
+  function currentChangeCount() {
+    if (state === 'idle') return 26;
+    if (state === 'done') return 28;
+    let n = 26;
+    if (elapsed >= STAGES.docApplyL.end) n++;
+    if (elapsed >= STAGES.docApplyR.end) n++;
+    return n;
+  }
+
+  // ---- render --------------------------------------------------------
+
   function render() {
     const ctx = setupCanvas(canvas, W, H);
-
     ctx.fillStyle = COLORS.bg;
     ctx.fillRect(0, 0, W, H);
 
     drawColumnHeaders(ctx);
-
-    // Static arrows first, then card contents on top of any arrow heads
-    // that bleed into card edges.
     drawArrows(ctx);
-
-    drawUICard(ctx);
+    drawComponentCard(ctx);
     drawDocCard(ctx);
     drawSideCards(ctx);
-
     drawFlyingPills(ctx);
   }
 
-  // ---- column headers ---------------------------------------------
+  // ---- column headers -----------------------------------------------
 
   function drawColumnHeaders(ctx) {
     ctx.save();
@@ -268,71 +311,66 @@ export default function mount(root) {
     ctx.font = '600 10px -apple-system, system-ui, sans-serif';
     ctx.textBaseline = 'alphabetic';
     ctx.textAlign = 'center';
-    ctx.fillText('APP UI',     UI_X + UI_W / 2,  TOP_LABEL_Y);
-    ctx.fillText('AUTOMERGE',  DOC_X + DOC_W / 2, TOP_LABEL_Y);
-    ctx.fillText('SIDE EFFECTS', RIGHT_X + RIGHT_W / 2, TOP_LABEL_Y);
+    ctx.fillText('COMPONENT', COMP_X + COMP_W / 2, TOP_LABEL_Y);
+    ctx.fillText('AUTOMERGE', DOC_X  + DOC_W  / 2, TOP_LABEL_Y);
+    ctx.fillText('SIDE EFFECTS', SIDE_X + SIDE_W / 2, TOP_LABEL_Y);
 
     ctx.font = '400 9px -apple-system, system-ui, sans-serif';
     ctx.fillStyle = COLORS.labelDim;
-    ctx.fillText('renders + dispatches', UI_X + UI_W / 2,   TOP_LABEL_Y + 12);
-    ctx.fillText('the project document', DOC_X + DOC_W / 2, TOP_LABEL_Y + 12);
-    ctx.fillText('all transparent',      RIGHT_X + RIGHT_W / 2, TOP_LABEL_Y + 12);
+    ctx.fillText('your React component', COMP_X + COMP_W / 2, TOP_LABEL_Y + 12);
+    ctx.fillText('the shared document',  DOC_X  + DOC_W  / 2, TOP_LABEL_Y + 12);
+    ctx.fillText('all transparent',      SIDE_X + SIDE_W / 2, TOP_LABEL_Y + 12);
     ctx.restore();
   }
 
-  // ---- arrows ------------------------------------------------------
-
-  // Five arrows total:
-  //   UI → Doc  (dispatch)        top of the UI↔Doc gap
-  //   Doc → UI  (subscribe)       bottom of the UI↔Doc gap
-  //   Doc → Storage               horizontal to storage card
-  //   Doc ↔ History               horizontal to history card
-  //   Doc ↔ Peers                 horizontal to peers card (both ways)
+  // ---- arrows --------------------------------------------------------
 
   function drawArrows(ctx) {
-    // UI <-> Doc
-    const uiR = UI_X + UI_W;
-    const docL = DOC_X;
-    const yDispatch  = CLIPS_ROW_Y + CLIPS_ROW_H / 2 - 8;
-    const ySubscribe = CLIPS_ROW_Y + CLIPS_ROW_H / 2 + 8;
-    drawArrow(ctx, uiR + 4, yDispatch, docL - 4, yDispatch,
-              'dispatch', active('dispatch'),  COLORS.local);
+    // Component <-> Doc. Dispatch on top, subscribe on bottom — they
+    // bracket the value-box region of the component card.
+    const compR = COMP_X + COMP_W;
+    const docL  = DOC_X;
+    const yDispatch  = VALUE_BOX_Y + 8;
+    const ySubscribe = VALUE_BOX_Y + VALUE_BOX_H - 8;
 
-    // Subscribe arrow can carry either local or remote re-render.
+    drawArrow(ctx, compR + 4, yDispatch, docL - 4, yDispatch,
+              'dispatch', active('dispatch'), COLORS.local);
+
+    // Subscribe arrow can carry either color depending on which cycle.
     {
       const sL = active('subscribeL');
       const sR = active('subscribeR');
       const color = sR > sL ? COLORS.remote : COLORS.local;
-      drawArrow(ctx, docL - 4, ySubscribe, uiR + 4, ySubscribe,
+      drawArrow(ctx, docL - 4, ySubscribe, compR + 4, ySubscribe,
                 'subscribe', Math.max(sL, sR), color);
     }
 
-    // Doc -> side effects
     const docR = DOC_X + DOC_W;
-    const yStore = STORAGE_Y + STORAGE_H / 2;
-    const yHist  = HISTORY_Y + HISTORY_H / 2;
-    const yPeers = PEERS_Y + PEERS_H / 2;
+    const yStore = SAVE_Y + SIDE_H / 2;
+    const yHist  = HIST_Y + SIDE_H / 2;
+    const yNet   = NET_Y  + SIDE_H / 2;
 
+    // Save and history arrows fire on either cycle.
     {
       const aL = active('fxSaveL');
       const aR = active('fxSaveR');
       const color = aR > aL ? COLORS.remote : COLORS.local;
-      drawArrow(ctx, docR + 4, yStore, RIGHT_X - 4, yStore,
+      drawArrow(ctx, docR + 4, yStore, SIDE_X - 4, yStore,
                 'save', Math.max(aL, aR), color);
     }
     {
       const aL = active('fxHistoryL');
       const aR = active('fxHistoryR');
       const color = aR > aL ? COLORS.remote : COLORS.local;
-      drawArrow(ctx, docR + 4, yHist, RIGHT_X - 4, yHist,
+      drawArrow(ctx, docR + 4, yHist, SIDE_X - 4, yHist,
                 'append', Math.max(aL, aR), color);
     }
 
-    // Peers: bidirectional, two parallel arrows (broadcast above,
-    // receive below).
-    drawArrow(ctx, docR + 4, yPeers - 8, RIGHT_X - 4, yPeers - 8,
+    // Peers: two parallel arrows. Broadcast (top, green) on the local
+    // cycle. Receive (bottom, gold) on the remote cycle.
+    drawArrow(ctx, docR + 4, yNet - 7, SIDE_X - 4, yNet - 7,
               'broadcast', active('fxBroadcastL'), COLORS.local);
-    drawArrow(ctx, RIGHT_X - 4, yPeers + 8, docR + 4, yPeers + 8,
+    drawArrow(ctx, SIDE_X - 4, yNet + 7, docR + 4, yNet + 7,
               'receive',   active('recvRemote'),   COLORS.remote);
   }
 
@@ -374,183 +412,161 @@ export default function mount(root) {
     ctx.fill();
   }
 
-  // ---- UI card -----------------------------------------------------
+  // ---- component card ------------------------------------------------
 
-  function drawUICard(ctx) {
+  function drawComponentCard(ctx) {
     ctx.save();
     ctx.fillStyle = COLORS.cardBg;
     ctx.strokeStyle = COLORS.cardBorder;
     ctx.lineWidth = 1;
-    roundRect(ctx, UI_X, UI_Y, UI_W, UI_H, 6);
+    roundRect(ctx, COMP_X, COMP_Y, COMP_W, COMP_H, 6);
     ctx.fill();
     ctx.stroke();
 
-    // Header bar to suggest "an app window"
-    ctx.fillStyle = 'rgba(255,255,255,0.05)';
-    topRoundedRect(ctx, UI_X, UI_Y, UI_W, 24, 6);
+    // The useDoc() hook line — monospace, dim, suggests "this is code".
+    ctx.fillStyle = COLORS.codeBg;
+    roundRect(ctx, COMP_X + COMP_PAD, CODE_LINE_Y - 12, COMP_W - COMP_PAD * 2, 18, 3);
     ctx.fill();
 
-    // Traffic-light dots
-    const dotY = UI_Y + 12;
-    for (let i = 0; i < 3; i++) {
-      ctx.fillStyle = 'rgba(255,255,255,0.18)';
-      ctx.beginPath();
-      ctx.arc(UI_X + 10 + i * 12, dotY, 3.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.fillStyle = COLORS.labelDim;
-    ctx.font = '500 9px -apple-system, system-ui, sans-serif';
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'left';
-    ctx.fillText('episode 4 · editor', UI_X + 56, dotY + 0.5);
-
-    // Section label "timeline"
-    ctx.fillStyle = COLORS.labelDim;
-    ctx.font = '600 9px -apple-system, system-ui, sans-serif';
+    ctx.fillStyle = COLORS.code;
+    ctx.font = '400 10.5px ui-monospace, "SF Mono", Menlo, monospace';
     ctx.textBaseline = 'alphabetic';
-    ctx.fillText('timeline', UI_X + UI_PAD, CLIPS_ROW_Y - 8);
+    ctx.textAlign = 'left';
+    ctx.fillText('const { title } = useDoc(ep4)', COMP_X + COMP_PAD + 8, CODE_LINE_Y);
 
-    // The clip row.
-    drawClipsRow(ctx, CLIPS_ROW_X, CLIPS_ROW_Y, CLIPS_ROW_W, CLIPS_ROW_H);
+    // "rendered:" small label above the value box
+    ctx.fillStyle = COLORS.valueLabel;
+    ctx.font = '500 9px -apple-system, system-ui, sans-serif';
+    ctx.fillText('rendered:', COMP_X + COMP_PAD, VALUE_LABEL_Y);
 
-    // "trim" handle/cursor that pulses on uiClick. Hidden once the
-    // local trim has completed (clip 3 is already at its new size).
-    drawTrimHandle(ctx);
+    // The value box — a fake H1 area showing the current title.
+    drawValueBox(ctx);
 
-    // Helper text below: explains what the user is doing.
+    // The "edit title" button. Glows green during uiClick stage.
+    drawEditButton(ctx);
+
+    // Helper text at the bottom: explains the action in plain language,
+    // updated to match the current phase of the animation.
+    drawComponentHelper(ctx);
+
+    ctx.restore();
+  }
+
+  function drawValueBox(ctx) {
+    const x = COMP_X + COMP_PAD;
+    const y = VALUE_BOX_Y;
+    const w = COMP_W - COMP_PAD * 2;
+    const h = VALUE_BOX_H;
+
+    // Highlight border briefly during uiUpdate (when the re-render fires).
+    const flashL = active('uiUpdateL', 100, 300);
+    const flashR = active('uiUpdateR', 100, 300);
+    const flashColor = flashR > flashL ? COLORS.remoteGlow : COLORS.localGlow;
+    const flash = Math.max(flashL, flashR);
+
+    ctx.fillStyle = COLORS.valueBoxBg;
+    ctx.strokeStyle = flash > 0
+      ? mixRgba(COLORS.valueBoxBorder, flashColor, easeOut(flash))
+      : COLORS.valueBoxBorder;
+    ctx.lineWidth = flash > 0 ? 1.4 : 1;
+    roundRect(ctx, x, y, w, h, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // The title text itself, slightly larger, centered.
+    ctx.fillStyle = COLORS.valueText;
+    ctx.font = '500 14px -apple-system, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const title = currentComponentTitle();
+    // Wrap to two lines if it's the long remote title.
+    drawWrappedCentered(ctx, title, x + w / 2, y + h / 2, w - 16, 16);
+  }
+
+  function drawWrappedCentered(ctx, text, cx, cy, maxW, lineH) {
+    const words = text.split(' ');
+    const lines = [];
+    let cur = '';
+    for (const word of words) {
+      const tryLine = cur ? cur + ' ' + word : word;
+      if (ctx.measureText(tryLine).width > maxW && cur) {
+        lines.push(cur);
+        cur = word;
+      } else {
+        cur = tryLine;
+      }
+    }
+    if (cur) lines.push(cur);
+    const totalH = lines.length * lineH;
+    let y = cy - totalH / 2 + lineH / 2;
+    for (const line of lines) {
+      ctx.fillText(line, cx, y);
+      y += lineH;
+    }
+  }
+
+  function drawEditButton(ctx) {
+    const x = COMP_X + COMP_PAD;
+    const y = BUTTON_Y;
+    const w = COMP_W - COMP_PAD * 2;
+    const h = BUTTON_H;
+
+    // Glow during the click stage.
+    const pulse = active('uiClick', 200, 400);
+    const t = easeOut(pulse);
+
+    ctx.save();
+    ctx.fillStyle = pulse > 0
+      ? mixRgba(COLORS.buttonBg, COLORS.localSoft, t)
+      : COLORS.buttonBg;
+    ctx.strokeStyle = pulse > 0
+      ? mixRgba(COLORS.buttonBorder, COLORS.localGlow, t)
+      : COLORS.buttonBorder;
+    ctx.lineWidth = pulse > 0 ? 1.6 : 1;
+    if (pulse > 0) {
+      ctx.shadowColor = COLORS.localGlow;
+      ctx.shadowBlur = 8 * t;
+    }
+    roundRect(ctx, x, y, w, h, 5);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = COLORS.buttonText;
+    ctx.font = '600 11px -apple-system, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('edit title', x + w / 2, y + h / 2 + 0.5);
+    ctx.restore();
+  }
+
+  // Tiny plain-language caption at the bottom of the component card.
+  // Adapts to the current phase so the reader can interpret each scene.
+  function drawComponentHelper(ctx) {
+    let text;
+    if (state === 'idle') text = 'click "edit title" to start';
+    else if (state === 'done') text = 'a remote edit landed in your component';
+    else if (elapsed < STAGES.uiClick.start)        text = 'click "edit title" to start';
+    else if (elapsed < STAGES.uiUpdateL.start)      text = 'your dispatch is in flight…';
+    else if (elapsed < STAGES.netSignal.start)      text = 'your edit applied. round-trip done.';
+    else if (elapsed < STAGES.docApplyR.start)      text = 'a peer just edited the same doc…';
+    else if (elapsed < STAGES.uiUpdateR.end)        text = 'merging in their change…';
+    else                                            text = 'a remote edit landed in your component';
+
+    ctx.save();
     ctx.fillStyle = COLORS.labelDim;
     ctx.font = '400 10px -apple-system, system-ui, sans-serif';
+    ctx.textBaseline = 'alphabetic';
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillText('user trims clip 3 →', UI_X + UI_PAD, UI_Y + UI_H - 20);
-
+    ctx.fillText(text, COMP_X + COMP_PAD, HELPER_Y);
     ctx.restore();
   }
 
-  // Visual layout of the clip array, accounting for the trim and delete
-  // animations in the UI. Returns the array of clip rects.
-  function clipLayout(rowX, rowY, rowW, rowH) {
-    // Each clip has a current "size factor" (1 = full base width, 0 =
-    // collapsed) and an "alpha" (1 = visible, 0 = gone).
-    const trim   = clamp01(P('uiTrim'));
-    const remove = clamp01(P('uiDelete'));
-
-    // size[i] is the fraction of the BASE width each clip currently
-    // occupies. Clip 2 (index 1) collapses to 0; clip 3 (index 2) shrinks
-    // to ~0.55. Other clips stay full-size.
-    const sizes = [
-      1,
-      1 - remove,             // clip 2: collapses
-      1 - 0.45 * trim,        // clip 3: trimmed to ~0.55
-      1,
-    ];
-    const alphas = [1, 1 - remove, 1, 1];
-
-    // Total of base widths (without scaling) and gaps between visible
-    // clips. We size so that at the *final* layout (sizes [1, 0, 0.55, 1])
-    // the row still fits — i.e. compute base width relative to the
-    // initial state with all four at 1, plus 3 gaps. The collapsed
-    // widths free up space; we let other clips expand into that space?
-    // For simplicity, NO expansion: missing space just becomes margin
-    // on the right. This reads as "deleted clip removed; row gets
-    // shorter" which is fine for the figure.
-    const baseW = (rowW - CLIP_GAP * 3) / 4;
-    const rects = [];
-    let x = rowX;
-    for (let i = 0; i < 4; i++) {
-      const w = baseW * sizes[i];
-      rects.push({ x, y: rowY, w, h: rowH, alpha: alphas[i], label: CLIP_LABELS[i] });
-      x += w + CLIP_GAP;
-    }
-    return rects;
-  }
-
-  function drawClipsRow(ctx, rowX, rowY, rowW, rowH) {
-    const rects = clipLayout(rowX, rowY, rowW, rowH);
-    for (let i = 0; i < rects.length; i++) {
-      const r = rects[i];
-      if (r.alpha <= 0.01 || r.w < 1) continue;
-      ctx.save();
-      ctx.globalAlpha = r.alpha;
-      drawMiniClip(ctx, r.x, r.y, r.w, r.h, r.label);
-      ctx.restore();
-    }
-  }
-
-  function drawMiniClip(ctx, x, y, w, h, label) {
-    ctx.save();
-    ctx.fillStyle = COLORS.clipFill;
-    ctx.strokeStyle = COLORS.clipStroke;
-    ctx.lineWidth = 1;
-    roundRect(ctx, x, y, w, h, 3);
-    ctx.fill();
-    ctx.stroke();
-
-    // Title bar
-    ctx.fillStyle = COLORS.clipFillTop;
-    topRoundedRect(ctx, x, y, w, 10, 3);
-    ctx.fill();
-
-    if (w > 22) {
-      ctx.fillStyle = COLORS.clipText;
-      ctx.font = '500 8px -apple-system, system-ui, sans-serif';
-      ctx.textBaseline = 'middle';
-      ctx.textAlign = 'left';
-      ctx.fillText(label, x + 4, y + 5.5);
-    }
-    ctx.restore();
-  }
-
-  // A tiny "trim" arrow that points at clip 3's right edge and pulses
-  // during the uiClick stage. Drawn outside the clip so it reads as a
-  // cursor about to interact.
-  function drawTrimHandle(ctx) {
-    const rects = clipLayout(CLIPS_ROW_X, CLIPS_ROW_Y, CLIPS_ROW_W, CLIPS_ROW_H);
-    const c3 = rects[2];
-    if (!c3 || c3.w < 1) return;
-
-    // Visible at idle (a hint of what's about to happen), bright while
-    // the click stage pulses, gone once the trim has actually applied.
-    const pulse = active('uiClick', 200, 200);
-    let baseAlpha;
-    if (state === 'idle') baseAlpha = 0.35;
-    else if (state === 'done') baseAlpha = 0;
-    else if (elapsed > STAGES.uiTrim.start) baseAlpha = 0;
-    else baseAlpha = 0.25;
-    const alpha = Math.min(1, baseAlpha + 0.65 * pulse);
-    if (alpha <= 0.01) return;
-
-    const handleX = c3.x + c3.w;
-    const handleY = c3.y + c3.h + 6;
-
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.strokeStyle = COLORS.local;
-    ctx.fillStyle   = COLORS.local;
-    ctx.lineWidth = 1.4;
-    // A small upward arrow + "trim" label
-    ctx.beginPath();
-    ctx.moveTo(handleX, handleY);
-    ctx.lineTo(handleX - 5, handleY + 6);
-    ctx.lineTo(handleX + 5, handleY + 6);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.font = '500 8px -apple-system, system-ui, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillText('trim', handleX, handleY + 18);
-
-    ctx.restore();
-  }
-
-  // ---- Doc card ----------------------------------------------------
+  // ---- doc card ------------------------------------------------------
 
   function drawDocCard(ctx) {
     ctx.save();
 
-    // Card background with a slightly brighter border to indicate it's
-    // the hub. Border flashes when a change is being applied.
     const flashL = active('docApplyL', 100, 300);
     const flashR = active('docApplyR', 100, 300);
     const flashColor = flashR > flashL ? COLORS.remoteGlow : COLORS.localGlow;
@@ -570,154 +586,174 @@ export default function mount(root) {
     ctx.font = '600 12px -apple-system, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
-    ctx.fillText('project document', DOC_X + DOC_W / 2, DOC_Y + 28);
+    ctx.fillText('automerge document', DOC_X + DOC_W / 2, DOC_HEADER_Y);
 
     ctx.fillStyle = COLORS.labelDim;
     ctx.font = '400 10px -apple-system, system-ui, sans-serif';
-    ctx.fillText('Automerge CRDT', DOC_X + DOC_W / 2, DOC_Y + 46);
+    ctx.fillText('CRDT', DOC_X + DOC_W / 2, DOC_SUBTITLE_Y);
 
-    // The clips data, mirrored from the UI so the viewer sees that
-    // doc-and-UI track the same array. This is the data being mutated.
+    // The single field: title.
     ctx.fillStyle = COLORS.labelDim;
-    ctx.font = '500 10px -apple-system, system-ui, sans-serif';
+    ctx.font = '500 10px ui-monospace, "SF Mono", Menlo, monospace';
     ctx.textAlign = 'left';
-    ctx.fillText('clips', DOC_CLIPS_ROW_X, DOC_CLIPS_ROW_Y - 8);
-    drawClipsRow(ctx, DOC_CLIPS_ROW_X, DOC_CLIPS_ROW_Y, DOC_CLIPS_ROW_W, DOC_CLIPS_ROW_H);
+    ctx.fillText('title:', DOC_X + 18, DOC_FIELD_KEY_Y);
 
-    // Helper text below the clips: caption about what's happening here.
-    ctx.fillStyle = COLORS.labelDim;
-    ctx.font = '400 10px -apple-system, system-ui, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('changes applied here', DOC_X + DOC_W / 2, DOC_CLIPS_ROW_Y + DOC_CLIPS_ROW_H + 28);
-    ctx.fillText('fan out to all side effects', DOC_X + DOC_W / 2, DOC_CLIPS_ROW_Y + DOC_CLIPS_ROW_H + 44);
+    // The value. Highlights briefly during docApply.
+    const valueFlash = flash;
+    ctx.fillStyle = valueFlash > 0
+      ? mixRgba(COLORS.label, flashColor, easeOut(valueFlash))
+      : COLORS.label;
+    ctx.font = '500 12px ui-monospace, "SF Mono", Menlo, monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    const value = currentDocTitle();
+    drawWrappedLeft(ctx, value, DOC_X + 18, DOC_FIELD_VAL_Y, DOC_W - 36, 17);
 
-    drawChangeCounter(ctx);
-
-    ctx.restore();
-  }
-
-  function drawChangeCounter(ctx) {
-    const x = DOC_X + DOC_W - 16;
-    const y = DOC_Y + DOC_H - 16;
-
-    // Counter advances as each docApply stage completes.
-    // Idle: pre-action (26). Done: post-both-actions (28). Playing:
-    // ticks up each time a change lands.
-    let count = 26;
-    if (state === 'done') {
-      count = 28;
-    } else if (state === 'playing') {
-      if (elapsed >= STAGES.docApplyL.end) count++;
-      if (elapsed >= STAGES.docApplyR.end) count++;
-    }
-
-    ctx.save();
+    // Changes counter, bottom-right.
     ctx.fillStyle = COLORS.labelDim;
     ctx.font = '500 9px -apple-system, system-ui, sans-serif';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'alphabetic';
-    ctx.fillText(`${count} changes`, x, y);
+    ctx.fillText(`${currentChangeCount()} changes`, DOC_X + DOC_W - 16, DOC_COUNTER_Y);
+
     ctx.restore();
   }
 
-  // ---- side cards (storage, history, peers) -----------------------
+  function drawWrappedLeft(ctx, text, x, y, maxW, lineH) {
+    const words = text.split(' ');
+    const lines = [];
+    let cur = '';
+    for (const word of words) {
+      const tryLine = cur ? cur + ' ' + word : word;
+      if (ctx.measureText(tryLine).width > maxW && cur) {
+        lines.push(cur);
+        cur = word;
+      } else {
+        cur = tryLine;
+      }
+    }
+    if (cur) lines.push(cur);
+    for (const line of lines) {
+      ctx.fillText(line, x, y);
+      y += lineH;
+    }
+  }
+
+  // ---- side effect cards -------------------------------------------
 
   function drawSideCards(ctx) {
-    ctx.save();
-    drawSideCard(ctx, RIGHT_X, STORAGE_Y, RIGHT_W, STORAGE_H,
+    drawSideCard(ctx, SIDE_X, SAVE_Y, SIDE_W, SIDE_H,
                  'local storage', 'saves automatically',
                  Math.max(active('fxSaveL'), active('fxSaveR')),
+                 active('fxSaveR') > active('fxSaveL') ? COLORS.remoteGlow : COLORS.localGlow,
                  (cx, cy) => drawDiskIcon(ctx, cx, cy));
 
-    drawSideCard(ctx, RIGHT_X, HISTORY_Y, RIGHT_W, HISTORY_H,
-                 'history', 'every change, timestamped',
+    drawSideCard(ctx, SIDE_X, HIST_Y, SIDE_W, SIDE_H,
+                 'history', 'every change kept',
                  Math.max(active('fxHistoryL'), active('fxHistoryR')),
+                 active('fxHistoryR') > active('fxHistoryL') ? COLORS.remoteGlow : COLORS.localGlow,
                  (cx, cy) => drawHistoryIcon(ctx, cx, cy));
 
-    drawSideCard(ctx, RIGHT_X, PEERS_Y, RIGHT_W, PEERS_H,
-                 'peers', 'broadcast + receive · merge',
-                 Math.max(active('fxBroadcastL'), active('recvRemote')),
+    // The network card has the special "from a collaborator" label.
+    const broadcastGlow = active('fxBroadcastL');
+    const receiveGlow   = Math.max(active('netSignal'), active('recvRemote'));
+    const netGlow = Math.max(broadcastGlow, receiveGlow);
+    const netGlowColor = receiveGlow > broadcastGlow ? COLORS.remoteGlow : COLORS.localGlow;
+
+    drawSideCard(ctx, SIDE_X, NET_Y, SIDE_W, SIDE_H,
+                 'peers', 'broadcast + receive',
+                 netGlow, netGlowColor,
                  (cx, cy) => drawPeersIcon(ctx, cx, cy));
 
-    ctx.restore();
+    // The collaborator label. Fades in when the remote cycle starts and
+    // stays through the doc-apply, so the source of the gold change is
+    // unambiguous.
+    drawCollaboratorLabel(ctx);
   }
 
-  function drawSideCard(ctx, x, y, w, h, title, sub, glow, drawIcon) {
+  function drawSideCard(ctx, x, y, w, h, title, sub, glow, glowColor, drawIcon) {
     ctx.save();
     ctx.fillStyle = COLORS.cardBg;
     ctx.strokeStyle = glow > 0
-      ? mixRgba(COLORS.cardBorder, COLORS.localGlow, easeOut(glow))
+      ? mixRgba(COLORS.cardBorder, glowColor, easeOut(glow))
       : COLORS.cardBorder;
     ctx.lineWidth = glow > 0 ? 1.4 : 1;
     roundRect(ctx, x, y, w, h, 5);
     ctx.fill();
     ctx.stroke();
 
-    // Icon on the left
-    drawIcon(x + 22, y + 22);
+    drawIcon(x + 22, y + h / 2);
 
-    // Title + subtitle on the right
     ctx.fillStyle = COLORS.label;
     ctx.font = '600 11px -apple-system, system-ui, sans-serif';
     ctx.textBaseline = 'alphabetic';
     ctx.textAlign = 'left';
-    ctx.fillText(title, x + 52, y + 22);
+    ctx.fillText(title, x + 52, y + h / 2 - 4);
 
     ctx.fillStyle = COLORS.subtitle;
     ctx.font = '400 10px -apple-system, system-ui, sans-serif';
-    ctx.fillText(sub, x + 52, y + 38);
+    ctx.fillText(sub, x + 52, y + h / 2 + 12);
 
     ctx.restore();
   }
 
-  // ---- flying pills ------------------------------------------------
-  // Small colored circle that traces an arrow during its active stage,
-  // representing "the action in flight." The label rides on the arrow.
+  // "← from a collaborator" annotation that appears beside the network
+  // card during the remote cycle. Sits on the LEFT edge of the network
+  // card, pointing at it, so the reader's eye connects "incoming change"
+  // → "this card is where it comes from".
+  function drawCollaboratorLabel(ctx) {
+    const onset = active('netSignal', 100, 200);
+    const through = active('recvRemote', 200, 600);
+    const linger = active('docApplyR', 0, 800);
+    const t = Math.max(onset, through, linger);
+    if (t <= 0.01) return;
+
+    const text = '← from a collaborator';
+    const x = SIDE_X - 6;
+    const y = NET_Y - 6;
+
+    ctx.save();
+    ctx.globalAlpha = easeOut(clamp01(t));
+    ctx.fillStyle = COLORS.remote;
+    ctx.font = '600 10px -apple-system, system-ui, sans-serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = 'right';
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+
+  // ---- flying pills -------------------------------------------------
 
   function drawFlyingPills(ctx) {
     if (state === 'idle' || state === 'done') return;
-    // UI → Doc (local dispatch)
-    flyPill(ctx, 'dispatch',
-            UI_X + UI_W, UI_Y + 100,
-            DOC_X,        UI_Y + 100,
-            COLORS.local);
-    // Doc → UI (subscribe / re-render)
-    flyPill(ctx, 'subscribeL',
-            DOC_X, UI_Y + UI_H - 100,
-            UI_X + UI_W, UI_Y + UI_H - 100,
-            COLORS.local);
-    flyPill(ctx, 'subscribeR',
-            DOC_X, UI_Y + UI_H - 100,
-            UI_X + UI_W, UI_Y + UI_H - 100,
-            COLORS.remote);
-    // Doc → Storage
-    flyPill(ctx, 'fxSaveL',
-            DOC_X + DOC_W, STORAGE_Y + STORAGE_H / 2,
-            RIGHT_X,       STORAGE_Y + STORAGE_H / 2,
-            COLORS.local);
-    flyPill(ctx, 'fxSaveR',
-            DOC_X + DOC_W, STORAGE_Y + STORAGE_H / 2,
-            RIGHT_X,       STORAGE_Y + STORAGE_H / 2,
-            COLORS.remote);
-    // Doc → History
-    flyPill(ctx, 'fxHistoryL',
-            DOC_X + DOC_W, HISTORY_Y + HISTORY_H / 2,
-            RIGHT_X,       HISTORY_Y + HISTORY_H / 2,
-            COLORS.local);
-    flyPill(ctx, 'fxHistoryR',
-            DOC_X + DOC_W, HISTORY_Y + HISTORY_H / 2,
-            RIGHT_X,       HISTORY_Y + HISTORY_H / 2,
-            COLORS.remote);
-    // Doc → Peers (broadcast)
-    flyPill(ctx, 'fxBroadcastL',
-            DOC_X + DOC_W, PEERS_Y + PEERS_H / 2 - 8,
-            RIGHT_X,       PEERS_Y + PEERS_H / 2 - 8,
-            COLORS.local);
-    // Peers → Doc (receive)
-    flyPill(ctx, 'recvRemote',
-            RIGHT_X,       PEERS_Y + PEERS_H / 2 + 8,
-            DOC_X + DOC_W, PEERS_Y + PEERS_H / 2 + 8,
-            COLORS.remote);
+
+    const compR = COMP_X + COMP_W;
+    const docL  = DOC_X;
+    const docR  = DOC_X + DOC_W;
+    const yDispatch  = VALUE_BOX_Y + 8;
+    const ySubscribe = VALUE_BOX_Y + VALUE_BOX_H - 8;
+    const yStore = SAVE_Y + SIDE_H / 2;
+    const yHist  = HIST_Y + SIDE_H / 2;
+    const yNet   = NET_Y  + SIDE_H / 2;
+
+    // Component → Doc (local dispatch)
+    flyPill(ctx, 'dispatch', compR, yDispatch, docL, yDispatch, COLORS.local);
+
+    // Doc → Component (subscribe)
+    flyPill(ctx, 'subscribeL', docL, ySubscribe, compR, ySubscribe, COLORS.local);
+    flyPill(ctx, 'subscribeR', docL, ySubscribe, compR, ySubscribe, COLORS.remote);
+
+    // Doc → side effects
+    flyPill(ctx, 'fxSaveL',    docR, yStore, SIDE_X, yStore, COLORS.local);
+    flyPill(ctx, 'fxSaveR',    docR, yStore, SIDE_X, yStore, COLORS.remote);
+    flyPill(ctx, 'fxHistoryL', docR, yHist,  SIDE_X, yHist,  COLORS.local);
+    flyPill(ctx, 'fxHistoryR', docR, yHist,  SIDE_X, yHist,  COLORS.remote);
+
+    // Doc → Peers (broadcast — local cycle only)
+    flyPill(ctx, 'fxBroadcastL', docR, yNet - 7, SIDE_X, yNet - 7, COLORS.local);
+
+    // Peers → Doc (receive — remote cycle only)
+    flyPill(ctx, 'recvRemote', SIDE_X, yNet + 7, docR, yNet + 7, COLORS.remote);
   }
 
   function flyPill(ctx, stageName, x1, y1, x2, y2, color) {
@@ -738,19 +774,18 @@ export default function mount(root) {
     ctx.restore();
   }
 
-  // ---- side-card icons --------------------------------------------
+  // ---- side-card icons ---------------------------------------------
 
   function drawDiskIcon(ctx, cx, cy) {
     ctx.save();
     ctx.strokeStyle = COLORS.iconNeutral;
     ctx.fillStyle = 'rgba(154, 161, 168, 0.15)';
     ctx.lineWidth = 1.2;
-    // Stacked cylinders for "disk".
     const r = 11;
     const h = 3;
     const offsets = [0, 7];
     for (let i = offsets.length - 1; i >= 0; i--) {
-      const oy = cy + offsets[i];
+      const oy = cy + offsets[i] - 6;
       ctx.beginPath();
       ctx.moveTo(cx - r, oy);
       ctx.lineTo(cx - r, oy + h);
@@ -760,7 +795,6 @@ export default function mount(root) {
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
-      // top ellipse
       ctx.beginPath();
       ctx.moveTo(cx - r, oy);
       ctx.bezierCurveTo(cx - r, oy + 3, cx + r, oy + 3, cx + r, oy);
@@ -775,7 +809,6 @@ export default function mount(root) {
     ctx.strokeStyle = COLORS.iconNeutral;
     ctx.fillStyle = COLORS.iconNeutral;
     ctx.lineWidth = 1.2;
-    // A short horizontal timeline with ticks at varying heights.
     const len = 26;
     ctx.beginPath();
     ctx.moveTo(cx - len / 2, cy + 4);
@@ -787,18 +820,15 @@ export default function mount(root) {
       { x:   4, h: 5 },
       { x:  11, h: 8 },
     ];
-    // The latest tick lights up green/gold depending on which change
-    // just landed.
     const lastL = active('fxHistoryL', 100, 250);
     const lastR = active('fxHistoryR', 100, 250);
     const newTickColor = lastR > lastL ? COLORS.remoteGlow : COLORS.localGlow;
     const newTickGlow = Math.max(lastL, lastR);
-
     for (let i = 0; i < ticks.length; i++) {
       const t = ticks[i];
       const isLast = i === ticks.length - 1;
       ctx.fillStyle = isLast && newTickGlow > 0
-        ? mixRgba(COLORS.iconNeutral + '', newTickColor, easeOut(newTickGlow))
+        ? mixRgba(COLORS.iconNeutral, newTickColor, easeOut(newTickGlow))
         : COLORS.iconNeutral;
       ctx.fillRect(cx + t.x, cy + 4 - t.h, 1.5, t.h);
     }
@@ -810,17 +840,15 @@ export default function mount(root) {
     ctx.strokeStyle = COLORS.iconNeutral;
     ctx.fillStyle = 'rgba(154, 161, 168, 0.15)';
     ctx.lineWidth = 1.2;
-    // Two small browser-y rectangles overlapping.
     const w = 14;
     const h = 11;
     const offsets = [{ x: -8, y: -2 }, { x: 4, y: 3 }];
     for (const o of offsets) {
       const x = cx + o.x;
-      const y = cy + o.y;
+      const y = cy + o.y - 5;
       roundRect(ctx, x, y, w, h, 2);
       ctx.fill();
       ctx.stroke();
-      // Mini "chrome" line
       ctx.beginPath();
       ctx.moveTo(x, y + 3);
       ctx.lineTo(x + w, y + 3);
@@ -835,8 +863,6 @@ export default function mount(root) {
 
 // === COLOR UTILITY ====================================================
 
-// Mix two CSS rgba() strings together. Cheap parse — supports only the
-// forms emitted by COLORS / hex above.
 function mixRgba(a, b, t) {
   const ca = parseColor(a);
   const cb = parseColor(b);
@@ -882,19 +908,6 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
   ctx.lineTo(x + rr, y + h);
   ctx.quadraticCurveTo(x, y + h, x, y + h - rr);
-  ctx.lineTo(x, y + rr);
-  ctx.quadraticCurveTo(x, y, x + rr, y);
-  ctx.closePath();
-}
-
-function topRoundedRect(ctx, x, y, w, h, r) {
-  const rr = Math.min(r, w / 2);
-  ctx.beginPath();
-  ctx.moveTo(x + rr, y);
-  ctx.lineTo(x + w - rr, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + rr);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
   ctx.lineTo(x, y + rr);
   ctx.quadraticCurveTo(x, y, x + rr, y);
   ctx.closePath();

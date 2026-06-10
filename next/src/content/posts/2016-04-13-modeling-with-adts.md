@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Modeling business problems with ADTs in Flow/js"
-description: "Tagged unions in Flow turn out to replace the worst part of ORM modeling: the big bag of nullable, secretly-correlated attributes."
+description: "Tagged unions in Flow turn out to replace the worst part of ORM modeling: the big bag of nullable, secretly-correlated attributes"
 date:   2016-04-13 21:43:39
 categories: js flow type
 tags: types

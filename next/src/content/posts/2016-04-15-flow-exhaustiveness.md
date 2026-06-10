@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Exhaustiveness checking in Flow"
-description: "Flow’s exhaustiveness checking has a gap — but a cast to `empty` gets you the behavior the type system can’t quite express."
+description: "Flow’s exhaustiveness checking has a gap — but a cast to `empty` gets you the behavior the type system can’t quite express"
 date:   2016-04-15 21:43:39
 categories: js flow type
 tags: types

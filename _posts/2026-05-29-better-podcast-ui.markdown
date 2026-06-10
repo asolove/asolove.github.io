@@ -149,7 +149,7 @@ Taken together, the more powerful audio layout model and the new UI navigation m
 
 Where this post focused on the UI, I plan to publish two future posts on other parts of the project:
 
-1. The experience of building a local-first, multiplayer experience on top of Automerge, especially focusing on ideas around collaboration and change management with non-textual data.
+1. [My experience building a multiplayer UI on top of Automerge](/ui/ducking/2026/06/08/podcast-multiplayer.html), especially focusing on ideas around collaboration and change management with non-textual data.
 2. The texture of working with AI coding assistants outside of a business environment, using the leverage not to intensify work but to enjoy more sketching and hammock time to decide what's next. Plus the pleasure of building narrowcast software that only has to please two people.
 
 ---

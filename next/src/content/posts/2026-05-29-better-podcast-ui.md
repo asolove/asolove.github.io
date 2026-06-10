@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Designing a better podcast editor"
-description: "A better concept model and more efficient tools for editing spoken word audio."
+description: "A better concept model and more efficient tools for editing spoken word audio"
 date: 2026-06-03 16:00:00
 categories: ui ducking
 tags: ui
@@ -149,14 +149,14 @@ Taken together, the more powerful audio layout model and the new UI navigation m
 
 Where this post focused on the UI, I plan to publish two future posts on other parts of the project:
 
-1. The experience of building a local-first, multiplayer experience on top of Automerge, especially focusing on ideas around collaboration and change management with non-textual data.
+1. [My experience building a multiplayer UI on top of Automerge](/ui/ducking/2026/06/08/podcast-multiplayer.html), especially focusing on ideas around collaboration and change management with non-textual data.
 2. The texture of working with AI coding assistants outside of a business environment, using the leverage not to intensify work but to enjoy more sketching and hammock time to decide what's next. Plus the pleasure of building narrowcast software that only has to please two people.
 
 ---
 
 ## About me
 
-I'm Adam Solove, a product engineer who loves to build great products in complicated domains. I'm just wrapping up a six month sabbatical that focused on my local community and building some deeply personal tech experiments like the one above. 
+I'm Adam Solove, a product engineer with experience at Stripe and Figma who loves to build great products in complicated domains. I'm just wrapping up a six month sabbatical that focused on my local community and building some deeply personal tech experiments like the one above. 
 
 I'm starting to look for projects or my next role. If you're building something interesting, please [get in touch](mailto:asolove+recruiting@gmail.com).
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "React.js & Om talk"
-description: "Videos and slides from a two-part introductory talk on React and then Om, given to the DC-area Clojure user group."
+description: "Videos and slides from a two-part introductory talk on React and then Om, given to the DC-area Clojure user group"
 date:   2014-05-08 09:16:00
 categories: js clojure
 tags: ui clojurescript functional

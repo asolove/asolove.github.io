@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Preact in pictures"
-description: "I gave a talk at tonight’s ReactJS Denver meetup about Preact."
+description: "I gave a talk at tonight’s ReactJS Denver meetup about Preact"
 date: 2017-04-19 09:00:00
 categories: js ui
 tags: ui
